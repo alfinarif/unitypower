@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container sidebar-closed sbar-open" id="container">
+
+        <div class="overlay"></div>
+        <div class="cs-overlay"></div>
+        <div class="search-overlay"></div>
+
+        <!--  BEGIN SIDEBAR  -->
+        {% include 'components/sidebar.html' %}
+        <!--  END SIDEBAR  -->
+
+        <!--  BEGIN CONTENT AREA  -->
+        <div id="content" class="main-content">
+        <div class="layout-px-spacing">
+            <div class="row" id="cancel-row">
+            
+                <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
+                    <div class="widget-content widget-content-area br-6">
+                        <table id="invoice-list" class="table table-hover" style="width:100%">
+
+                            <thead>
+                                <tr>
+                                    <th class="checkbox-column"> Record no. </th>
+                                    <th>Member</th>
+                                    <th>Total Due Month</th>
+                                    <th>Months</th>
+                                    <th>Amounts</th>
+                                    <th>Send Messages</th>
+                                    
+                                    
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    {% for transaction in all_transactions %}
+                                        <tr>
+                                            
+                                            <td class="checkbox-column"> 1 </td>
+                                            <td><span class="inv-email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> 
+                                                {{transaction.user.email}} </span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <p class="align-self-center mb-0 user-name"> {{transaction.total_unpaid_months}} </p>
+                                                </div>
+                                            </td>
+                                            
+                                            <td>
+                                                {% for month in transaction.unpaid_months %}
+                                                    <span class="badge badge-danger mr-2"> {{month}} </span> 
+                                                    {% if forloop.counter|divisibleby:5 and not forloop.last %}    
+                                                        <div class="d-flex">
+                                                            {% comment %} <p class="align-self-center mb-0 user-name"> {{transaction.unpaid_months|truncatechars:10}} </p> {% endcomment %}
+                                                                 
+                                                        </div>
+                                                    
+                                                        </br>
+                                                    {% endif %}
+                                                    
+                                                {% endfor %}
+                                            </td>
+
+                                            <td><span class="inv-amount">৳{{transaction.total_amount_due}}</span></td>
+
+                                            <td>
+                                                <span class="d-flex">
+                                                    <a href="{% url 'administration:send_whatsapp_notification' %}" class="btn btn-info btn-sm w-100">Message</a>
+                                                </span>
+                                            </td>
+
+                                            
+                                            
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+        <!--  END CONTENT AREA  -->
+
+    </div>
+    <!-- END MAIN CONTAINER -->
+
+{% endblock content %}
+
+   

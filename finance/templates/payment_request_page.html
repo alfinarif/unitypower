@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container sidebar-closed sbar-open" id="container">
+
+        <div class="overlay"></div>
+        <div class="cs-overlay"></div>
+        <div class="search-overlay"></div>
+
+        {% if not request.GET.pdf %}
+        <!--  BEGIN SIDEBAR  -->
+            {% include 'components/sidebar.html' %}
+        <!--  END SIDEBAR  -->
+        {% endif %}
+
+        <!--  BEGIN CONTENT AREA  -->
+        {% include 'components/payment_request_form.html' %}
+        <!--  END CONTENT AREA  -->
+
+    </div>
+    <!-- END MAIN CONTAINER -->
+
+{% endblock content %}
+
+   

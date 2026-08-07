@@ -1,0 +1,102 @@
+{% load i18n %}
+{% load humanize %}
+{% load static %}
+
+<div id="content" class="main-content">
+            <div class="layout-px-spacing">
+
+                <div class="row layout-top-spacing">
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing"></div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                        <div class="widget widget-account-invoice-three">
+
+
+                            <div class="widget-heading">
+                                <div class="wallet-usr-info">
+                                    <div class="usr-name">
+                                        {% if request.user.profile.avatar %}
+                                            <span><img src="{{request.user.profile.avatar.url}}" alt="unitypower-profile" class="img-fluid"> {{request.user.profile.full_name}} </span>
+                                        {% else %}
+                                            <span><img src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-photo-183042379.jpg" alt="unitypower-profile" class="img-fluid"> Unity-Finance </span>
+                                        {% endif %}
+                                        
+                                    </div>
+                                    <div class="add">
+                                        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span>
+                                    </div>
+                                </div>
+                                <div class="wallet-balance">
+                                    <p><strong>Total Payments</strong></p>
+                                    <h5 class=""><span class="w-currency">৳</span>{{total_payment|floatformat:"2"|intcomma}}</h5>
+                                </div>
+                            </div>
+
+                            <div class="widget-amount">
+
+                                <div class="w-a-info funds-received">
+                                    <span>Last Payments <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
+                                    <p>৳{{last_payment.amount_of_money|floatformat:"2"|intcomma}}</p>
+                                </div>
+
+                                <div class="w-a-info funds-received">
+                                    <span>Due Amounts <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
+                                    <p><span class="text-danger">৳{{unpaid_reports.total_amount_due|floatformat:"2"|intcomma}}</span></p>
+                                </div>
+                            
+                            </div>
+
+                            <div class="widget-content">
+
+                                <div class="bills-stats">
+                                    <span>Due Transactions</span>
+                                </div>
+
+                                <div class="invoice-list">
+
+                                    <div class="inv-detail">
+                                        {% for latest_transaction in unpaid_reports.unpaid_months %}
+                                        {% if unpaid_reports %}
+                                            <div class="info-detail-1">
+                                                <p>Due month <span class="text-danger">{{latest_transaction}}</p>
+                                                <p><span class="w-currency">৳</span> <span class="bill-amount">{{unpaid_reports.month_fee|floatformat:"2"|intcomma}}</span></p>
+                                            </div>
+                                        {% else %}
+                                            <div class="info-detail-1">
+                                                <p>Total Cash and Bank</p>
+                                                <p><span class="w-currency">৳</span> <span class="bill-amount">{{total_cash_and_bank_payment|floatformat:"2"|intcomma}}</span></p>
+                                            </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    
+
+
+                    
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

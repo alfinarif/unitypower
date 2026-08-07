@@ -1,0 +1,209 @@
+{% load i18n %}
+{% load static %}
+
+
+<div id="content" class="main-content">
+            <div class="layout-px-spacing">
+                <div class="row layout-spacing">
+
+                    <!-- Content -->
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 layout-top-spacing">
+
+                {% if request.user.is_hr or request.user.is_admin or request.user.is_finance %}
+                    {% if admin_form %}
+                        <div class="user-profile layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Request For New Payments</h4>
+                                        </div>                 
+                                    </div>
+                                </div>
+                                <div class="widget-content widget-content-area p-3">                                
+                                    <form method="POST" class="needs-validation" novalidate action="">
+                                        {% csrf_token %}
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">User For Payment</label>
+                                                {{admin_form.user}}
+                                            </div>
+
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom02">Received Cashier</label>
+                                                {{admin_form.cashier}}
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">Payment Type</label>
+                                                {{admin_form.calculation_type}}
+                                            </div>
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom02">Payment Method</label>
+                                                {{admin_form.payment_method}}
+                                            </div>
+                                        </div>
+                                        </br>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">Amount Of Money</label>
+                                                {{admin_form.amount_of_money}}
+                                            </div>
+
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom02">From which number?</label>
+                                                {{admin_form.from_number}}
+                                            </div>
+                                        </div>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">Pin Number Or Referance</label>
+                                                {{admin_form.pin_ref}}
+                                            </div>
+
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom02">Payment Month</label>
+                                                {{admin_form.pay_month}}
+                                            </div>
+                                        </div>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-12 mb-12">
+                                                <label for="validationCustom02">Leave a Message</label>
+                                                {{admin_form.payment_note}}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group mb-4">
+                                            <div class="form-check pl-0">
+                                                <div class="custom-control custom-checkbox checkbox-success">
+                                                    <input type="checkbox" class="custom-control-input" name="is_agree" id="invalidCheck" required>
+                                                    <label class="custom-control-label" for="invalidCheck">Agree to terms and conditions</label>
+                                                    <div class="invalid-feedback">
+                                                        You must agree before submitting.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary mt-3 w-100 text-center" type="submit">Submit Request</button>
+                                    </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="user-profile layout-spacing">
+                        <div class="statbox widget box box-shadow">
+                            <div class="widget-header">
+                                <div class="row">
+                                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                        <h4>Request For New Payments</h4>
+                                    </div>                 
+                                </div>
+                            </div>
+                            <div class="widget-content widget-content-area p-3">                                
+                                <form method="POST" class="needs-validation" novalidate action="">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-6 mb-6">
+                                            <label for="validationCustom01">Calculation Type</label>
+                                            {{form.calculation_type}}
+                                        </div>
+                                        <div class="col-md-6 mb-6">
+                                            <label for="validationCustom02">Payment Method</label>
+                                            {{form.payment_method}}
+                                        </div>
+                                    </div>
+                                    </br>
+                                    <div class="form-row mb-3">
+                                        <div class="col-md-6 mb-6">
+                                            <label for="validationCustom01">Amount Of Money</label>
+                                            {{form.amount_of_money}}
+                                        </div>
+
+                                        <div class="col-md-6 mb-6">
+                                            <label for="">From which number?</label>
+                                            {{form.from_number}}
+                                        </div>
+                                    </div>
+                                    <div class="form-row mb-3">
+                                        <div class="col-md-12 mb-12">
+                                            <label for="validationCustom01">Referance</label>
+                                            {{form.pin_ref}}
+                                        </div>
+
+                                        <div class="col-md-12 mb-12">
+                                            <label for="validationCustom01">Select Cashier</label>
+                                            {{form.cashier}}
+                                        </div>
+
+                                        <div class="col-md-12 mb-12">
+                                            <label for="validationCustom02">Leave a Message</label>
+                                            {{form.payment_note}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group mb-4">
+                                        <div class="form-check pl-0">
+                                            <div class="custom-control custom-checkbox checkbox-success">
+                                                <input type="checkbox" class="custom-control-input" name="is_agree" id="invalidCheck" required>
+                                                <label class="custom-control-label" for="invalidCheck">Agree to terms and conditions</label>
+                                                <div class="invalid-feedback">
+                                                    You must agree before submitting.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary mt-3 w-100 text-center" type="submit">Submit Request</button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                        
+
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 layout-top-spacing">
+
+                        <div class="skills layout-spacing ">
+                            <div class="widget-content widget-content-area br-6">
+                                <table id="invoice-list" class="table table-hover" style="width:100%">
+
+                                    <thead>
+                                        <tr>
+                                            <th class="checkbox-column"> Record no. </th>
+                                            <th>Invoice Id</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        {% for payment in all_payments %}
+                                        <tr>
+                                            <td class="checkbox-column"> 1 </td>
+                                            <td><a href="{% url 'finance:invoice_preview' payment.pk %}"><span class="inv-number">#{{payment.invoice_number}}</span></a></td>
+                                            <td><span class="inv-amount">{{payment.amount_of_money}} Taka</span></td>
+                                            {% if payment.is_accept == True %}
+                                                <td><span class="badge badge-success inv-status">Accepted</span></td>
+                                            {% elif payment.is_accept == False %}
+                                                <td><span class="badge badge-danger inv-status">Panding</span></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>

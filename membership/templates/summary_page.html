@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    Welcome {{request.user.email|upper}} | Unity-Power
+{% endblock title %}
+
+{% block content %}
+
+    <div class="main-container sidebar-closed sbar-open" id="container">
+
+        <div class="overlay"></div>
+        <div class="search-overlay"></div>
+
+        {% if request.user.is_authenticated %}
+            {% include 'components/sidebar.html' %}
+        {% endif %}
+        
+        
+        {% if request.user.is_authenticated %}
+            {% include 'components/summary_content.html' %}
+        {% endif %}
+
+
+    </div>
+
+{% endblock content %}

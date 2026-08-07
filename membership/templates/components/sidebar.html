@@ -1,0 +1,187 @@
+{% load i18n %}
+{% load static %}
+
+
+
+<div class="sidebar-wrapper sidebar-theme">
+            
+    <nav id="sidebar">
+
+        <ul class="navbar-nav theme-brand flex-row  text-center">
+            <li class="nav-item theme-logo">
+                <a href="index.html">
+                    <img src="{% static 'images/unity_power_logo.png' %}" class="navbar-logo" alt="logo">
+                </a>
+            </li>
+            <li class="nav-item theme-text">
+                <a href="{% url 'membership:profile_view' %}" class="nav-link"> Dashboard </a>
+            </li>
+        </ul>
+
+        <ul class="list-unstyled menu-categories" id="accordionExample">
+            
+            <li class="menu active">
+                <a href="#dashboard" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        <span>Dashboard</span>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                </a>
+                <ul class="collapse submenu recent-submenu mini-recent-submenu list-unstyled show" id="dashboard" data-parent="#accordionExample">
+                    <li class="active">
+                        <a href="{% url 'membership:profile_view' %}"> <span class="text-success">Home Page</span> </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="menu menu-heading">
+                <div class="heading"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Features</span></div>
+            </li>
+
+            <li class="menu">
+                <a href="{% url 'membership:summary_view' %}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+
+                        <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#f7f7f7"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="0.5" d="M22 10.5V12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2H13.5" stroke="#e6e6e6" stroke-width="1.5" stroke-linecap="round"></path> <circle cx="19" cy="5" r="3" stroke="#e6e6e6" stroke-width="1.5"></circle> <path d="M7 14L9.29289 11.7071C9.68342 11.3166 10.3166 11.3166 10.7071 11.7071L12.2929 13.2929C12.6834 13.6834 13.3166 13.6834 13.7071 13.2929L17 10M17 10V12.5M17 10H14.5" stroke="#e6e6e6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <span>Account Summary</span>
+                    </div>
+                </a>
+            </li>
+
+
+            {% if request.user.is_hr or request.user.is_admin or request.user.is_finance %}
+                <li class="menu">
+                    <a href="#members" data-toggle="collapse" aria-expanded="true" class="dropdown-toggle">
+                        <div class="">
+                            <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 19H1V18C1 16.1362 2.27477 14.5701 4 14.126M6 10.8293C4.83481 10.4175 4 9.30621 4 7.99999C4 6.69378 4.83481 5.58254 6 5.1707M21 19H23V18C23 16.1362 21.7252 14.5701 20 14.126M18 5.1707C19.1652 5.58254 20 6.69378 20 7.99999C20 9.30621 19.1652 10.4175 18 10.8293M10 14H14C16.2091 14 18 15.7909 18 18V19H6V18C6 15.7909 7.79086 14 10 14ZM15 8C15 9.65685 13.6569 11 12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <span>Members Management</span>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                    </a>
+                    <ul class="collapse submenu recent-submenu mini-recent-submenu list-unstyled show" id="members" data-parent="#accordionExample">
+                        <li class="active">
+                            <a href="{% url 'administration:admin_user_list' %}"> <span class="text-success">Members List</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'administration:admin_profile_list' %}"> <span class="text-success">Profile List</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'administration:admin_nominee_list' %}"> <span class="text-success">Nominee List</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'membership:user_register' %}"> <span class="text-success">Add New Member</span> </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu">
+                    <a href="#finance" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+                            <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 2h8v8H7v12H5V10H2V2zm2 2v4h4V4H4zm8 1h7.09v9H22v8h-8v-8h3.09V7H12V5zm4 11v4h4v-4h-4z" fill="#f5f5f5"></path> </g></svg>
+                            
+                            <span>Finance Department</span>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                    </a>
+                    <ul class="collapse submenu recent-submenu mini-recent-submenu list-unstyled show" id="finance" data-parent="#accordionExample">
+                        <li class="active">
+                            <a href="{% url 'administration:admin_transaction_list' %}"> <span class="text-success">All Transactions</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'administration:admin_unpaid_report_list' %}"> <span class="text-success">Unpaid Payment List</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'finance:payment_request' %}"> <span class="text-success">Add New Payment</span> </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu">
+                    <a href="#contact" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+                            <svg width="256px" height="256px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g fill="none" fill-rule="evenodd" id="页面-1" stroke="none" stroke-width="1"> <g id="导航图标" transform="translate(-251.000000, -207.000000)"> <g id="编组" transform="translate(251.000000, 207.000000)"> <rect fill="#FFFFFF" fill-opacity="0.01" fill-rule="nonzero" height="24" id="矩形" width="24" x="0" y="0"></rect> <path d="M18,16 C20.20915,16 22,14.20915 22,12 C22,9.79085 20.20915,8 18,8" id="路径"></path> <path d="M18,16 L18,16 C20.20915,16 22,14.20915 22,12 C22,9.79085 20.20915,8 18,8" id="路径" stroke="#fcfcfc" stroke-linejoin="round" stroke-width="1.5"></path> <path d="M6,8 C3.79086,8 2,9.79085 2,12 C2,14.20915 3.79086,16 6,16" id="路径"></path> <path d="M6,8 C3.79086,8 2,9.79085 2,12 C2,14.20915 3.79086,16 6,16 L6,16" id="路径" stroke="#fcfcfc" stroke-linejoin="round" stroke-width="1.5"></path> <path d="M6,16 L6,15.75 L6,14.5 L6,12 L6,8 C6,4.68629 8.6863,2 12,2 C15.3137,2 18,4.68629 18,8 L18,16 C18,19.3137 15.3137,22 12,22" id="路径" stroke="#fcfcfc" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path> </g> </g> </g> </g></svg>
+                            <span>Contact and Messages</span>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                    </a>
+                    <ul class="collapse submenu recent-submenu mini-recent-submenu list-unstyled show" id="contact" data-parent="#accordionExample">
+                        <li class="active">
+                            <a href="{% url 'administration:admin_notification_view' %}"> <span class="text-success">Send Notifications</span> </a>
+                        </li>
+                        <li class="active">
+                            <a href="{% url 'administration:admin_message_list' %}"> <span class="text-success">Contact Us List</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'membership:contact_us' %}"> <span class="text-success">Add New Contact Us</span> </a>
+                        </li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="menu">
+                    <a href="{% url 'finance:transaction_list' %}" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+
+                            <svg width="256px" height="256px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.32 11.9999C20.92 11.9999 22 10.9999 21.04 7.71994C20.39 5.50994 18.49 3.60994 16.28 2.95994C13 1.99994 12 3.07994 12 5.67994V8.55994C12 10.9999 13 11.9999 15 11.9999H18.32Z" stroke="#f0f0f0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M19.9999 14.7C19.0699 19.33 14.6299 22.69 9.57993 21.87C5.78993 21.26 2.73993 18.21 2.11993 14.42C1.30993 9.39001 4.64993 4.95001 9.25993 4.01001" stroke="#f0f0f0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <span>Transactions</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="{% url 'finance:payment_request' %}" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+                            <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 2h8v8H7v12H5V10H2V2zm2 2v4h4V4H4zm8 1h7.09v9H22v8h-8v-8h3.09V7H12V5zm4 11v4h4v-4h-4z" fill="#f5f5f5"></path> </g></svg>
+                            
+                            <span>Pyment Request</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="menu">
+                    <a href="{% url 'membership:contact_us' %}" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+                            <svg fill="#dedede" width="256px" height="256px" viewBox="0 0 64.00 64.00" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" stroke="#dedede" stroke-width="0.00064" transform="matrix(-1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="_x32_5_attachment"></g> <g id="_x32_4_office"></g> <g id="_x32_3_pin"></g> <g id="_x32_2_business_card"></g> <g id="_x32_1_form"></g> <g id="_x32_0_headset"> <g> <path d="M63,40.2202c0-5.9472-3.9073-10.9949-9.2881-12.7225v-6.0148c0-10.5703-10.1641-19.8423-21.752-19.8423 s-21.752,9.272-21.752,19.8423v6.0442C4.8693,29.2792,1,34.303,1,40.2202C1,47.5884,6.9941,53.583,14.3623,53.583h3.6738 c1.9336,0,3.5059-1.5728,3.5059-3.5059v-19.71c0-1.8768-1.4827-3.4017-3.3359-3.4926v-5.1373 c0-6.0151,5.8818-12.7432,13.7539-12.7432c7.8701,0,13.75,6.728,13.75,12.7432v5.1458c-1.8132,0.1329-3.252,1.636-3.252,3.4841 v19.71c0,1.9331,1.5723,3.5059,3.5059,3.5059h2.6728l-0.0048,4.5596h-5.6547c-0.3737-1.429-1.6642-2.4917-3.2086-2.4917h-2.0977 c-1.835,0-3.3281,1.4932-3.3281,3.3281s1.4932,3.3281,3.3281,3.3281h2.0977c1.4242,0,2.6327-0.9039,3.1068-2.1646h6.7556 c0.5518,0,0.999-0.4473,1-0.999l0.0059-5.6111C57.5385,53.0181,63,47.2512,63,40.2202z M39.7686,60.3071h-2.0977 c-0.7324,0-1.3281-0.5957-1.3281-1.3281s0.5957-1.3281,1.3281-1.3281h2.0977c0.7324,0,1.3281,0.5957,1.3281,1.3281 S40.501,60.3071,39.7686,60.3071z M13.3623,51.5396C7.5635,51.0313,3,46.1489,3,40.2202s4.5635-10.811,10.3623-11.3193V51.5396z M19.542,30.3672v19.71c0,0.8306-0.6758,1.5059-1.5059,1.5059h-2.6738V28.8574h2.6738 C18.8662,28.8574,19.542,29.5347,19.542,30.3672z M31.96,6.9941c-8.2451,0-15.7539,7.0273-15.7539,14.7432v5.1201h-1.8438 c-0.735,0-1.4512,0.0753-2.1543,0.19v-5.5645c0-9.5049,9.2295-17.8423,19.752-17.8423s19.752,8.3374,19.752,17.8423v5.5522 c-0.6778-0.1064-1.3671-0.1777-2.0742-0.1777H47.71v-5.1201C47.71,14.0215,40.2031,6.9941,31.96,6.9941z M44.458,50.0771v-19.71 c0-0.8325,0.6758-1.5098,1.5059-1.5098h2.6738V51.583h-2.6738C45.1338,51.583,44.458,50.9077,44.458,50.0771z M50.6377,51.5396 V28.9009C56.4365,29.4092,61,34.2915,61,40.2202S56.4365,51.0313,50.6377,51.5396z"></path> </g> </g> <g id="_x31_9_video_call"></g> <g id="_x31_8_letter_box"></g> <g id="_x31_7_papperplane"></g> <g id="_x31_6_laptop"></g> <g id="_x31_5_connection"></g> <g id="_x31_4_phonebook"></g> <g id="_x31_3_classic_telephone"></g> <g id="_x31_2_sending_mail"></g> <g id="_x31_1_man_talking"></g> <g id="_x31_0_date"></g> <g id="_x30_9_review"></g> <g id="_x30_8_email"></g> <g id="_x30_7_information"></g> <g id="_x30_6_phone_talking"></g> <g id="_x30_5_women_talking"></g> <g id="_x30_4_calling"></g> <g id="_x30_3_women"></g> <g id="_x30_2_writing"></g> <g id="_x30_1_chatting"></g> </g></svg>
+                            <span>Contact Us</span>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
+
+
+            
+
+            <li class="menu">
+                <a href="{% url 'membership:user_logout' %}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21 12L13 12" stroke="#dedede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M18 15L20.913 12.087V12.087C20.961 12.039 20.961 11.961 20.913 11.913V11.913L18 9" stroke="#dedede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16 5V4.5V4.5C16 3.67157 15.3284 3 14.5 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H14.5C15.3284 21 16 20.3284 16 19.5V19.5V19" stroke="#dedede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <span>Logout</span>
+                    </div>
+                </a>
+            </li>
+
+            
+
+        </ul>
+        
+    </nav>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

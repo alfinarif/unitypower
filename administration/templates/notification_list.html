@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<!--  BEGIN MAIN CONTAINER  -->
+<div class="main-container sidebar-closed sbar-open" id="container">
+
+    <div class="overlay"></div>
+    <div class="cs-overlay"></div>
+    <div class="search-overlay"></div>
+
+    <!--  BEGIN SIDEBAR  -->
+    {% include 'components/sidebar.html' %}
+    <!--  END SIDEBAR  -->
+
+    <!--  BEGIN CONTENT AREA  -->
+    <div id="content" class="main-content">
+        <div class="layout-px-spacing">
+            <div class="row layout-top-spacing">
+                <div class="col-xl-12 col-lg-12 col-md-12">
+
+                    <div class="row">
+
+                        <div class="col-xl-12  col-md-12">
+
+                            <div class="mail-box-container">
+                                <div class="mail-overlay"></div>
+
+                                <div class="tab-title">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-12 text-center mail-btn-container">
+                                            <a id="btn-compose-mail" class="btn btn-block" href="javascript:void(0);">
+                                                <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">  .st0{fill:#f2f2f2;}  </style> <g> <path class="st0" d="M147.57,320.188c-0.078-0.797-0.328-1.531-0.328-2.328v-6.828c0-3.25,0.531-6.453,1.594-9.5 c0,0,17.016-22.781,25.063-49.547c-8.813-18.594-16.813-41.734-16.813-64.672c0-5.328,0.391-10.484,0.938-15.563 c-11.484-12.031-27-18.844-44.141-18.844c-35.391,0-64.109,28.875-64.109,73.75c0,35.906,29.219,74.875,29.219,74.875 c1.031,3.047,1.563,6.25,1.563,9.5v6.828c0,8.516-4.969,16.266-12.719,19.813l-46.391,18.953 C10.664,361.594,2.992,371.5,0.852,383.156l-0.797,10.203c-0.406,5.313,1.406,10.547,5.031,14.438 c3.609,3.922,8.688,6.125,14.016,6.125H94.93l3.109-39.953l0.203-1.078c3.797-20.953,17.641-38.766,36.984-47.672L147.57,320.188z"></path> <path class="st0" d="M511.148,383.156c-2.125-11.656-9.797-21.563-20.578-26.531l-46.422-18.953 c-7.75-3.547-12.688-11.297-12.688-19.813v-6.828c0-3.25,0.516-6.453,1.578-9.5c0,0,29.203-38.969,29.203-74.875 c0-44.875-28.703-73.75-64.156-73.75c-17.109,0-32.625,6.813-44.141,18.875c0.563,5.063,0.953,10.203,0.953,15.531 c0,22.922-7.984,46.063-16.781,64.656c8.031,26.766,25.078,49.563,25.078,49.563c1.031,3.047,1.578,6.25,1.578,9.5v6.828 c0,0.797-0.266,1.531-0.344,2.328l11.5,4.688c20.156,9.219,34,27.031,37.844,47.984l0.188,1.094l3.094,39.969h75.859 c5.328,0,10.406-2.203,14-6.125c3.625-3.891,5.438-9.125,5.031-14.438L511.148,383.156z"></path> <path class="st0" d="M367.867,344.609l-56.156-22.953c-9.375-4.313-15.359-13.688-15.359-23.969v-8.281 c0-3.906,0.625-7.797,1.922-11.5c0,0,35.313-47.125,35.313-90.594c0-54.313-34.734-89.234-77.594-89.234 c-42.844,0-77.594,34.922-77.594,89.234c0,43.469,35.344,90.594,35.344,90.594c1.266,3.703,1.922,7.594,1.922,11.5v8.281 c0,10.281-6.031,19.656-15.391,23.969l-56.156,22.953c-13.047,5.984-22.344,17.984-24.906,32.109l-2.891,37.203h139.672h139.672 l-2.859-37.203C390.211,362.594,380.914,350.594,367.867,344.609z"></path> </g> </g>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        </hr>
+                                        <div class="col-md-12 col-sm-12 col-12 mail-categories-container">
+
+                                            <div class="mail-sidebar-scroll">
+
+                                                <ul class="nav nav-pills d-block" id="pills-tab" role="tablist">
+                                                    <li class="nav-item">
+                                                        <div class="col-md-12 col-sm-12 col-12 text-center mail-btn-container">
+                                                            <a id="btn-compose-mail" class="btn btn-block" data-toggle="modal" data-target="#exampleModal">
+                                                                <svg height="163px" width="163px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#ffffff;} </style> <g> <path class="st0" d="M458.159,404.216c-18.93-33.65-49.934-71.764-100.409-93.431c-28.868,20.196-63.938,32.087-101.745,32.087 c-37.828,0-72.898-11.89-101.767-32.087c-50.474,21.667-81.479,59.782-100.398,93.431C28.731,448.848,48.417,512,91.842,512 c43.426,0,164.164,0,164.164,0s120.726,0,164.153,0C463.583,512,483.269,448.848,458.159,404.216z"></path> <path class="st0" d="M256.005,300.641c74.144,0,134.231-60.108,134.231-134.242v-32.158C390.236,60.108,330.149,0,256.005,0 c-74.155,0-134.252,60.108-134.252,134.242V166.4C121.753,240.533,181.851,300.641,256.005,300.641z"></path> </g> </g>
+                                                                </svg>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="mailbox-inbox" class="accordion mailbox-inbox">
+
+                                    <div class="search">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu mail-menu d-lg-none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                                        <input type="text" class="form-control input-search" placeholder="Search Here...">
+                                    </div>
+
+                            
+                                    <div class="message-box">
+                                        <div class="message-box-scroll" id="ct">
+                                            {% for notification in all_whatsapp_notifications %}
+                                                <div class="mail-item draft">
+                                                    <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingOne">
+                                                        <div class="mb-0">
+                                                            <div class="mail-item-heading personal collapsed"  data-toggle="collapse" role="navigation" data-target="#mailCollapseOne" aria-expanded="false">
+                                                                <div class="mail-item-inner">
+
+                                                                    <div class="d-flex">
+                                                                        <div class="n-chk text-center">
+                                                                            <label class="new-control new-checkbox checkbox-primary">
+                                                                                <input type="checkbox" class="new-control-input inbox-chkbox">
+                                                                                <span class="new-control-indicator"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="f-body" data-mailfrom="info@mail.com" data-mailto="kf@mail.com" data-mailcc="">
+                                                                            <div class="meta-mail-time">
+                                                                                <p class="user-email" data-mailTo="{{notification.company}}">{{notification.company}}</p>
+                                                                            </div>
+                                                                            <div class="meta-title-tag">
+                                                                                <p class="mail-content-excerpt" data-maildescription='{"ops":[{"insert":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pulvinar feugiat consequat. Duis lacus nibh, sagittis id varius vel, aliquet non augue. Vivamus sem ante, ultrices at ex a, rhoncus ullamcorper tellus. Nunc iaculis eu ligula ac consequat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum mattis urna neque, eget posuere lorem tempus non. Suspendisse ac turpis dictum, convallis est ut, posuere sem. Etiam imperdiet aliquam risus, eu commodo urna vestibulum at. Suspendisse malesuada lorem eu sodales aliquam.\n"}]}'>
+                                                                                    {{notification.message}}
+                                                                                </p>
+                                                                                <div class="tags">
+                                                                                    <span class="g-dot-primary"></span>
+                                                                                    <span class="g-dot-warning"></span>
+                                                                                    <span class="g-dot-success"></span>
+                                                                                    <span class="g-dot-danger"></span>
+                                                                                </div>
+                                                                                <p class="meta-time align-self-center">{{notification.created_at}}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+
+                            <!-- Modal for sending whatsapp message to perticular user -->
+                            <div class="modal fade" id="composeMailModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            <div class="compose-box">
+                                                <div class="compose-content mt-4">
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+
+                                                        {{to_all_members_form.as_p}}
+
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-warning" data-dismiss="modal"> <i class="flaticon-delete-1"></i> Discard</button>
+                                                            <button name="btn-all_member" type="submit" class="btn btn-success"> Send To All </button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            <div class="compose-box">
+                                                <div class="compose-content mt-4">
+                                                    <form method="POST">
+                                                        {% csrf_token %}
+
+                                                        
+                                                        {{to_particular_member_form.as_p}}
+
+                                    
+
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-warning" data-dismiss="modal"> <i class="flaticon-delete-1"></i> Discard</button>
+                                                            <button name="btn-per_member" type="submit" id="btn-send" class="btn btn-success"> Send </button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            <!-- Modal for sending whatsapp message to all users -->
+                            <div class="modal fade" id="allUsersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">CleveRange</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="modal-text">Mauris mi tellus, pharetra vel mattis sed, tempus ultrices eros. Phasellus egestas sit amet velit sed luctus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse potenti. Vivamus ultrices sed urna ac pulvinar. Ut sit amet ullamcorper mi. </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>
+                                            <button type="button" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  END CONTENT AREA  -->
+</div>
+<!-- END MAIN CONTAINER -->
+   
+{% endblock content %}
+
+
+
+

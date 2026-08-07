@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+
+{% block content %}
+
+    <div class="main-container sidebar-closed sbar-open" id="container">
+
+        <div class="overlay"></div>
+        <div class="cs-overlay"></div>
+        <div class="search-overlay"></div>
+
+        <!--  BEGIN SIDEBAR  -->
+            {% include 'components/sidebar.html' %} 
+        <!--  END SIDEBAR  -->
+
+        <!--  BEGIN CONTENT AREA  -->
+        <div id="content" class="main-content">
+            <div class="layout-px-spacing">
+
+                <div class="account-settings-container layout-top-spacing">
+
+                    <div class="account-content">
+                        <div class="scrollspy-example" data-spy="scroll" data-target="#account-settings-scroll" data-offset="-100">
+                            <div class="row">
+
+
+                                <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
+                                    <form method="POST" enctype="multipart/form-data" id="general-info" class="section general-info">
+                                        {% csrf_token %}
+                                        <div class="info">
+                                            <h6 class="">General Information</h6>
+                                            <div class="row">
+                                                <div class="col-lg-11 mx-auto">
+                                                    <div class="row">
+                                                        <div class="col-xl-2 col-lg-12 col-md-4">
+                                                            <div class="upload mt-4 pr-md-4">
+{#                                                                <input type="file" id="input-file-max-fs" class="dropify" data-default-file="{{ request.user.profile.avatar.url }}" data-max-file-size="2M" />#}
+                                                                {{ form.avatar }}
+                                                                <p class="mt-2"><i class="flaticon-cloud-upload mr-1"></i> Upload Picture</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-10 col-lg-12 col-md-8 mt-md-0 mt-4">
+                                                            <div class="form">
+
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.full_name.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.full_name }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.father_name.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.father_name }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.mother_name.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.mother_name }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.national_id.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.national_id }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.phone_number.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.phone_number }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.profession.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.profession }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.district.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.district }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.upazila.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.upazila }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.post_office.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.post_office }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.village.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.village }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.current_address.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.current_address }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.religion.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.religion }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.gender.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.gender }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.marital_status.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.marital_status }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.blood_group.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.blood_group }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="profession">{{ form.birthday.label }}</label>
+    {#                                                                    <input type="text" class="form-control mb-4" id="profession" placeholder="Designer" value="Web Developer">#}
+                                                                        {{ form.birthday }}
+                                                                    </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="account-settings-footer">
+                                            <div class="as-footer-container">
+
+                                                <button type="submit" id="multiple-messages" class="profile-updating-btn btn btn-success">Save Changes</button>
+
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <!--  END CONTENT AREA  -->
+
+    </div>
+
+{% endblock content %}

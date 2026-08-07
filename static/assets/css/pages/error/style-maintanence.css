@@ -1,0 +1,104 @@
+/*
+	===============================
+			@Import	Function
+	===============================
+*/
+/*
+	===============================
+			@Import	Mixins
+	===============================
+*/
+
+/*.unity-logo-bg {*/
+/*  background-image: url('../../../../images/unity_power_logo.png') !important;*/
+/*  background-repeat: no-repeat !important;*/
+/*  background-position: center !important;*/
+/*  background-attachment: fixed !important;*/
+/*  transform: scale(1.05) !important;*/
+/*  opacity: 0.1 !important;*/
+/*  z-index: -1 !important;*/
+/*}*/
+
+.unity-logo-bg {
+  position: relative;          /* Establishes positioning context for the pseudo-element */
+  width: 100%;
+  min-height: 300px;
+  padding: 40px;
+  isolation: isolate;          /* Optional: Ensures content stays cleanly on top of the background */
+}
+
+.unity-logo-bg::before {
+  content: "";                 /* Required to make the pseudo-element render */
+  position: absolute;          /* Pulls it out of document flow to stack under content */
+  inset: 0;                    /* Shorthand for top:0, right:0, bottom:0, left:0 */
+  z-index: -1;                 /* Pushes the background layer behind the text content */
+
+  /* Apply your background styles here */
+  background-image: url('../../../../images/unity_power_logo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* Control your background image opacity here */
+  opacity: 0.1;                /* Adjust from 0.0 (invisible) to 1.0 (fully visible) */
+}
+
+.maintanence-hero-img img {
+  width: 80px;
+  height: 80px;
+  isolation: isolate;
+}
+
+body.maintanence {
+  color: #888ea8;
+  height: 100%;
+  font-size: 0.875rem;
+  background:   #060818;
+}
+  body.maintanence > .maintanence-content {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    isolation: isolate;
+  }
+
+.maintanence .error-title {
+  margin-top: 65px;
+  font-weight: 600;
+  font-size: 54px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-shadow: 0px 5px 4px rgba(31, 45, 61, 0.101961);
+  isolation: isolate;
+}
+
+.maintanence .error-text {
+  margin-top: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 0;
+  color: #bfc9d4;
+  isolation: isolate;
+}
+
+.maintanence a.btn {
+  width: 134px;
+  padding: 6px;
+  font-size: 17px;
+  background-image: linear-gradient(229deg, #517281 0%, #3b5d70 27%, #4d5c82 72%, #5d647f 100%);
+  border: none;
+  letter-spacing: 2px;
+  box-shadow: none;
+  isolation: isolate;
+}
+
+.maintanence .text {
+  color: #e0e6ed;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 21px;
+  isolation: isolate;
+}
