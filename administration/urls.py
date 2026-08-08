@@ -16,7 +16,7 @@ urlpatterns = [
     path('notification-list/', views.admin_notification_view, name='admin_notification_view'),
 
     # whatsapp notification endpoint
-    path('send-notification/', views.send_whatsapp_notification, name='send_whatsapp_notification'),
+    path('send-notification/<int:id>/', views.send_whatsapp_notification_to_unpaid_user, name='send_whatsapp_notification_to_unpaid_user'),
 
     # export/download data
     path('data/trans/export/<str:format>/', views.export_all_transactions_data, name='export_all_transactions_data'),

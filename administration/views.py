@@ -30,7 +30,7 @@ from django.http import JsonResponse
 from .helpers.send_messages_whatsapp import send_whatsapp_messages
 from .helpers.export_invoices import export_invoice_data
 from .helpers.export_excel_csv_format import export_excel_csv
-from .helpers.unpaid_reports import get_unpaid_report
+from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_user
 
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
@@ -259,7 +259,7 @@ def admin_notification_view(request):
                     
                     result = send_whatsapp_messages(
                         recipient_phone = phone_number,
-                        text_body = f"{company} \n\n{message} \n\nBest Regards, \nFinance Department"
+                        text_body = f"*{company}* \n\n{message} \n\n*Best Regards,* \n*Finance Department*"
                     )
 
                 
@@ -281,7 +281,7 @@ def admin_notification_view(request):
                 phone_number = user_obj.profile.phone_number
                 result = send_whatsapp_messages(
                     recipient_phone = phone_number,
-                    text_body = f"{company} \n\n {message} \n\n Best Regards, \n Finance Department"
+                    text_body = f"*{company}* \n\n {message} \n\n*Best Regards,* \n*Finance Department*"
                 )
 
                 if result["success"]:
@@ -359,17 +359,31 @@ def export_all_invoice_data(request, pk):
 
 
 # Send Whatsapp Message To All Users
-def send_whatsapp_notification(request):
-    # Example recipient: Include country code, remove leading zeros/plus signs
-    phone_number = "966506897109"
-    
+def send_whatsapp_notification_to_unpaid_user(request, id):
+    user_obj = User.objects.get(id=id)
+    unpaid_user_report = get_unpaid_report_per_user(id)[0]
+
+    # recipient: Include country code, remove leading zeros/plus signs
+    unpaid_sms_text = "*অপরিশোধিত চাদা রিমাইন্ডার* \nঅনুগ্রহ করে আপনার নিম্ন উল্যেখ্য মাসের মাসিক চাদা সময় মত পরিসদ করুন।"
+    unpaid_total_months = unpaid_user_report['total_unpaid_months']
+    unpaid_months = unpaid_user_report['unpaid_months']
+    unpaid_amounts = unpaid_user_report['total_amount_due']
+    unpaid_user_name = unpaid_user_report['user'].profile.full_name
+
+    message_body = f"*Hello Mr. {unpaid_user_name}* \n\n{unpaid_sms_text} \n\n*মোট অপরিশোধিত মাস:* {unpaid_total_months}\n\n*অপরিশোধিত মাসের বিবরণ:* {unpaid_months}\n\n\n*মোট অপরিশোধিত বকেয়া:* ৳{unpaid_amounts}\n\n\n\n*Best Regards*, \n*Finance Department*"
+
+    phone_number = user_obj.profile.phone_number
     result = send_whatsapp_messages(
         recipient_phone = phone_number,
-        text_body = f"Congratulations Mr. Faysal \n\nঅনুগ্রহ করে আপনার জুলাই মাসের মাসিক চাদা পরিসদ করুন। \n\n\n\nThank You For Your Cooperation"
+        text_body = message_body
     )
     
     if result["success"]:
-        return JsonResponse({"status": "Message sent successfully!", "details": result["data"]})
+        # creating object of sended messages to whatsapp
+        whatsapp_notification_obj = WhatsappNotificationModel.objects.create(company="অপরিশোধিত চাদা রিমাইন্ডার ↓", message=message_body, is_sended=True)
+        # set all users to whatsapp notification object
+        whatsapp_notification_obj.users.set([user_obj])
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return JsonResponse({"status": "Failed to send message", "details": result["error"]}, status=400)
 

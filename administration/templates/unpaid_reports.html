@@ -68,7 +68,7 @@
 
                                             <td>
                                                 <span class="d-flex">
-                                                    <a href="{% url 'administration:send_whatsapp_notification' %}" class="btn btn-info btn-sm w-100">Message</a>
+                                                    <a href="{% url 'administration:send_whatsapp_notification_to_unpaid_user' transaction.user.id %}" class="btn btn-info btn-sm w-100">Message</a>
                                                 </span>
                                             </td>
 
