@@ -135,7 +135,7 @@ class Nominee(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     phone_number = models.CharField(max_length=16, blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(blank=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True)
     history = HistoricalRecords()
 
     def __str__(self):

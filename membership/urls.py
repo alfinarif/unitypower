@@ -13,4 +13,7 @@ urlpatterns = [
     path('membership/to-update-profile/', views.notice_to_update_profile, name='notice_to_update_profile'),
     path('membership/profile/update/<int:id>/', views.update_profile, name='update_profile'),
     path('membership/profile/sendMessage/', views.contact_us, name='contact_us'),
+
+    # privacy page
+    path('systems/privacy/terms-and-condition/', views.terms_and_condition_page, name='terms_and_condition'),
 ]

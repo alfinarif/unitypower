@@ -77,25 +77,32 @@ def payment_request(request):
 # APPROVE OR REJECT PAYMENT REQUEST
 def approve_or_reject_payment_request(request, id, status):
     if request.user.is_authenticated:
-        if status == 'Approved':
-            PaymentRequestModel.objects.filter(id=id).update(
-                status=status,
-                is_accept = True,
-                approved_by = request.user,
-                approved_at = timezone.now()
-                )
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        elif status == 'Rejected':
-            PaymentRequestModel.objects.filter(id=id).update(
-                status=status,
-                is_accept = False,
-                approved_by = request.user,
-                approved_at = timezone.now()
-                )
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        current_user_payment_request = get_object_or_404(PaymentRequestModel, pk=id)
+        if current_user_payment_request.user == request.user:
+            messages.error(request, "You cannot approve or rejects your own payment request.")
+            return redirect('administration:admin_transaction_list')
         else:
-            messages.warning(request, 'There is something went wrong, try again!')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if status == 'Approved':
+                PaymentRequestModel.objects.filter(id=id).update(
+                    status=status,
+                    is_accept = True,
+                    approved_by = request.user,
+                    approved_at = timezone.now()
+                    )
+                messages.success(request, "Payment request has been approved.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            elif status == 'Rejected':
+                PaymentRequestModel.objects.filter(id=id).update(
+                    status=status,
+                    is_accept = False,
+                    approved_by = request.user,
+                    approved_at = timezone.now()
+                    )
+                messages.warning(request, "Your payment request has been rejected.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.warning(request, 'There is something went wrong, try again!')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return redirect('membership:user_login')
 

@@ -411,7 +411,9 @@
     border-bottom-width: 0;
     border-radius: 0;
 }
-.widget-activity-five .timeline-line .item-timeline:last-child .t-dot:after { display: none; }
+.widget-activity-five .timeline-line .item-timeline:last-child .t-dot:after {
+     display: none; 
+    }
 
 /*
     ==================
@@ -420,6 +422,7 @@
 */
 
 .widget-one_hybrid {
+    height: 130px;
     background: #fff;
     background: #0e1726;
 }

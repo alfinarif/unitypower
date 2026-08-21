@@ -1,6 +1,10 @@
 {% load i18n %}
 {% load static %}
 
+<!--  Showing toast messages  -->
+{% include "components/toast_message.html" %}
+<!--  Showing toast messages end -->
+
 
 <div id="content" class="main-content">
             <div class="layout-px-spacing">
@@ -47,24 +51,30 @@
                                         </br>
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6">
-                                                <label for="validationCustom01">Amount Of Money</label>
+                                                <label for="validationCustom01">Fee Amount</label>
                                                 {{admin_form.amount_of_money}}
                                             </div>
 
                                             <div class="col-md-6 mb-6">
-                                                <label for="validationCustom02">From which number?</label>
+                                                <label for="validationCustom02">Bkash/Rocket/Bank-AC</label>
                                                 {{admin_form.from_number}}
                                             </div>
                                         </div>
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6">
-                                                <label for="validationCustom01">Pin Number Or Referance</label>
-                                                {{admin_form.pin_ref}}
+                                                <label for="validationCustom01">Payment Year</label>
+                                                {{admin_form.pay_year}}
                                             </div>
 
                                             <div class="col-md-6 mb-6">
                                                 <label for="validationCustom02">Payment Month</label>
                                                 {{admin_form.pay_month}}
+                                            </div>
+                                        </div>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-12 mb-12">
+                                                <label for="validationCustom01">Pin Number Or Referance</label>
+                                                {{admin_form.pin_ref}}
                                             </div>
                                         </div>
                                         <div class="form-row mb-3">
@@ -118,13 +128,24 @@
                                     </br>
                                     <div class="form-row mb-3">
                                         <div class="col-md-6 mb-6">
-                                            <label for="validationCustom01">Amount Of Money</label>
+                                            <label for="validationCustom01">Fee Amount</label>
                                             {{form.amount_of_money}}
                                         </div>
 
                                         <div class="col-md-6 mb-6">
-                                            <label for="">From which number?</label>
+                                            <label for="">Bkash/Rocket/Bank-AC</label>
                                             {{form.from_number}}
+                                        </div>
+                                    </div>
+                                    <div class="form-row mb-3">
+                                        <div class="col-md-6 mb-6">
+                                            <label for="validationCustom01">Payment Year</label>
+                                            {{form.pay_year}}
+                                        </div>
+
+                                        <div class="col-md-6 mb-6">
+                                            <label for="">Payment Month</label>
+                                            {{form.pay_month}}
                                         </div>
                                     </div>
                                     <div class="form-row mb-3">

@@ -14,13 +14,17 @@
         {% include 'components/sidebar.html' %}
         <!--  END SIDEBAR  -->
 
+        <!--  Showing toast messages  -->
+        {% include "components/toast_message.html" %}
+        <!--  Showing toast messages end -->
+
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
                 <div class="row" id="cancel-row">
-                
                     <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
                         <div class="widget-content widget-content-area br-6">
+                            <a href="{% url 'administration:testing_pdf_design' %}" class="btn btn-success">Test PDF</a>
                             <table id="invoice-list" class="table table-hover" style="width:100%">
 
                                 <thead>

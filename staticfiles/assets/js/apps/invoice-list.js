@@ -16,13 +16,7 @@ var invoiceList = $('#invoice-list').DataTable({
         },
     }],
     buttons: [
-        {
-            text: 'Add New',
-            className: 'btn btn-primary btn-sm',
-            action: function(e, dt, node, config ) {
-                window.location = 'apps_invoice-add.html';
-            }
-        }
+        
     ],
     "order": [[ 1, "asc" ]],
     "oLanguage": {
@@ -37,7 +31,7 @@ var invoiceList = $('#invoice-list').DataTable({
     "pageLength": 7
 });
 
-$("div.toolbar").html('<button class="dt-button dt-delete btn btn-danger btn-sm" tabindex="0" aria-controls="invoice-list"><span>Delete</span></button>');
+$("").html('<button class="dt-button dt-delete btn btn-danger btn-sm" tabindex="0" aria-controls="invoice-list"><span>Delete</span></button>');
 
 multiCheck(invoiceList);
 

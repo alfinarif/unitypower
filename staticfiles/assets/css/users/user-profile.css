@@ -9,6 +9,7 @@
 	===============================
 */
 .widget-content-area {
+  padding: 20px !important;
   -webkit-box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2); }
@@ -21,6 +22,10 @@
     User Profile
 ===================
 */
+
+.contact-us-padding{
+  padding: 20px !important;
+}
 
 .profile-avatar-custom {
   width: 120px !important;
@@ -291,7 +296,7 @@
 @media (max-width: 575px) {
   .education .widget-content-area .timeline-alter .item-timeline {
     display: inline-flex !important;
-    text-align: center;
+    text-align: center !important;
     }
     .education .widget-content-area .timeline-alter .item-timeline .t-meta-date p, .education .widget-content-area .timeline-alter .item-timeline .t-usr-txt p {
       margin: 0 auto; } }

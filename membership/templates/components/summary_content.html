@@ -2,6 +2,11 @@
 {% load humanize %}
 {% load static %}
 
+
+<!--  Showing toast messages  -->
+{% include "components/toast_message.html" %}
+<!--  Showing toast messages end -->
+
 <div id="content" class="main-content">
             <div class="layout-px-spacing">
 
@@ -42,7 +47,7 @@
 
                                 <div class="w-a-info funds-received">
                                     <span>Due Amounts <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
-                                    <p><span class="text-danger">৳{{unpaid_reports.total_amount_due|floatformat:"2"|intcomma}}</span></p>
+                                    <p><span class="text-danger">৳{{unpaid_reports.total_unpaid_due|floatformat:"2"|intcomma}}</span></p>
                                 </div>
                             
                             </div>
@@ -56,11 +61,11 @@
                                 <div class="invoice-list">
 
                                     <div class="inv-detail">
-                                        {% for latest_transaction in unpaid_reports.unpaid_months %}
+                                        {% for user_report in unpaid_reports.unpaid_months %}
                                         {% if unpaid_reports %}
                                             <div class="info-detail-1">
-                                                <p>Due month <span class="text-danger">{{latest_transaction}}</p>
-                                                <p><span class="w-currency">৳</span> <span class="bill-amount">{{unpaid_reports.month_fee|floatformat:"2"|intcomma}}</span></p>
+                                                <p>Due month <span class="text-danger">{{user_report.month_name}}</p>
+                                                <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.amount|floatformat:"2"|intcomma}}</span></p>
                                             </div>
                                         {% else %}
                                             <div class="info-detail-1">

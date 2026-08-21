@@ -15,7 +15,13 @@ from django.db.models import Sum
 
 from django.contrib.auth import authenticate, login, logout
 
-from finance.unpaid_report_per_user import get_unpaid_report_per_user
+from administration.helpers.paid_unpaid_billings import calculate_per_user_billing
+
+
+# Email backend package for sending email
+from administration.helpers.emailSenders import send_email_notification
+
+
 
 # Users Registration -> CREATE AN ACCOUNT
 def user_registration(request):
@@ -59,6 +65,7 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
+            messages.success(request, f"Welcome {email} to your profile.")
             return redirect('membership:profile_view')
         else:
             messages.warning(request, 'Username or Password invalid..!')
@@ -70,6 +77,7 @@ def user_login(request):
 # USER LOGOUT -> WHENE USER IS LOGGED IN THEY CAN LOGOUT
 def user_logout(request):
     logout(request)
+    messages.info(request, 'Login to access your profile.')
     return redirect('membership:user_login')
 
 
@@ -77,6 +85,7 @@ def user_logout(request):
 def profile_view(request):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            messages.success(request, 'You have full access at Admin Panel.')
             return redirect('administration:admin_index')
         else:
             context = {
@@ -129,7 +138,7 @@ def summary_view(request):
 
 
     # ==================== get unpaid users, amounts reports ==================================
-        unpaid_reports = get_unpaid_report_per_user(request)
+        unpaid_reports = calculate_per_user_billing(request.user)
 
         context = {
             'total_payment': total_payment,
@@ -138,6 +147,7 @@ def summary_view(request):
             'unpaid_reports': unpaid_reports
             
         }
+        messages.info(request, 'Your Finance A/C Summary.')
         return render(request, 'summary_page.html', context)
     else:
         return redirect('membership:user_login')
@@ -159,8 +169,6 @@ def notice_to_update_profile(request):
         return redirect('membership:user_login')
 
 
-
-
 # PROFILE UPDATE VIEW FOR ALL TYPE OF USERS
 def update_profile(request, id):
     if request.user.is_authenticated:
@@ -173,8 +181,10 @@ def update_profile(request, id):
                 current_form.avatar = request.FILES.get('avatar')
                 current_form.updated_date = datetime.now()
                 current_form.save()
+                messages.success(request, 'Your profile info updated successfully')
                 return redirect('membership:profile_view')
             else:
+                messages.warning(request, 'Something is wrong! try again.')
                 form = ProfileInfoForm(instance=get_profile)
                 context = {
                     'form': form
@@ -203,7 +213,8 @@ def contact_us(request):
                 current_object = form.save(commit=False)
                 current_object.user = request.user
                 current_object.save()
-                messages.success(request, 'Your message sended successfully!')
+
+                messages.success(request, 'Your message sended to admin successfully!')
                 return redirect('membership:contact_us')
             else:
                 context = {
@@ -218,6 +229,19 @@ def contact_us(request):
         return render(request, 'contact_us.html', context)
     else:
         return redirect('membership:user_login')
+
+
+# Throw error 404 not found 
+def custom_page_404_not_found(request, exception):
+    return render(request, '404.html', {'message': 'The page you requested was not found'}, status=404)
+
+
+# Privacy or terms and condition page views
+def terms_and_condition_page(request):
+    return render(request, 'privacy.html')
+
+
+
 
 
 

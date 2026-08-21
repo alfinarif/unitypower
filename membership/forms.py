@@ -67,8 +67,16 @@ class ProfileInfoForm(ModelForm):
 class NomineeInfoForm(ModelForm):
     class Meta:
         model = Nominee
-        fields = '__all__'
+        fields = ['full_name','relation', 'address', 'phone_number']
         exclude = ('profile',)
+        
+        widgets = {
+            'full_name': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'relation': forms.TextInput(attrs={'placeholder': 'Relationship', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control mb-4', 'id': 'profession'}),
+
+        }
 
 
 class ContactUsForm(ModelForm):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from finance.models import PaymentRequestModel, PropertiesBuySale
+from finance.models import FeeSchedule, PaymentRequestModel, PropertiesBuySale
 
 from import_export import resources
 from import_export.admin import ExportActionMixin
@@ -42,7 +42,8 @@ class PaymentRequestAdmin(ExportActionMixin, admin.ModelAdmin):
     resource_class = PaymentRequestModelResource
 
 
-admin.site.register(PaymentRequestModel, PaymentRequestAdmin)
+admin.site.register(FeeSchedule)
 admin.site.register(PropertiesBuySale)
+admin.site.register(PaymentRequestModel, PaymentRequestAdmin)
 
 

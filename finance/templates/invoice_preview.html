@@ -15,19 +15,23 @@
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/plugins.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'plugins/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'plugins/sweetalerts/sweetalert.css' %}" rel="stylesheet" type="text/css" />
     <!-- END GLOBAL MANDATORY STYLES -->
 
     <!--  BEGIN CUSTOM STYLE FILE  -->
     <link href="{% static 'assets/css/apps/invoice-preview.css' %}" rel="stylesheet" type="text/css" />
     <!--  END CUSTOM STYLE FILE  -->
+
     
 </head>
 <body class="alt-menu">
-    
-
     <!--  BEGIN MAIN CONTAINER  -->
     <div class="main-container sidebar-closed sbar-open" id="container">
 
+        <!--  Showing toast messages  -->
+        {% include "components/toast_message.html" %}
+        <!--  Showing toast messages end -->
+        
         <div class="overlay"></div>
         <div class="cs-overlay"></div>
         <div class="search-overlay"></div>
@@ -46,7 +50,6 @@
 
                                     <div class="invoice-container">
                                         <div class="invoice-inbox">
-                                            
                                             <div id="ct" class="">
                                                 
                                                 <div class="invoice-00001">
@@ -206,7 +209,10 @@
 
                                 </div>
 
+                                
+
                                 <div class="col-xl-3">
+
 
                                     <div class="invoice-actions-btn">
 
@@ -261,7 +267,9 @@
     </div>
     <!-- END MAIN CONTAINER -->
 
+
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+
     <script src="{% static 'assets/js/libs/jquery-3.1.1.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
@@ -276,5 +284,6 @@
     <script src="{% static 'assets/js/custom.js' %}"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
     <script src="{% static 'assets/js/apps/invoice-preview.js' %}"></script>
+
 </body>
 </html>

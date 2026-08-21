@@ -6,7 +6,7 @@ from django.contrib.admin.models import LogEntry
 from django.db.models import Sum, Q
 
 from membership.models import User, Profile, Nominee, ContactUs
-from membership.forms import UserUpdateForm
+from membership.forms import UserUpdateForm, NomineeInfoForm
 from finance.models import PaymentRequestModel
 from administration.models import WhatsappNotificationModel
 from administration.forms import WhatsappNotificationForm, WhatsappNotificationToPerUserForm
@@ -28,9 +28,11 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 
 from django.http import JsonResponse
 from .helpers.send_messages_whatsapp import send_whatsapp_messages
-from .helpers.export_invoices import export_invoice_data
+from .helpers.export_invoices import export_invoice_data, export_unpaid_data_as_pdf
 from .helpers.export_excel_csv_format import export_excel_csv
 from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_user
+from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
+from .helpers.export_all_as_pdf import download_member_list_pdf
 
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
@@ -132,8 +134,8 @@ def admin_index_view(request):
             }
         return render(request, 'admin_index.html', context)
     else:
-        return redirect('membership:profile_view')
-    
+        return redirect('membership:profile_view')  
+
 
 # ADMIN USERS LIST VIEW
 def admin_user_list_view(request):
@@ -188,6 +190,45 @@ def admin_profile_list_view(request):
 
 
 
+# ADMIN NOMINEE LIST VIEW
+def admin_nominee_list_view(request):
+    if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+        # SHOWING ALL NOMINEE TO ADMIN
+        nominee_list = Nominee.objects.all().order_by('-created_date')
+        
+        context = {
+            'nominee_list': nominee_list
+            }
+        return render(request, 'nominee_list.html', context)
+    else:
+        return redirect('membership:profile_view')
+
+
+
+# ADMIN NOMINEE UPDATE VIEW
+def admin_nominee_update_view(request, id):
+    if request.user.is_authenticated:
+        if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            get_user = Nominee.objects.get(id=id)
+            form = NomineeInfoForm(instance=get_user.profile.nominee)
+
+            if request.method == "POST" or request.method == "post":
+                form = NomineeInfoForm(request.POST, instance=get_user.profile.nominee)
+                if form.is_valid():
+                    form.save()
+                    return redirect('administration:admin_nominee_list')
+            
+            context = {
+                'form': form
+                }
+            return render(request, 'update_nominee_info.html', context)
+        else:
+            return redirect('membership:profile_view')
+    else:
+        return redirect('membership:user_login')
+
+
+
 # TRANSACTION LIST VIEW
 def admin_transaction_list(request):
     if request.user.is_authenticated:
@@ -211,11 +252,11 @@ def admin_transaction_list(request):
 def admin_unpaid_report_list(request):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-            all_unpaid_transactions = get_unpaid_report(request)
-            
+            users = User.objects.all()
+            reports_data = calculate_all_users_billing(users)
 
             context = {
-                'all_transactions': all_unpaid_transactions
+                'reports_data': reports_data
             }
 
             return render(request, 'unpaid_reports.html', context)
@@ -304,21 +345,6 @@ def admin_notification_view(request):
             return render(request, 'notification_list.html', context)
     else:
         return redirect('membership:profile_view')
-    
-
-
-# ADMIN MESSAGES LIST VIEW
-def admin_nominee_list_view(request):
-    if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-        # SHOWING ALL NOMINEE TO ADMIN
-        nominee_list = Nominee.objects.all().order_by('-created_date')
-        
-        context = {
-            'nominee_list': nominee_list
-            }
-        return render(request, 'nominee_list.html', context)
-    else:
-        return redirect('membership:profile_view')
 
 
 
@@ -357,20 +383,23 @@ def export_all_invoice_data(request, pk):
 
 
 
-
 # Send Whatsapp Message To All Users
 def send_whatsapp_notification_to_unpaid_user(request, id):
     user_obj = User.objects.get(id=id)
-    unpaid_user_report = get_unpaid_report_per_user(id)[0]
+    unpaid_user_report = calculate_per_user_billing(user_obj)
+
 
     # recipient: Include country code, remove leading zeros/plus signs
     unpaid_sms_text = "*অপরিশোধিত চাদা রিমাইন্ডার* \nঅনুগ্রহ করে আপনার নিম্ন উল্যেখ্য মাসের মাসিক চাদা সময় মত পরিসদ করুন।"
-    unpaid_total_months = unpaid_user_report['total_unpaid_months']
-    unpaid_months = unpaid_user_report['unpaid_months']
-    unpaid_amounts = unpaid_user_report['total_amount_due']
-    unpaid_user_name = unpaid_user_report['user'].profile.full_name
+    unpaid_total_months = unpaid_user_report['unpaid_months']
+    total_unpaid_due = unpaid_user_report['total_unpaid_due']
+    unpaid_user_name = user_obj.profile.full_name
+    # extract only month names
+    due_month_list = [item['month_name'] for item in unpaid_total_months]
+    display_due_months = "\n".join(due_month_list)
 
-    message_body = f"*Hello Mr. {unpaid_user_name}* \n\n{unpaid_sms_text} \n\n*মোট অপরিশোধিত মাস:* {unpaid_total_months}\n\n*অপরিশোধিত মাসের বিবরণ:* {unpaid_months}\n\n\n*মোট অপরিশোধিত বকেয়া:* ৳{unpaid_amounts}\n\n\n\n*Best Regards*, \n*Finance Department*"
+
+    message_body = f"*Hello Mr. {unpaid_user_name}* \n\n{unpaid_sms_text} \n\n*মোট অপরিশোধিত বকেয়া:* {total_unpaid_due}\n\n*অপরিশোধিত মাসের বিবরণ:*\n{display_due_months}\n\n\n\n*Best Regards*, \n*Finance Department*"
 
     phone_number = user_obj.profile.phone_number
     result = send_whatsapp_messages(
@@ -386,6 +415,12 @@ def send_whatsapp_notification_to_unpaid_user(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return JsonResponse({"status": "Failed to send message", "details": result["error"]}, status=400)
+
+
+
+
+def testing_pdf_design(request):
+    return download_member_list_pdf(request)
 
 
 

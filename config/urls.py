@@ -16,9 +16,12 @@ urlpatterns = [
     path('administration/admin/', include('administration.urls')),
 ]
 
-
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+
+
+# Point to a custom view function (App_Name.views_file.function_name)
+handler404 = 'membership.views.custom_page_404_not_found'

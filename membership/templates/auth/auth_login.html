@@ -5,6 +5,10 @@
     
 {% block auth_content %}
 
+    <!--  Showing toast messages  -->
+    {% include "components/toast_message.html" %}
+    <!--  Showing toast messages end -->
+
     <div class="form-container outer">
         <div class="form-form">
             <div class="form-form-wrap">
@@ -14,11 +18,6 @@
                         <h1 class=""><strong>লগ ইন করুন</strong></h1>
                         <p class="">অ্যাকাউন্টে প্রবেশ করতে ই-মেইল এবং পাসওয়ার্ড দিন.</p>
                         
-                        {% for message in messages%}
-                            <div class="alert alert-{{message.tags}} mb-4 text-left" role="alert">
-                                <strong>{{message}}</strong>
-                            </div> 
-                        {% endfor %}
                         
                         <form class="text-left" method="POST" action="">
                             {% csrf_token %}

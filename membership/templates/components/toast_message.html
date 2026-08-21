@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Django App</title>
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body>
+
+    {% block content %}
+    <!-- Your page content goes here -->
+    {% endblock %}
+
+    <!-- Toastify JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- Django Messages to Toastify Script -->
+    {% if messages %}
+    <script>
+        {% for message in messages %}
+            // Map Django message tags to appropriate colors
+            let bgColor = "#333333"; // Default
+            if ("{{ message.tags }}" === "success") bgColor = "#28a745";
+            if ("{{ message.tags }}" === "error") bgColor = "#dc3545";
+            if ("{{ message.tags }}" === "warning") bgColor = "#ffc107";
+            if ("{{ message.tags }}" === "info") bgColor = "#17a2b8";
+
+            Toastify({
+                text: "{{ message|escapejs }}",
+                duration: 4000,
+                close: true,
+                gravity: "top", // top or bottom
+                position: "right", // left, center or right
+                style: {
+                    background: bgColor,
+                }
+            }).showToast();
+        {% endfor %}
+    </script>
+    {% endif %}
+
+</body>
+</html>
