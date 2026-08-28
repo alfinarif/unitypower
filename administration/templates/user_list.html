@@ -27,7 +27,8 @@
                         <div class="widget-content widget-content-area br-6">
                             <div class="pb-3">
                                 <a href="{% url 'administration:export_user_access_data' 'xls' %}" class="btn btn-success">Excel</a>
-                                <a href="{% url 'administration:export_user_access_data' 'csv' %}" class="btn btn-info">Csv</a>
+                                <a href="{% url 'administration:export_user_access_data' 'csv' %}" class="btn btn-primary">Csv</a>
+                                <a href="{% url 'administration:download_member_report_pdf' %}" class="btn btn-info">Pdf</a>
                             </div>
                             <table id="invoice-list" class="table table-hover" style="width:100%">
 

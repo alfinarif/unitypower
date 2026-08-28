@@ -23,9 +23,8 @@ urlpatterns = [
     path('data/trans/export/<str:format>/', views.export_all_transactions_data, name='export_all_transactions_data'),
     path('data/members/export/<str:format>/', views.export_user_access_data, name='export_user_access_data'),
     path('transaction/invoice/export/<int:pk>/', views.export_all_invoice_data, name='export_invoice_data'),
-
-
-
-    path('test/pdf', views.testing_pdf_design, name='testing_pdf_design')
+    # download reports as pdf
+    path('data/members/export-report/pdf/', views.download_member_report_view, name='download_member_report_pdf'),
+    path('data/members/profile/export-report/pdf/', views.download_profile_report_view, name='download_profile_report_pdf')
 
 ]

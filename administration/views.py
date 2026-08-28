@@ -32,7 +32,7 @@ from .helpers.export_invoices import export_invoice_data, export_unpaid_data_as_
 from .helpers.export_excel_csv_format import export_excel_csv
 from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_user
 from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
-from .helpers.export_all_as_pdf import download_member_list_pdf
+from .helpers.export_all_as_pdf import download_member_report, download_profile_report
 
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
@@ -418,11 +418,12 @@ def send_whatsapp_notification_to_unpaid_user(request, id):
 
 
 
+def download_member_report_view(request):
+    return download_member_report(request)
 
-def testing_pdf_design(request):
-    return download_member_list_pdf(request)
 
-
+def download_profile_report_view(request):
+    return download_profile_report(request)
 
 
 
