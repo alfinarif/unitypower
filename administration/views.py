@@ -32,7 +32,7 @@ from .helpers.export_invoices import export_invoice_data, export_unpaid_data_as_
 from .helpers.export_excel_csv_format import export_excel_csv
 from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_user
 from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
-from .helpers.export_all_as_pdf import download_member_report, download_profile_report
+from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report
 
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
@@ -375,8 +375,7 @@ def export_user_access_data(request, format):
 # Export invoice data pdf format
 def export_all_invoice_data(request, pk):
     if request.user.is_authenticated:
-        model_object = PaymentRequestModel.objects.get(id=pk)
-        response = export_invoice_data(model_object)
+        response = download_invoice_report(pk)
         return response
     else:
         return redirect('membership:user_login')
@@ -417,14 +416,17 @@ def send_whatsapp_notification_to_unpaid_user(request, id):
         return JsonResponse({"status": "Failed to send message", "details": result["error"]}, status=400)
 
 
-
+# Export member list PDF
 def download_member_report_view(request):
     return download_member_report(request)
 
-
+# Export profile list PDF
 def download_profile_report_view(request):
     return download_profile_report(request)
 
+# Export nominee list PDF
+def download_nominee_report_view(request):
+    return download_nominee_report(request)
 
 
 

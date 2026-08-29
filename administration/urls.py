@@ -25,6 +25,7 @@ urlpatterns = [
     path('transaction/invoice/export/<int:pk>/', views.export_all_invoice_data, name='export_invoice_data'),
     # download reports as pdf
     path('data/members/export-report/pdf/', views.download_member_report_view, name='download_member_report_pdf'),
-    path('data/members/profile/export-report/pdf/', views.download_profile_report_view, name='download_profile_report_pdf')
+    path('data/members/profile/export-report/pdf/', views.download_profile_report_view, name='download_profile_report_pdf'),
+    path('data/members/profile/nominee/export-report/pdf/', views.download_nominee_report_view, name='download_nominee_report_pdf'),
 
 ]
