@@ -7,7 +7,7 @@ from django.db.models import Sum, Q
 
 from membership.models import User, Profile, Nominee, ContactUs
 from membership.forms import UserUpdateForm, NomineeInfoForm
-from finance.models import PaymentRequestModel
+from finance.models import PaymentRequestModel, PropertiesBuySale
 from administration.models import WhatsappNotificationModel
 from administration.forms import WhatsappNotificationForm, WhatsappNotificationToPerUserForm
 
@@ -32,7 +32,7 @@ from .helpers.export_invoices import export_invoice_data, export_unpaid_data_as_
 from .helpers.export_excel_csv_format import export_excel_csv
 from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_user
 from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
-from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report
+from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report, download_transaction_list_report
 
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
@@ -248,6 +248,26 @@ def admin_transaction_list(request):
 
 
 
+
+# PROPERTIES LIST VIEW
+def admin_properties_list_view(request):
+    if request.user.is_authenticated:
+        if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            properties_list = PropertiesBuySale.objects.all().order_by('-id')
+            
+
+            context = {
+                'properties_list': properties_list
+            }
+
+            return render(request, 'properties_list.html', context)
+        else:
+                return redirect('membership:profile_view')
+    else:
+        return redirect('membership:user_login')
+
+
+
 # TRANSACTION LIST VIEW
 def admin_unpaid_report_list(request):
     if request.user.is_authenticated:
@@ -428,6 +448,10 @@ def download_profile_report_view(request):
 def download_nominee_report_view(request):
     return download_nominee_report(request)
 
+
+# Export nominee list PDF
+def download_transaction_report_view(request):
+    return download_transaction_list_report(request)
 
 
 

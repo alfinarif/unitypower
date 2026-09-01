@@ -10,6 +10,7 @@ urlpatterns = [
     path('user-list/update/<int:id>/', views.admin_user_update_view, name='admin_user_update'),
     path('profile-list/', views.admin_profile_list_view, name='admin_profile_list'),
     path('transactions-list/', views.admin_transaction_list, name='admin_transaction_list'),
+    path('properties-list/', views.admin_properties_list_view, name='admin_properties_list_view'),
     path('unpaid-reports-list/', views.admin_unpaid_report_list, name='admin_unpaid_report_list'),
     path('nominee-list/', views.admin_nominee_list_view, name='admin_nominee_list'),
     path('nominee-list/update/<int:id>/', views.admin_nominee_update_view, name='admin_nominee_update'),
@@ -27,5 +28,6 @@ urlpatterns = [
     path('data/members/export-report/pdf/', views.download_member_report_view, name='download_member_report_pdf'),
     path('data/members/profile/export-report/pdf/', views.download_profile_report_view, name='download_profile_report_pdf'),
     path('data/members/profile/nominee/export-report/pdf/', views.download_nominee_report_view, name='download_nominee_report_pdf'),
+    path('data/finance/transactions/list/export-report/pdf/', views.download_transaction_report_view, name='download_transaction_report_pdf'),
 
 ]

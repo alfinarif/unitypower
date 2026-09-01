@@ -530,6 +530,141 @@ def download_invoice_report(id):
 
 
 
+# Export all transaction list PDF
+def download_transaction_list_report(request):
+    # Create the HTTP response with PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="finance_transactions_list_report.pdf"'
+
+    # Setup document
+    doc = SimpleDocTemplate(response, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
+    story = []
+    
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'TitleStyle',
+        parent=styles['Heading1'],
+        fontSize=16,
+        textColor=colors.HexColor("#033985"),
+        alignment=0,
+        leading=3,
+        spaceAfter=20
+    )
+    info_style = ParagraphStyle(
+        'InfoStyle',
+        parent=styles['Heading3'],
+        fontSize=10,
+        textColor=colors.HexColor("#263f63"),
+        alignment=0,
+        leading=5,
+        spaceAfter=10
+    )
+    cell_style = ParagraphStyle(
+        'CellStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        leading=12,
+        textColor=colors.HexColor('#2d3748')
+    )
+    header_style = ParagraphStyle(
+        'HeaderStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        leading=12,
+        textColor=colors.whitesmoke,
+        fontName='Helvetica-Bold'
+    )
+
+    # FIX 1: Add Company Logo (Reduced height/width to prevent blocking page budget)
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'unity_power_logo.png')
+    if os.path.exists(logo_path):
+        # A 120x120 logo takes up massive real estate. 
+        # Shrinking it ensures elements split across pages gracefully.
+        logo = Image(logo_path, width=70, height=70)
+        logo.hAlign = 'LEFT'
+        story.append(logo)
+        story.append(Spacer(1, 15))
+
+    # Title
+    story.append(Paragraph("UnityPower Finance Department", title_style))
+    story.append(Paragraph("Transactions List Reports", title_style))
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("E-mail: finance@unitypower.online", info_style))
+    story.append(Paragraph("Phone: +966506897109", info_style))
+    story.append(Paragraph("Address: Riyadh, Saudi Arabia", info_style))
+    story.append(Spacer(1, 15))
+
+    # Dynamic Profile Data
+    transaction_list = PaymentRequestModel.objects.all().order_by('-id')
+
+    # Table Header
+    table_data = [[
+        Paragraph("Member", header_style),
+        Paragraph("Payment Type", header_style),
+        Paragraph("Payment Method", header_style),
+        Paragraph("Amount", header_style),
+        Paragraph("Cashier", header_style),
+        Paragraph("Status", header_style),
+        Paragraph("Date", header_style),
+    ]]
+
+    # Populate Table Rows dynamically
+    for transaction in transaction_list:
+        # FIX 2: Handle None values cleanly inside Paragraphs to prevent rendering breaks
+        member = transaction.user.email if transaction.user.email else "X"
+        calculation_type = transaction.calculation_type if transaction.calculation_type else "X"
+        payment_method = transaction.payment_method if transaction.payment_method else "X"
+        amount_of_money = transaction.amount_of_money if transaction.amount_of_money else "X"
+        cashier = transaction.cashier if transaction.cashier else "X"
+        status = transaction.status if transaction.status else "X"
+        pay_date = f'{transaction.pay_year} / {transaction.pay_month}'
+        
+
+        table_data.append([
+            Paragraph(member, cell_style),
+            Paragraph(calculation_type, cell_style),
+            Paragraph(payment_method, cell_style),
+            Paragraph(str(amount_of_money), cell_style),
+            Paragraph(cashier, cell_style),
+            Paragraph(status, cell_style),
+            Paragraph(pay_date, cell_style),
+        ])
+
+    # Create Table with specific column widths (Total width: 532)
+    column_widths = [172, 60, 60, 60, 60, 60, 60]
+    
+    # FIX 3: Explicitly set repeatRows=1 so headers replicate on multi-page breaks automatically
+    user_table = Table(table_data, colWidths=column_widths, repeatRows=1)
+    
+    # Style the table
+    # FIX 4: Replaced 'ROWBACKGROUNDS' with an explicit alternating background command loop.
+    # The built-in list tuple for ROWBACKGROUNDS occasionally mismatches during infinite splits.
+    t_style = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1a365d')),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cbd5e0'))
+    ]
+    
+    # Add alternating backgrounds safely row-by-row
+    for i in range(1, len(table_data)):
+        if i % 2 == 0:
+            t_style.append(('BACKGROUND', (0, i), (-1, i), colors.HexColor('#f7fafc')))
+        else:
+            t_style.append(('BACKGROUND', (0, i), (-1, i), colors.white))
+
+    user_table.setStyle(TableStyle(t_style))
+    story.append(user_table)
+
+    # Build PDF
+    doc.build(story)
+    return response
+
+
+
 
 
 
