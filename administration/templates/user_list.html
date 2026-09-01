@@ -21,97 +21,96 @@
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
-                <div class="row" id="cancel-row">
-                
-                    <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
-                        <div class="widget-content widget-content-area br-6">
-                            <div class="pb-3">
-                                <a href="{% url 'administration:export_user_access_data' 'xls' %}" class="btn btn-success">Excel</a>
-                                <a href="{% url 'administration:export_user_access_data' 'csv' %}" class="btn btn-primary">Csv</a>
-                                <a href="{% url 'administration:download_member_report_pdf' %}" class="btn btn-info">Pdf</a>
-                            </div>
-                            <table id="invoice-list" class="table table-hover" style="width:100%">
 
+                <div class="page-header">
+                    <div class="page-title">
+                        <h3>Unity-Power Association Members List</h3>
+                    </div>
+                </div>
+                
+                <div class="row" id="cancel-row">
+                    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+                        <div class="pb-3">
+                            <a href="{% url 'administration:export_user_access_data' 'xls' %}" class="btn btn-success">Excel</a>
+                            <a href="{% url 'administration:export_user_access_data' 'csv' %}" class="btn btn-primary">Csv</a>
+                            <a href="{% url 'administration:download_member_report_pdf' %}" class="btn btn-info">PDF</a>
+                        </div>
+                        <div class="widget-content widget-content-area br-6">
+                            <table id="alter_pagination" class="table" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="checkbox-column"> Record no. </th>
-                                        <th>Email</th>
-                                        <th>Account Number</th>
-                                        <th>User Type</th>
+                                        <th>Member Email</th>
+                                        <th>ID Number</th>
+                                        <th>Member Type</th>
                                         <th>Is HR</th>
                                         <th>Is Admin</th>
                                         <th>Is Finance</th>
                                         <th>Date</th>
-                                        
-                                        
-                                        
+                                        <th class="text-center dt-no-sorting">Action</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
+                                    {% for user in users %}
+                                        <tr>
 
-                                {% for user in users %}
-                                    <tr>
-                                        <td class="checkbox-column"> {{user.id}} </td>
+                                            <td><a href="{% url 'administration:admin_user_update' user.id %}">
+                                                <span class="inv-email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> 
+                                                <span class="text-success">{{user.email}}</span> </span></a>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <p class="align-self-center mb-0 user-name"> {{user.account_number}} </p>
+                                                </div>
+                                            </td>
 
-                                        <td><a href="{% url 'administration:admin_user_update' user.id %}">
-                                            <span class="inv-email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> 
-                                            <span class="text-success">{{user.email}}</span> </span></a>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex">
-                                                <p class="align-self-center mb-0 user-name"> {{user.account_number}} </p>
-                                            </div>
-                                        </td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <p class="align-self-center mb-0 user-name"> {{user.user_type}} </p>
+                                                </div>
+                                            </td>
+                                            
+                                            {% if user.is_hr  %}
+                                                <td><span class="badge badge-success inv-status">{{user.is_hr}}</span></td>
+                                            {% else %}
+                                                <td><span class="badge badge-danger inv-status">{{user.is_hr}}</span></td>
+                                            {% endif %}
 
-                                        <td>
-                                            <div class="d-flex">
-                                                <p class="align-self-center mb-0 user-name"> {{user.user_type}} </p>
-                                            </div>
-                                        </td>
-                                        
-                                    {% if user.is_hr  %}
-                                        <td><span class="badge badge-success inv-status">{{user.is_hr}}</span></td>
-                                    {% else %}
-                                        <td><span class="badge badge-danger inv-status">{{user.is_hr}}</span></td>
-                                    {% endif %}
+                                            {% if user.is_admin  %}
+                                                <td><span class="badge badge-success inv-status">{{user.is_admin}}</span></td>
+                                            {% else %}
+                                                <td><span class="badge badge-danger inv-status">{{user.is_admin}}</span></td>
+                                            {% endif %}
 
-                                    {% if user.is_admin  %}
-                                        <td><span class="badge badge-success inv-status">{{user.is_admin}}</span></td>
-                                    {% else %}
-                                        <td><span class="badge badge-danger inv-status">{{user.is_admin}}</span></td>
-                                    {% endif %}
+                                            {% if user.is_finance  %}
+                                                <td><span class="badge badge-success inv-status">{{user.is_finance}}</span></td>
+                                            {% else %}
+                                                <td><span class="badge badge-danger inv-status">{{user.is_finance}}</span></td>
+                                            {% endif %}
+                                            
+                                            <td><span class="inv-date"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 
+                                                {{user.date_joined}} </span>
+                                            </td>
 
-                                    {% if user.is_finance  %}
-                                        <td><span class="badge badge-success inv-status">{{user.is_finance}}</span></td>
-                                    {% else %}
-                                        <td><span class="badge badge-danger inv-status">{{user.is_finance}}</span></td>
-                                    {% endif %}
-                                        
-                                        <td><span class="inv-date"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 
-                                            {{user.date_joined}} </span>
-                                        </td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0);" class="bs-tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-octagon table-cancel"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></a>
+                                            </td>
 
-                                        
-                                        
-                                        
-                                        
-                                        
-                                    </tr>
-                                {% endfor %}
-                                    
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
+
         <!--  END CONTENT AREA  -->
 
     </div>
     <!-- END MAIN CONTAINER -->
+    
 
 {% endblock content %}
 

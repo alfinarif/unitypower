@@ -20,33 +20,38 @@
 
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
-        <div class="layout-px-spacing">
-            <div class="row" id="cancel-row">
+            <div class="layout-px-spacing">
+
+                <div class="page-header">
+                    <div class="page-title">
+                        <h3>Unity-Power Association Unpaid Members List</h3>
+                    </div>
+                </div>
                 
-                <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
-                    <div class="widget-content widget-content-area br-6">
-                        <table id="invoice-list" class="table table-hover" style="width:100%">
-                            
-                            <thead>
-                                <tr>
-                                    <th class="checkbox-column"> Record no. </th>
-                                    <th>Member</th>
-                                    <th>Months Details</th>
-                                    <th>Amounts</th>
-                                    <th>Send Messages</th>
-                                    
-                                    
-                                </tr>
-                            </thead>
+                <div class="row" id="cancel-row">
+                    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+                        <div class="pb-3">
+                            <a href="{% url 'administration:download_member_report_pdf' %}" class="btn btn-primary">PDF Reports</a>
+                        </div>
+                        <div class="widget-content widget-content-area br-6">
+                            <table id="alter_pagination" class="table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Member Email</th>
+                                        <th>ID Number</th>
+                                        <th>Month Details</th>
+                                        <th>Amount</th>
+                                        <th>Send Messages</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     {% for user in reports_data %}
-                                        
-                                        <tr>
                                             
-                                            <td class="checkbox-column"> 1 </td>
+                                        <tr>
                                             <td><span class="inv-email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> 
                                                 {{user.email}} </span>
                                             </td>
+                                            <td>{{user.account_number}}</td>
                                             
                                             <td>
                                                 {% for unpaid_month in user.unpaid_months %}
@@ -54,7 +59,7 @@
                                                     {% if forloop.counter|divisibleby:5 and not forloop.last %}    
                                                         <div class="d-flex">
                                                             {% comment %} <p class="align-self-center mb-0 user-name"> {{transaction.unpaid_months|truncatechars:10}} </p> {% endcomment %}
-                                                                 
+                                                                
                                                         </div>
                                                     
                                                         </br>
@@ -70,21 +75,19 @@
                                                     <a href="{% url 'administration:send_whatsapp_notification_to_unpaid_user' user.id %}" class="btn btn-info btn-sm w-100">Send Notice</a>
                                                 </span>
                                             </td>
-
-                                            
-                                            
                                             
                                         </tr>
                                     {% endfor %}
-                                </tbody>
 
-                        </table>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
         <!--  END CONTENT AREA  -->
 
     </div>

@@ -106,6 +106,7 @@ def calculate_all_users_billing(users):
         all_users_report.append({
             'id': user.id,
             'email': user.email,
+            'account_number': user.account_number,
             'created_at': user.profile.created_date,
             'unpaid_months': unpaid_months_list,
             'total_unpaid_months': len(unpaid_months_list),

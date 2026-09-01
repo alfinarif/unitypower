@@ -21,34 +21,34 @@
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
+
+                <div class="page-header">
+                    <div class="page-title">
+                        <h3>Unity-Power Association Profile List</h3>
+                    </div>
+                </div>
+                
                 <div class="row" id="cancel-row">
-                    <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
+                    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+                        <div class="pb-3">
+                            <a href="{% url 'administration:download_profile_report_pdf' %}" class="btn btn-success">PDF Reports</a>
+                        </div>
                         <div class="widget-content widget-content-area br-6">
-                            
-                            <a href="{% url 'administration:download_profile_report_pdf' %}" class="btn btn-success">Pdf Reports</a>
-
-                            <table id="invoice-list" class="table table-hover" style="width:100%">
-
+                            <table id="alter_pagination" class="table" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="checkbox-column"> Record no. </th>
                                         <th>Email</th>
                                         <th>Name</th>
                                         <th>National Id</th>
                                         <th>Phone Number</th>
                                         <th>Status</th>
                                         <th>Date</th>
-                                        
-                                        
-                                        
+                                        <th class="text-center dt-no-sorting">Action</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
-
-                                {% for profile in profiles %}
+                                    {% for profile in profiles %}
                                     <tr>
-                                        <td class="checkbox-column"> {{profile.id}} </td>
 
                                         <td><a href="{% url 'membership:update_profile' profile.id %}">
                                             <span class="inv-email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> 
@@ -73,20 +73,17 @@
                                             {{profile.created_date}} </span>
                                         </td>
 
-                                        
-                                        
-                                        
-                                        
-                                        
+                                        <td class="text-center">
+                                            <a href="javascript:void(0);" class="bs-tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-octagon table-cancel"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
-                                    
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
         <!--  END CONTENT AREA  -->

@@ -1,15 +1,19 @@
 
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.admin.models import LogEntry
 from django.db.models import Sum, Q
+from django.utils import timezone
 
-from membership.models import User, Profile, Nominee, ContactUs
-from membership.forms import UserUpdateForm, NomineeInfoForm
-from finance.models import PaymentRequestModel, PropertiesBuySale
 from administration.models import WhatsappNotificationModel
+from finance.models import PaymentRequestModel, PropertiesBuySale
+from membership.models import User, Profile, Nominee, ContactUs
+
 from administration.forms import WhatsappNotificationForm, WhatsappNotificationToPerUserForm
+from finance.forms import PropertiesForm
+from membership.forms import UserUpdateForm, NomineeInfoForm
 
 
 from finance.admin import PaymentRequestModelResource
@@ -253,11 +257,26 @@ def admin_transaction_list(request):
 def admin_properties_list_view(request):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            form = PropertiesForm()
+            if request.method == 'POST' or request.method == 'post':
+                form = PropertiesForm(request.POST)
+                all_users = User.objects.all()
+                if form.is_valid():
+                    form_obj = form.save(commit=False)
+                    form_obj.approved_at = timezone.now()
+                    form_obj.save()
+                    form_obj.user.set(all_users)
+                    form_obj.save()
+                    messages.success(request, "Properties document have been created successfully.")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
             properties_list = PropertiesBuySale.objects.all().order_by('-id')
             
 
             context = {
-                'properties_list': properties_list
+                'form': form,
+                'properties_list': properties_list,
             }
 
             return render(request, 'properties_list.html', context)
@@ -272,7 +291,7 @@ def admin_properties_list_view(request):
 def admin_unpaid_report_list(request):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-            users = User.objects.all()
+            users = User.objects.all().order_by('-id')
             reports_data = calculate_all_users_billing(users)
 
             context = {

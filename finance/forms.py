@@ -4,7 +4,7 @@ from django import forms
 import calendar
 from django.utils import timezone
 
-from finance.models import PaymentRequestModel
+from finance.models import PaymentRequestModel, PropertiesBuySale
 
 
 class PaymentRequestForm(ModelForm):
@@ -76,6 +76,23 @@ class PaymentViaAdminForm(ModelForm):
         self.fields['pay_month'].initial = timezone.now().month
 
 
+
+
+
+class PropertiesForm(ModelForm):
+    class Meta:
+        model = PropertiesBuySale
+        fields = ['name', 'details', 'document', 'status', 'approved_by']
+        exclude = ('user', 'history', 'approved_at')
+
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Properties Name', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'details': forms.TextInput(attrs={'placeholder': 'Details', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'document': forms.FileInput(attrs={'placeholder': 'Documents', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'status': forms.Select(attrs={'placeholder': 'Pending', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'approved_by': forms.TextInput(attrs={'placeholder': 'Approved By: President', 'class': 'form-control mb-4', 'id': 'profession'}),
+            
+        }
 
 
 
