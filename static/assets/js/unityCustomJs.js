@@ -5,6 +5,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const paymentSelectElement = document.getElementById('paymentType');
     const amountInputElement = document.getElementById("amountInput");
+    const paymentNote = document.getElementById("paymentNote");
+
 
     const properties = document.getElementById("properties");
     const fromNumber = document.getElementById("fromNumber");
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         paymentSelectElement.addEventListener('change', (e) => {
             if (e.target.value == 'Savings'){
                 amountInputElement.value = 5000;
+                paymentNote.value = "This is my monthly fee please kindly check and approve my transaction.";
 
                 properties.style.display = "none";
 
@@ -38,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else if (e.target.value == 'Expense'){
                 amountInputElement.value = 0.00;
+                paymentNote.value = "I have expense this amount to development unity-power assosiation.";
 
                 properties.style.display = "none";
 
@@ -55,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else if (e.target.value == 'Loan'){
                 amountInputElement.value = 0.00;
+                paymentNote.value = "Unity-Power take this amount as Loan for our Welfare.";
 
                 properties.style.display = "none";
 
@@ -72,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else if (e.target.value == 'Welfare'){
                 properties.style.display = "block";
+                paymentNote.value = "Unity-Power pay this amount to buy land space kindly verify this transaction.";
 
                 cashier.style.display = 'none';
                 fromNumber.style.display = 'none';
