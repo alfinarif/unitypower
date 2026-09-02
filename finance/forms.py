@@ -20,17 +20,17 @@ class PaymentRequestForm(ModelForm):
         exclude = ('user', 'invoice_number')
         
         widgets = {
-            'calculation_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'validationCustom01'}),
-            'payment_method': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'profession'}),
-            'amount_of_money': forms.NumberInput(attrs={'class': 'form-control mb-4', 'id': 'profession'}),
-            'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'calculation_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentType'}),
+            'payment_method': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentMethod'}),
+            'amount_of_money': forms.NumberInput(attrs={'class': 'form-control mb-4', 'id': 'amountInput'}),
+            'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'fromNumber'}),
 
-            'pay_year': forms.Select(choices=YEAR_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'profession'}),
-            'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'profession'}),
+            'pay_year': forms.Select(choices=YEAR_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payYear'}),
+            'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payMonth'}),
 
-            'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'profession'}),
-            'cashier': forms.Select(attrs={'placeholder': 'Refer To Cashier', 'class': 'form-control mb-4', 'id': 'profession'}),
-            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'class': 'form-control mb-4', 'id': 'profession'})
+            'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'pinRef'}),
+            'cashier': forms.Select(attrs={'placeholder': 'Refer To Cashier', 'class': 'form-control mb-4', 'id': 'cashier'}),
+            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'class': 'form-control mb-4', 'id': 'paymentNote'})
             
         }
 
@@ -50,21 +50,22 @@ class PaymentViaAdminForm(ModelForm):
         MONTH_CHOICES = [(i, calendar.month_name[i]) for i in range(1, 13)]
 
         model = PaymentRequestModel
-        fields = ['user', 'cashier', 'calculation_type', 'payment_method', 'amount_of_money', 'from_number', 'pay_year', 'pay_month', 'pin_ref', 'pay_month', 'payment_note']
+        fields = ['user', 'properties', 'cashier', 'calculation_type', 'payment_method', 'amount_of_money', 'from_number', 'pay_year', 'pay_month', 'pin_ref', 'pay_month', 'payment_note']
         exclude = ('invoice_number',)
         widgets = {
             'user': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'validationCustom01'}),
-            'cashier': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'validationCustom01'}),
-            'calculation_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'validationCustom01'}),
-            'payment_method': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'profession'}),
-            'amount_of_money': forms.NumberInput(attrs={'class': 'form-control mb-4', 'id': 'profession'}),
-            'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'properties': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'propertiesId'}),
+            'cashier': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'cashier'}),
+            'calculation_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentType'}),
+            'payment_method': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'profession paymentMethod'}),
+            'amount_of_money': forms.NumberInput(attrs={'class': 'form-control mb-4', 'id': 'amountInput'}),
+            'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'fromNumber'}),
 
-            'pay_year': forms.Select(choices=YEAR_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'profession'}),
-            'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'profession'}),
+            'pay_year': forms.Select(choices=YEAR_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payYear'}),
+            'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payMonth'}),
 
-            'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'profession'}),
-            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'class': 'form-control mb-4', 'id': 'profession'})
+            'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'pinRef'}),
+            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'class': 'form-control mb-4', 'id': 'paymentNote'})
             
         }
 

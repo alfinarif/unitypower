@@ -28,12 +28,12 @@
                                     <form method="POST" class="needs-validation" novalidate action="">
                                         {% csrf_token %}
                                         <div class="form-row mb-3">
-                                            <div class="col-md-6 mb-6">
+                                            <div class="col-md-6 mb-6" id='myColUser'>
                                                 <label for="validationCustom01">User For Payment</label>
                                                 {{admin_form.user}}
                                             </div>
 
-                                            <div class="col-md-6 mb-6">
+                                            <div class="col-md-6 mb-6" id="cashier">
                                                 <label for="validationCustom02">Received Cashier</label>
                                                 {{admin_form.cashier}}
                                             </div>
@@ -50,28 +50,34 @@
                                         </div>
                                         </br>
                                         <div class="form-row mb-3">
-                                            <div class="col-md-6 mb-6">
+                                            <div class="col-md-6 mb-6" id='myColAmount'>
                                                 <label for="validationCustom01">Fee Amount</label>
                                                 {{admin_form.amount_of_money}}
                                             </div>
 
-                                            <div class="col-md-6 mb-6">
+                                            <div class="col-md-6 mb-6" id="fromNumber">
                                                 <label for="validationCustom02">Bkash/Rocket/Bank-AC</label>
                                                 {{admin_form.from_number}}
                                             </div>
                                         </div>
+                                        <div class="form-row mb-3" id="properties" style="display: none;">
+                                            <div class="col-md-12 mb-12">
+                                                <label for="validationCustom01">Select Properties</label>
+                                                {{admin_form.properties}}
+                                            </div>
+                                        </div>
                                         <div class="form-row mb-3">
-                                            <div class="col-md-6 mb-6">
+                                            <div class="col-md-6 mb-6" id="payYear">
                                                 <label for="validationCustom01">Payment Year</label>
                                                 {{admin_form.pay_year}}
                                             </div>
 
-                                            <div class="col-md-6 mb-6">
+                                            <div class="col-md-6 mb-6" id="payMonth">
                                                 <label for="validationCustom02">Payment Month</label>
                                                 {{admin_form.pay_month}}
                                             </div>
                                         </div>
-                                        <div class="form-row mb-3">
+                                        <div class="form-row mb-3" id="pinRef">
                                             <div class="col-md-12 mb-12">
                                                 <label for="validationCustom01">Pin Number Or Referance</label>
                                                 {{admin_form.pin_ref}}
@@ -228,3 +234,4 @@
                 </div>
             </div>
         </div>
+

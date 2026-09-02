@@ -45,6 +45,9 @@ class PropertiesBuySale(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     history = HistoricalRecords()
 
+    def __str__(self):
+        return self.name
+
 
 
 # Payment request models

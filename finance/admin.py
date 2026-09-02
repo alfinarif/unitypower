@@ -42,8 +42,11 @@ class PaymentRequestAdmin(ExportActionMixin, admin.ModelAdmin):
     resource_class = PaymentRequestModelResource
 
 
+class PropertiesBuySaleModelAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'status', 'approved_by', 'created_at')
+
 admin.site.register(FeeSchedule)
-admin.site.register(PropertiesBuySale)
+admin.site.register(PropertiesBuySale, PropertiesBuySaleModelAdmin)
 admin.site.register(PaymentRequestModel, PaymentRequestAdmin)
 
 

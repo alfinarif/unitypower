@@ -263,7 +263,6 @@ def admin_properties_list_view(request):
                 all_users = User.objects.all()
                 if form.is_valid():
                     form_obj = form.save(commit=False)
-                    form_obj.approved_at = timezone.now()
                     form_obj.save()
                     form_obj.user.set(all_users)
                     form_obj.save()
