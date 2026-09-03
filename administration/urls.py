@@ -29,5 +29,6 @@ urlpatterns = [
     path('data/members/profile/export-report/pdf/', views.download_profile_report_view, name='download_profile_report_pdf'),
     path('data/members/profile/nominee/export-report/pdf/', views.download_nominee_report_view, name='download_nominee_report_pdf'),
     path('data/finance/transactions/list/export-report/pdf/', views.download_transaction_report_view, name='download_transaction_report_pdf'),
+    path('data/finance/transactions/unpaid/list/export-report/pdf/', views.download_unpaid_report_view, name='download_unpaid_report_pdf'),
 
 ]

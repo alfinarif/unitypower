@@ -66,7 +66,7 @@ def user_login(request):
         if user is not None:
             login(request, user)
             messages.success(request, f"Welcome {email} to your profile.")
-            return redirect('membership:profile_view')
+            return redirect('membership:summary_view')
         else:
             messages.warning(request, 'Username or Password invalid..!')
 

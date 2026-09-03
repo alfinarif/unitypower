@@ -36,7 +36,7 @@ from .helpers.export_invoices import export_invoice_data, export_unpaid_data_as_
 from .helpers.export_excel_csv_format import export_excel_csv
 from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_user
 from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
-from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report, download_transaction_list_report
+from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report, download_transaction_list_report, download_unpaid_list_report
 
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
@@ -471,6 +471,10 @@ def download_nominee_report_view(request):
 def download_transaction_report_view(request):
     return download_transaction_list_report(request)
 
+
+# Export nominee list PDF
+def download_unpaid_report_view(request):
+    return download_unpaid_list_report(request)
 
 
 

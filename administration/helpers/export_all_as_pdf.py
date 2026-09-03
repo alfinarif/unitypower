@@ -6,6 +6,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
+from administration.helpers.paid_unpaid_billings import calculate_all_users_billing
 from membership.models import User, Profile, Nominee
 from finance.models import PaymentRequestModel
 
@@ -30,7 +31,7 @@ def download_member_report(request):
         textColor=colors.HexColor('#1a365d'),
         alignment=0,
         leading=3,
-        spaceAfter=15
+        spaceAfter=20
     )
     info_style = ParagraphStyle(
         'InfoStyle',
@@ -633,6 +634,134 @@ def download_transaction_list_report(request):
 
     # Create Table with specific column widths (Total width: 532)
     column_widths = [172, 60, 60, 60, 60, 60, 60]
+    
+    # FIX 3: Explicitly set repeatRows=1 so headers replicate on multi-page breaks automatically
+    user_table = Table(table_data, colWidths=column_widths, repeatRows=1)
+    
+    # Style the table
+    # FIX 4: Replaced 'ROWBACKGROUNDS' with an explicit alternating background command loop.
+    # The built-in list tuple for ROWBACKGROUNDS occasionally mismatches during infinite splits.
+    t_style = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1a365d')),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#cbd5e0'))
+    ]
+    
+    # Add alternating backgrounds safely row-by-row
+    for i in range(1, len(table_data)):
+        if i % 2 == 0:
+            t_style.append(('BACKGROUND', (0, i), (-1, i), colors.HexColor('#f7fafc')))
+        else:
+            t_style.append(('BACKGROUND', (0, i), (-1, i), colors.white))
+
+    user_table.setStyle(TableStyle(t_style))
+    story.append(user_table)
+
+    # Build PDF
+    doc.build(story)
+    return response
+
+
+
+
+
+# Export all transaction list PDF
+def download_unpaid_list_report(request):
+    # Create the HTTP response with PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="finance_due_members_list_report.pdf"'
+
+    # Setup document
+    doc = SimpleDocTemplate(response, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
+    story = []
+    
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'TitleStyle',
+        parent=styles['Heading1'],
+        fontSize=16,
+        textColor=colors.HexColor("#033985"),
+        alignment=0,
+        leading=3,
+        spaceAfter=20
+    )
+    info_style = ParagraphStyle(
+        'InfoStyle',
+        parent=styles['Heading3'],
+        fontSize=10,
+        textColor=colors.HexColor("#263f63"),
+        alignment=0,
+        leading=5,
+        spaceAfter=10
+    )
+    cell_style = ParagraphStyle(
+        'CellStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        leading=12,
+        textColor=colors.HexColor('#2d3748')
+    )
+    header_style = ParagraphStyle(
+        'HeaderStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        leading=12,
+        textColor=colors.whitesmoke,
+        fontName='Helvetica-Bold'
+    )
+
+    # FIX 1: Add Company Logo (Reduced height/width to prevent blocking page budget)
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'unity_power_logo.png')
+    if os.path.exists(logo_path):
+        # A 120x120 logo takes up massive real estate. 
+        # Shrinking it ensures elements split across pages gracefully.
+        logo = Image(logo_path, width=70, height=70)
+        logo.hAlign = 'LEFT'
+        story.append(logo)
+        story.append(Spacer(1, 15))
+
+    # Title
+    story.append(Paragraph("UnityPower Finance Department", title_style))
+    story.append(Paragraph("Due Members List Reports", title_style))
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("E-mail: finance@unitypower.online", info_style))
+    story.append(Paragraph("Phone: +966506897109", info_style))
+    story.append(Paragraph("Address: Riyadh, Saudi Arabia", info_style))
+    story.append(Spacer(1, 15))
+
+    # Dynamic Unpaid Data
+    users = User.objects.all().order_by('-id')
+    reports_data = calculate_all_users_billing(users)
+    transaction_list = PaymentRequestModel.objects.all().order_by('-id')
+
+    # Table Header
+    table_data = [[
+        Paragraph("Member", header_style),
+        Paragraph("ID Number", header_style),
+        Paragraph("Total Due Month", header_style),
+        Paragraph("Total Due Amount", header_style),
+    ]]
+
+    # Populate Table Rows dynamically
+    for user in reports_data:
+        member = user['email'] if user['email'] else "X"
+        account_number = user['account_number'] if user['account_number'] else "X"
+        due_months = user['total_unpaid_months'] if user['total_unpaid_months'] else "X"
+        total_due_amount = user['total_unpaid'] if user['total_unpaid'] else "X"
+        
+        table_data.append([
+            Paragraph(member, cell_style),
+            Paragraph(account_number, cell_style),
+            Paragraph(str(due_months), cell_style),
+            Paragraph(str(total_due_amount) + ' TK', cell_style),
+        ])
+
+    # Create Table with specific column widths (Total width: 532)
+    column_widths = [180, 118, 117, 117]
     
     # FIX 3: Explicitly set repeatRows=1 so headers replicate on multi-page breaks automatically
     user_table = Table(table_data, colWidths=column_widths, repeatRows=1)
