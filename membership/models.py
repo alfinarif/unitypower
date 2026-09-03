@@ -2,7 +2,7 @@ from django.db import models
 from datetime import date
 
 from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
-
+from django.db.models import Q
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
@@ -82,7 +82,12 @@ class Profile(models.Model):
         ('Married', 'Married'),
         ('Unmarried', 'Unmarried')
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='profile',
+        limit_choices_to=~Q(user_type='Developer')
+        )
     full_name = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)
     mother_name = models.CharField(max_length=100, blank=True, null=True)
@@ -129,7 +134,11 @@ class Profile(models.Model):
 
 
 class Nominee(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='nominee')
+    profile = models.OneToOneField(
+        Profile, 
+        on_delete=models.CASCADE, 
+        related_name='nominee'
+        )
     full_name = models.CharField(max_length=100, blank=True, null=True)
     relation = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -155,7 +164,12 @@ class Nominee(models.Model):
 
 
 class ContactUs(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_us')
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='contact_us',
+        limit_choices_to=~Q(user_type='Developer')
+        )
     subject = models.CharField(max_length=255, blank=True, null=True)
     message = models.TextField()
     is_seen = models.BooleanField(default=False)

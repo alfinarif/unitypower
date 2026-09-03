@@ -260,7 +260,7 @@ def admin_properties_list_view(request):
             form = PropertiesForm()
             if request.method == 'POST' or request.method == 'post':
                 form = PropertiesForm(request.POST)
-                all_users = User.objects.all()
+                all_users = User.objects.exclude(user_type='Developer')
                 if form.is_valid():
                     form_obj = form.save(commit=False)
                     form_obj.save()
@@ -290,7 +290,7 @@ def admin_properties_list_view(request):
 def admin_unpaid_report_list(request):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-            users = User.objects.all().order_by('-id')
+            users = User.objects.exclude(user_type='Developer')
             reports_data = calculate_all_users_billing(users)
 
             context = {

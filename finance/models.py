@@ -3,6 +3,7 @@ import random
 import string
 from datetime import date
 from django.utils import timezone
+from django.db.models import Q
 
 from simple_history.models import HistoricalRecords
 
@@ -35,7 +36,11 @@ class PropertiesBuySale(models.Model):
         ('Approved', 'Approved'),
         ('Rejected', 'Rejected'),
     )
-    user = models.ManyToManyField(User, related_name="properties")
+    user = models.ManyToManyField(
+        User, 
+        related_name="properties",
+        limit_choices_to=~Q(user_type='Developer')
+        )
     name = models.CharField(max_length=255, blank=False, null=False, default='Properties Name')
     details = models.TextField(blank=False, null=False, default='Properties Descriptions')
     document = models.ImageField(upload_to='payment_doc', blank=True, null=True)
@@ -81,7 +86,12 @@ class PaymentRequestModel(models.Model):
         ('Rejected', 'Rejected'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment_request')
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='payment_request',
+        limit_choices_to=~Q(user_type='Developer')
+        )
     properties = models.ForeignKey(PropertiesBuySale, on_delete=models.CASCADE, blank=True, null=True, related_name='properties')
     invoice_number = models.CharField(max_length=20, unique=True, default=generate_invoice_number, editable=False)
     calculation_type = models.CharField(max_length=100, choices=CALCULATION_TYPE, default='Select Purpose')

@@ -34,7 +34,14 @@
                                 </div>
                                 <div class="wallet-balance">
                                     <p><strong>Total Payments</strong></p>
-                                    <h5 class=""><span class="w-currency">৳</span>{{total_payment|floatformat:"2"|intcomma}}</h5>
+                                    <h5 class="">
+                                        <span class="w-currency">৳</span>
+                                        {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
+                                            {{total_payment|floatformat:"2"|intcomma}}
+                                        {% else %}
+                                            <span class="text-success"><strong>Developer Mode</strong></span>
+                                        {% endif %}
+                                    </h5>
                                 </div>
                             </div>
 
@@ -42,12 +49,26 @@
 
                                 <div class="w-a-info funds-received">
                                     <span>Last Payments <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
-                                    <p>৳{{last_payment.amount_of_money|floatformat:"2"|intcomma}}</p>
+                                    <p>
+                                        {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
+                                            ৳{{last_payment.amount_of_money|floatformat:"2"|intcomma}}
+                                        {% else %}
+                                            <span class="text-success"><strong>Developer Mode</strong></span>
+                                        {% endif %}
+                                    </p>
                                 </div>
 
                                 <div class="w-a-info funds-received">
                                     <span>Due Amounts <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
-                                    <p><span class="text-danger">৳{{unpaid_reports.total_unpaid_due|floatformat:"2"|intcomma}}</span></p>
+                                    <p>
+                                        <span class="text-danger">
+                                            {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
+                                                ৳{{unpaid_reports.total_unpaid_due|floatformat:"2"|intcomma}}
+                                            {% else %}
+                                                <span class="text-success"><strong>Developer Mode</strong></span>
+                                            {% endif %}
+                                        </span>
+                                    </p>
                                 </div>
                             
                             </div>
@@ -61,19 +82,25 @@
                                 <div class="invoice-list">
 
                                     <div class="inv-detail">
-                                        {% for user_report in unpaid_reports.unpaid_months %}
-                                        {% if unpaid_reports %}
-                                            <div class="info-detail-1">
-                                                <p>Due month <span class="text-danger">{{user_report.month_name}}</p>
-                                                <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.amount|floatformat:"2"|intcomma}}</span></p>
-                                            </div>
+                                        {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
+                                        
+                                            {% for user_report in unpaid_reports.unpaid_months %}
+                                            {% if unpaid_reports %}
+                                                <div class="info-detail-1">
+                                                    <p>Due month <span class="text-danger">{{user_report.month_name}}</p>
+                                                    <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.amount|floatformat:"2"|intcomma}}</span></p>
+                                                </div>
+                                            {% else %}
+                                                <div class="info-detail-1">
+                                                    <p>Total Cash and Bank</p>
+                                                    <p><span class="w-currency">৳</span> <span class="bill-amount">{{total_cash_and_bank_payment|floatformat:"2"|intcomma}}</span></p>
+                                                </div>
+                                            {% endif %}
+                                            {% endfor %}
+
                                         {% else %}
-                                            <div class="info-detail-1">
-                                                <p>Total Cash and Bank</p>
-                                                <p><span class="w-currency">৳</span> <span class="bill-amount">{{total_cash_and_bank_payment|floatformat:"2"|intcomma}}</span></p>
-                                            </div>
+                                            <span><strong>Developer Mode Doesn't Have Access To Any Calculation.</strong></span>
                                         {% endif %}
-                                        {% endfor %}
                                     </div>
 
                                     
