@@ -45,7 +45,13 @@ class PropertiesBuySale(models.Model):
     details = models.TextField(blank=False, null=False, default='Properties Descriptions')
     document = models.ImageField(upload_to='payment_doc', blank=True, null=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Pending')
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='properties_approved')
+    approved_by = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        blank=True, null=True, 
+        related_name='properties_approved',
+        limit_choices_to=~Q(user_type='Developer')
+        )
     approved_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     history = HistoricalRecords()
@@ -105,7 +111,13 @@ class PaymentRequestModel(models.Model):
     payment_note = models.CharField(max_length=500, blank=True, null=True)
     is_accept = models.BooleanField(default=False)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Pending')
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='approved_by')
+    approved_by = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        blank=True, null=True, 
+        related_name='approved_by',
+        limit_choices_to=~Q(user_type='Developer')
+        )
     approved_at = models.DateField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     document = models.ImageField(upload_to='payment_doc', blank=True, null=True)

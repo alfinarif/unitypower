@@ -103,7 +103,11 @@ LANGUAGES = [
     ('bn-bd', _('Bengali')),
     ('ar', _('Arabic'))
 ]
-TIME_ZONE = 'Asia/Dhaka'
+TIME_ZONE = 'Asia/Riyadh'
+
+# It is highly recommended to keep UTC enabled for database storage
+USE_TZ = True
+
 USE_I18N = True
 
 

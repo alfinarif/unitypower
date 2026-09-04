@@ -7,14 +7,13 @@
 
 
 <div id="content" class="main-content">
-            <div class="layout-px-spacing">
-                <div class="row layout-spacing">
-
-                    <!-- Content -->
-                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 layout-top-spacing">
-
-                {% if request.user.is_hr or request.user.is_admin or request.user.is_finance %}
-                    {% if admin_form %}
+    <div class="layout-px-spacing">
+        <div class="row layout-spacing">
+            <!-- Content -->
+            
+            {% if request.user.is_hr or request.user.is_admin or request.user.is_finance %}
+                {% if admin_form %}
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 layout-top-spacing">
                         <div class="user-profile layout-spacing">
                             <div class="statbox widget box box-shadow">
                                 <div class="widget-header">
@@ -29,7 +28,7 @@
                                         {% csrf_token %}
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6" id='myColUser'>
-                                                <label for="validationCustom01">User For Payment</label>
+                                                <label for="validationCustom01">Member For Payment</label>
                                                 {{admin_form.user}}
                                             </div>
 
@@ -51,7 +50,7 @@
                                         </br>
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6" id='myColAmount'>
-                                                <label for="validationCustom01">Fee Amount</label>
+                                                <label for="validationCustom01">Amounts</label>
                                                 {{admin_form.amount_of_money}}
                                             </div>
 
@@ -107,92 +106,92 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
+                    </div>
+                {% endif %}
                 {% else %}
-                    <div class="user-profile layout-spacing">
-                        <div class="statbox widget box box-shadow">
-                            <div class="widget-header">
-                                <div class="row">
-                                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                                        <h4>Request For New Payments</h4>
-                                    </div>                 
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-top-spacing">
+                        <div class="user-profile layout-spacing">
+                            <div class="statbox widget box box-shadow">
+                                <div class="widget-header">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                            <h4>Request For New Payments</h4>
+                                        </div>                 
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="widget-content widget-content-area p-3">                                
-                                <form method="POST" class="needs-validation" novalidate action="">
-                                    {% csrf_token %}
-                                    <div class="form-row">
-                                        <div class="col-md-6 mb-6">
-                                            <label for="validationCustom01">Calculation Type</label>
-                                            {{form.calculation_type}}
+                                <div class="widget-content widget-content-area p-3">                                
+                                    <form method="POST" class="needs-validation" novalidate action="">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">Calculation Type</label>
+                                                {{form.calculation_type}}
+                                            </div>
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom02">Payment Method</label>
+                                                {{form.payment_method}}
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 mb-6">
-                                            <label for="validationCustom02">Payment Method</label>
-                                            {{form.payment_method}}
-                                        </div>
-                                    </div>
-                                    </br>
-                                    <div class="form-row mb-3">
-                                        <div class="col-md-6 mb-6">
-                                            <label for="validationCustom01">Fee Amount</label>
-                                            {{form.amount_of_money}}
-                                        </div>
+                                        </br>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">Fee Amount</label>
+                                                {{form.amount_of_money}}
+                                            </div>
 
-                                        <div class="col-md-6 mb-6">
-                                            <label for="">Bkash/Rocket/Bank-AC</label>
-                                            {{form.from_number}}
+                                            <div class="col-md-6 mb-6">
+                                                <label for="">Bkash/Rocket/Bank-AC</label>
+                                                {{form.from_number}}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-row mb-3">
-                                        <div class="col-md-6 mb-6">
-                                            <label for="validationCustom01">Payment Year</label>
-                                            {{form.pay_year}}
-                                        </div>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-6 mb-6">
+                                                <label for="validationCustom01">Payment Year</label>
+                                                {{form.pay_year}}
+                                            </div>
 
-                                        <div class="col-md-6 mb-6">
-                                            <label for="">Payment Month</label>
-                                            {{form.pay_month}}
+                                            <div class="col-md-6 mb-6">
+                                                <label for="">Payment Month</label>
+                                                {{form.pay_month}}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-row mb-3">
-                                        <div class="col-md-12 mb-12">
-                                            <label for="validationCustom01">Referance</label>
-                                            {{form.pin_ref}}
-                                        </div>
+                                        <div class="form-row mb-3">
+                                            <div class="col-md-12 mb-12">
+                                                <label for="validationCustom01">Referance</label>
+                                                {{form.pin_ref}}
+                                            </div>
 
-                                        <div class="col-md-12 mb-12">
-                                            <label for="validationCustom01">Select Cashier</label>
-                                            {{form.cashier}}
-                                        </div>
+                                            <div class="col-md-12 mb-12">
+                                                <label for="validationCustom01">Select Cashier</label>
+                                                {{form.cashier}}
+                                            </div>
 
-                                        <div class="col-md-12 mb-12">
-                                            <label for="validationCustom02">Leave a Message</label>
-                                            {{form.payment_note}}
+                                            <div class="col-md-12 mb-12">
+                                                <label for="validationCustom02">Leave a Message</label>
+                                                {{form.payment_note}}
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="form-group mb-4">
-                                        <div class="form-check pl-0">
-                                            <div class="custom-control custom-checkbox checkbox-success">
-                                                <input type="checkbox" class="custom-control-input" name="is_agree" id="invalidCheck" required>
-                                                <label class="custom-control-label" for="invalidCheck">Agree to terms and conditions</label>
-                                                <div class="invalid-feedback">
-                                                    You must agree before submitting.
+                                        
+                                        <div class="form-group mb-4">
+                                            <div class="form-check pl-0">
+                                                <div class="custom-control custom-checkbox checkbox-success">
+                                                    <input type="checkbox" class="custom-control-input" name="is_agree" id="invalidCheck" required>
+                                                    <label class="custom-control-label" for="invalidCheck">Agree to terms and conditions</label>
+                                                    <div class="invalid-feedback">
+                                                        You must agree before submitting.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <button class="btn btn-primary mt-3 w-100 text-center" type="submit">Submit Request</button>
-                                </form>
-                                
+                                        <button class="btn btn-primary mt-3 w-100 text-center" type="submit">Submit Request</button>
+                                    </form>
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
-                        
 
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 layout-top-spacing">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-top-spacing">
 
                         <div class="skills layout-spacing ">
                             <div class="widget-content widget-content-area br-6">
@@ -230,8 +229,9 @@
 
 
                     </div>
-                {% endif %}
-                </div>
-            </div>
+                
+            {% endif %}
         </div>
+    </div>
+</div>
 

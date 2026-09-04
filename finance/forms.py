@@ -30,7 +30,7 @@ class PaymentRequestForm(ModelForm):
 
             'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'pinRef'}),
             'cashier': forms.Select(attrs={'placeholder': 'Refer To Cashier', 'class': 'form-control mb-4', 'id': 'cashier'}),
-            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'class': 'form-control mb-4', 'id': 'paymentNote'})
+            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'rows': '4', 'class': 'form-control mb-4', 'id': 'paymentNote'})
             
         }
 
@@ -65,7 +65,7 @@ class PaymentViaAdminForm(ModelForm):
             'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payMonth'}),
 
             'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'pinRef'}),
-            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'class': 'form-control mb-4', 'id': 'paymentNote'})
+            'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'rows': '4', 'class': 'form-control mb-4', 'id': 'paymentNote'})
             
         }
 
@@ -88,10 +88,10 @@ class PropertiesForm(ModelForm):
 
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Properties Name', 'class': 'form-control mb-4', 'id': 'profession'}),
-            'details': forms.TextInput(attrs={'placeholder': 'Details', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'details': forms.Textarea(attrs={'placeholder': 'Details', 'rows': '6', 'class': 'form-control mb-4', 'id': 'profession'}),
             'document': forms.FileInput(attrs={'placeholder': 'Documents', 'class': 'form-control mb-4', 'id': 'profession'}),
             'status': forms.Select(attrs={'placeholder': 'Pending', 'class': 'form-control mb-4', 'id': 'profession'}),
-            'approved_by': forms.TextInput(attrs={'placeholder': 'Approved By: President', 'class': 'form-control mb-4', 'id': 'profession'}),
+            'approved_by': forms.Select(attrs={'placeholder': 'Approved By: President', 'class': 'form-control mb-4', 'id': 'profession'}),
             
         }
 
