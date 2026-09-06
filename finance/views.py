@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils import timezone
-
+import calendar
 import os
 from django.conf import settings
 
@@ -13,6 +13,8 @@ from weasyprint import HTML, CSS
 
 from finance.models import PaymentRequestModel
 from finance.forms import PaymentRequestForm, PaymentViaAdminForm
+
+from administration.helpers.send_messages_whatsapp import send_whatsapp_messages
 
 # TRANSACTION LIST VIEW
 def transaction_list(request):
@@ -89,8 +91,13 @@ def approve_or_reject_payment_request(request, id, status):
                     approved_by = request.user,
                     approved_at = timezone.now()
                     )
+
+                payment_date = f"{calendar.month_name[current_user_payment_request.pay_month]} {current_user_payment_request.pay_year}"
+                sms_body = f"*Payment Notification* \n\n*Hello {current_user_payment_request.user.profile.full_name}* \nYour payment request month of *{payment_date}* and amount is *TK-{current_user_payment_request.amount_of_money}* has been approved successfully.\n\n*Thank You*\n\n*Best Regards*\n*UnityPower Finance Department*"
+                
+                send_whatsapp_messages(current_user_payment_request.user.profile.phone_number, sms_body)
                 messages.success(request, "Payment request has been approved.")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                return redirect('administration:admin_transaction_list')
             elif status == 'Rejected':
                 PaymentRequestModel.objects.filter(id=id).update(
                     status=status,
@@ -115,7 +122,7 @@ def invoice_preview(request, pk):
         context = {
             'invoice': current_invoice_object
         }
-        return render(request, 'invoice_preview.html', context)
+        return render(request, 'invoice_preview_page.html', context)
     else:
         return redirect('membership:user_login')
     

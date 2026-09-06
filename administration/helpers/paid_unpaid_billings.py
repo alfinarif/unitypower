@@ -13,10 +13,18 @@ def get_fee_for_month(month_number):
     fee_schedule_obj = FeeSchedule.objects.last()
     base_fee = fee_schedule_obj.base_fee
     special_fee = fee_schedule_obj.special_fee
+    penalty_fine = 500
+    today = date.today()
+    if today.day > 4:
+        if month_number in [4, 11]:
+            return base_fee + special_fee + penalty_fine   # Total 25000 or just 5000 total based on your business rule
+        return base_fee + penalty_fine
+    else:
+        if month_number in [4, 11]:
+            return base_fee + special_fee  # Total 25000 or just 5000 total based on your business rule
+        return base_fee
 
-    if month_number in [4, 11]:
-        return base_fee + special_fee  # Total 25000 or just 5000 total based on your business rule
-    return base_fee
+
 
 # return paid unpaid report per user
 def calculate_per_user_billing(user):

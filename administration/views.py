@@ -138,7 +138,7 @@ def admin_index_view(request):
             }
         return render(request, 'admin_index.html', context)
     else:
-        return redirect('membership:profile_view')  
+        return redirect('membership:summary_view')  
 
 
 # ADMIN USERS LIST VIEW
@@ -425,6 +425,9 @@ def send_whatsapp_notification_to_unpaid_user(request, id):
     user_obj = User.objects.get(id=id)
     unpaid_user_report = calculate_per_user_billing(user_obj)
 
+    print('=================================================')
+    print(unpaid_user_report)
+    print('=================================================')
 
     # recipient: Include country code, remove leading zeros/plus signs
     unpaid_sms_text = "*অপরিশোধিত চাদা রিমাইন্ডার* \nঅনুগ্রহ করে আপনার নিম্ন উল্যেখ্য মাসের মাসিক চাদা সময় মত পরিসদ করুন।"
