@@ -6,6 +6,6 @@ services:
       sh -c "python manage.py migrate && python manage.py makemigrations && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
-      - ./db.sqlite3:/app/db.sqlite3
+      - ./db.sqlite3:/unity_power/db.sqlite3
     ports:
       - "8000:8000"
