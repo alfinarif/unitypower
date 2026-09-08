@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/apps/invoice-list.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/apps/notes.css' %}" />
     <!--  END INVOICE AND TRANSACTION PAGES  -->
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/scrollspyNav.css' %}" />
+    <link href="{% static 'assets/css/scrollspyNav.css' %}" rel="stylesheet" type="text/css"/>
 
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/users/user-profile.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/dropify/dropify.min.css' %}">
@@ -50,6 +50,7 @@
     <link href="{% static 'plugins/sweetalerts/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'plugins/sweetalerts/sweetalert.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'plugins/notification/snackbar/snackbar.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'plugins/select2/select2.min.css' %}" rel="stylesheet" type="text/css">
 
 
 </head>
@@ -124,6 +125,9 @@
     <script src="{% static 'plugins/notification/snackbar/snackbar.min.js' %}"></script>
     <script src="{% static 'assets/js/apps/custom-mailbox.js' %}"></script>
 
+    <script src="{% static 'plugins/select2/select2.min.js' %}"></script>
+    <script src="{% static 'plugins/select2/custom-select2.js' %}"></script>
+
     <script>
         $(document).ready(function() {
             $('#alter_pagination').DataTable( {
@@ -149,6 +153,12 @@
             });
         } );
 
+
+
+        // 30000 milliseconds = 30 seconds
+        //setTimeout(function() {
+        //    window.location.reload();
+        //}, 30000);
 
 
     </script>

@@ -40,6 +40,7 @@ def payment_request(request):
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
             if request.method == 'post' or request.method == 'POST':
                 admin_form = PaymentViaAdminForm(request.POST)
+                
                 if admin_form.is_valid():
                     admin_form.save()
                     messages.success(request, 'Your payment request submited successfully.')

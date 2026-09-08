@@ -62,7 +62,7 @@ class PaymentViaAdminForm(ModelForm):
             'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'fromNumber'}),
 
             'pay_year': forms.Select(choices=YEAR_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payYear'}),
-            'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control mb-4', 'id': 'payMonth'}),
+            'pay_month': forms.Select(choices=MONTH_CHOICES, attrs={'class': 'form-control tagging', 'id': 'payMonth'}),
 
             'pin_ref': forms.TextInput(attrs={'placeholder': 'Pin Number Or Referance', 'class': 'form-control mb-4', 'id': 'pinRef'}),
             'payment_note': forms.TextInput(attrs={'placeholder': 'Write something..!', 'rows': '4', 'class': 'form-control mb-4', 'id': 'paymentNote'})

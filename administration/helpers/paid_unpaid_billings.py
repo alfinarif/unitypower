@@ -15,7 +15,7 @@ def get_fee_for_month(month_number):
     special_fee = fee_schedule_obj.special_fee
     penalty_fine = 500
     today = date.today()
-    if today.day > 4:
+    if today.day > 10 and today.day <= 15:
         if month_number in [4, 11]:
             return base_fee + special_fee + penalty_fine   # Total 25000 or just 5000 total based on your business rule
         return base_fee + penalty_fine
