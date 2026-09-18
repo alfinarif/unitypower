@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from membership.models import User, Profile
 from .forms import CreateUserForm, ProfileInfoForm, NomineeInfoForm, ContactUsForm
 
-from finance.models import PaymentRequestModel
+from finance.models import PaymentModel, DuePayment
 from django.db.models import Q
 from django.db.models import Sum
 
@@ -102,17 +102,17 @@ def summary_view(request):
         # CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
         
         # Calculate both totals in a single database query
-        payment_totals = PaymentRequestModel.objects.aggregate(
-            total_savings_cash=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(user=request.user) & Q(payment_method='Cash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bank=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(user=request.user) & Q(payment_method='Bank') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bkash=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(user=request.user) & Q(payment_method='Bkash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_rocket=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(user=request.user) & Q(payment_method='Rocket') & Q(status='Approved') & Q(is_accept=True)),
+        payment_totals = PaymentModel.objects.aggregate(
+            total_savings_cash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_bank=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bkash') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Rocket') & Q(status='Approved') & Q(is_accept=True)),
 
 
-            total_expense=Sum('amount_of_money', filter=Q(calculation_type='Expense') & Q(status='Approved') & Q(is_accept=True)),
-            total_loan=Sum('amount_of_money', filter=Q(calculation_type='Loan') & Q(status='Approved') & Q(is_accept=True)),
-            total_welfare=Sum('amount_of_money', filter=Q(calculation_type='Welfare') & Q(status='Approved') & Q(is_accept=True)),
-            total_developments=Sum('amount_of_money', filter=Q(payment_method='Developments') & Q(status='Approved') & Q(is_accept=True)),
+            total_expense=Sum('amount_of_money', filter=Q(payment_type__name='Expense') & Q(status='Approved') & Q(is_accept=True)),
+            total_loan=Sum('amount_of_money', filter=Q(payment_type__name='Loan') & Q(status='Approved') & Q(is_accept=True)),
+            total_welfare=Sum('amount_of_money', filter=Q(payment_type__name='Welfare') & Q(status='Approved') & Q(is_accept=True)),
+            total_developments=Sum('amount_of_money', filter=Q(payment_type__name='Developments') & Q(status='Approved') & Q(is_accept=True)),
 
         )
 
@@ -133,12 +133,17 @@ def summary_view(request):
         total_payment = (savings_total_cash + savings_total_bank + savings_total_bkash + savings_total_rocket)
         
         # END CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
-        last_five_transaction = PaymentRequestModel.objects.filter(user=request.user).order_by('-id')[:3]
-        last_payment = PaymentRequestModel.objects.filter(Q(user=request.user) & Q(is_accept=True) & Q(status='Approved')).last()
+        last_five_transaction = PaymentModel.objects.filter(user=request.user).order_by('-id')[:3]
+        last_payment = PaymentModel.objects.filter(Q(user=request.user) & Q(is_accept=True) & Q(status='Approved')).last()
 
 
     # ==================== get unpaid users, amounts reports ==================================
-        unpaid_reports = calculate_per_user_billing(request.user)
+        unpaid_reports = DuePayment.objects.filter(Q(user=request.user) & Q(status='Pending')).order_by('created')
+        print('==================================================')
+        print(unpaid_reports)
+        print('====== Len ======')
+        print(len(unpaid_reports))
+        print('==================================================')
 
         context = {
             'total_payment': total_payment,

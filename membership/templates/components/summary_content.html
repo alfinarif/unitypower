@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load static %}
+{% load custom_filters %}
 
 
 <!--  Showing toast messages  -->
@@ -84,11 +85,11 @@
                                     <div class="inv-detail">
                                         {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
                                         
-                                            {% for user_report in unpaid_reports.unpaid_months %}
+                                            {% for user_report in unpaid_reports %}
                                             {% if unpaid_reports %}
                                                 <div class="info-detail-1">
-                                                    <p>Due month <span class="text-danger">{{user_report.month_name}}</p>
-                                                    <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.amount|floatformat:"2"|intcomma}}</span></p>
+                                                    <p>Due month > <span class="text-danger">{{user_report.pay_month|to_month_name}}-{{user_report.pay_year}}</span></p>
+                                                    <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.due_amount|floatformat:"2"|intcomma}}</span></p>
                                                 </div>
                                             {% else %}
                                                 <div class="info-detail-1">

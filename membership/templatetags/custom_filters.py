@@ -1,4 +1,5 @@
 from django import template
+import calendar
 
 register = template.Library()
 
@@ -23,3 +24,13 @@ def price_format(value):
         formatted_int = int_part
         
     return f"{formatted_int}{dec_part}"
+
+
+
+@register.filter
+def to_month_name(month_number):
+    try:
+        # Converts "1" or 1 to "January", etc.
+        return calendar.month_name[int(month_number)]
+    except (ValueError, IndexError):
+        return ""

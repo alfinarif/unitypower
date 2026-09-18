@@ -2,10 +2,13 @@ import calendar
 from datetime import date
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-
 from django.db.models import Q
 
-from finance.models import FeeSchedule, PaymentRequestModel
+from django.tasks import task
+from django.utils import timezone
+from datetime import timedelta
+
+from finance.models import FeeSchedule, PaymentModel, DuePayment
 
 # controll monthly and special fee from admin panel using FeeSchedule Models
 def get_fee_for_month(month_number):
@@ -33,7 +36,7 @@ def calculate_per_user_billing(user):
     
     # Fetch all months the user has already paid for
     paid_months = set(
-        user.payment_request.filter(Q(is_accept=True) & Q(status='Approved') & Q()).values_list('pay_year', 'pay_month', flat=False)
+        user.payments.filter(Q(is_accept=True) & Q(status='Approved') & Q()).values_list('pay_year', 'pay_month', flat=False)
     )
 
     unpaid_months_list = []
@@ -76,7 +79,7 @@ def calculate_all_users_billing(users):
     today = date.today()
     
     # 1. Bulk-fetch ALL payments to avoid hitting DB inside loops
-    all_payments = PaymentRequestModel.objects.all()
+    all_payments = PaymentModel.objects.all()
     
     # Map user ID to a set of their paid (year, month) tuples
     paid_maps = defaultdict(set)
@@ -108,6 +111,15 @@ def calculate_all_users_billing(users):
                     'amount': fee
                 })
                 total_unpaid_amount += fee
+
+                # create due payment record
+                DuePayment.objects.get_or_create(
+                    user = user,
+                    due_amount = fee,
+                    pay_year = year,
+                    pay_month = month,
+                    status = 'Pending',
+                )
 
             current_date += relativedelta(months=1)
 

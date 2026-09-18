@@ -117,23 +117,23 @@
                                             <div class="t-dot" data-original-title="" title="">
                                             </div>
                                             <div class="t-text">
-                                                <p><span class="text-danger">{{ log.history_type }}</span> <span class="text-success">{{ log.history_object }}</span></p>
+                                                {% if log.url %}
+                                                    <p><span class="text-primary">TRAFFIC</span> <span class="text-info">{{ log.ip_address }}</span> accessed page <code>{{ log.url }}</code> ({% if log.user %}{{ log.user.username }}{% else %}Guest{% endif %})</p>
+                                                {% elif log.event_type and not log.object_repr %}
+                                                    <p><span class="text-success">AUTH</span> User <strong>{{ log.email }}</strong> triggered auth event: <strong>{{ log.get_event_type_display }}</strong> from IP {{ log.ip_address }}</p>
+                                                {% elif log.object_repr %}
+                                                    <p><span class="text-warning">DB CHANGE</span> User <strong>{% if log.user %}{{ log.user.username }}{% else %}System{% endif %}</strong> performed <strong>{{ log.get_event_type_display }}</strong> on <em>{{ log.object_repr }}</em></p>
+                                                {% endif %}
+                                                <p><span class="text-danger">{{ log.event_type }}</span> <span class="text-success">{{ log.history_object }}</span></p>
                                                 
-                                                <p class="t-time">{{ log.history_date|date:"d-m-Y H:i" }}</p>
+                                                <p class="t-time">{{ log.datetime|date:"Y-m-d H:i:s" }}</p>
                                             </div>
-                                        </div>
-
-                                        {% comment %} <div class="item-timeline timeline-success">
-                                            <div class="t-dot" data-original-title="" title="">
-                                            </div>
-                                            <div class="t-text">
-                                                <p>Send Mail to <a href="javascript:void(0);">HR</a> and <a href="javascript:void(0);">Admin</a></p>
-                                                <span class="badge">Completed</span>
-                                                <p class="t-time">2 min ago</p>
-                                            </div>
-                                        </div>  {% endcomment %}
+                                        </div> 
 
                                     {% endfor %}
+
+                        
+
 
                                     </div>
                                 </div>

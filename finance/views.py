@@ -11,15 +11,16 @@ from django.http import FileResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
 
-from finance.models import PaymentRequestModel
+from finance.models import PaymentModel
 from finance.forms import PaymentRequestForm, PaymentViaAdminForm
 
 from administration.helpers.send_messages_whatsapp import send_whatsapp_messages
 
+
 # TRANSACTION LIST VIEW
 def transaction_list(request):
     if request.user.is_authenticated:
-        all_transactions = request.user.payment_request.all().order_by('-created')
+        all_transactions = request.user.payments.all().order_by('-created')
         
 
         context = {
@@ -64,7 +65,7 @@ def payment_request(request):
 
         # showing all payment request for current user
         user = request.user
-        all_payments = user.payment_request.all()
+        all_payments = user.payments.all()
         context = {
             'form': form,
             'admin_form': admin_form,
@@ -80,13 +81,13 @@ def payment_request(request):
 # APPROVE OR REJECT PAYMENT REQUEST
 def approve_or_reject_payment_request(request, id, status):
     if request.user.is_authenticated:
-        current_user_payment_request = get_object_or_404(PaymentRequestModel, pk=id)
+        current_user_payment_request = get_object_or_404(PaymentModel, pk=id)
         if current_user_payment_request.user == request.user:
             messages.error(request, "You cannot approve or rejects your own payment request.")
             return redirect('administration:admin_transaction_list')
         else:
             if status == 'Approved':
-                PaymentRequestModel.objects.filter(id=id).update(
+                PaymentModel.objects.filter(id=id).update(
                     status=status,
                     is_accept = True,
                     approved_by = request.user,
@@ -100,7 +101,7 @@ def approve_or_reject_payment_request(request, id, status):
                 messages.success(request, "Payment request has been approved.")
                 return redirect('administration:admin_transaction_list')
             elif status == 'Rejected':
-                PaymentRequestModel.objects.filter(id=id).update(
+                PaymentModel.objects.filter(id=id).update(
                     status=status,
                     is_accept = False,
                     approved_by = request.user,
@@ -118,7 +119,7 @@ def approve_or_reject_payment_request(request, id, status):
 # INVOICE PREVIEW VIEW
 def invoice_preview(request, pk):
     if request.user.is_authenticated:
-        current_invoice_object = get_object_or_404(PaymentRequestModel, pk=pk)
+        current_invoice_object = get_object_or_404(PaymentModel, pk=pk)
 
         context = {
             'invoice': current_invoice_object
@@ -131,7 +132,7 @@ def invoice_preview(request, pk):
 # INVOICE DOWNLOAD FUNCTION VIEW
 def invoice_download(request, pk):
     if request.user.is_authenticated:
-        invoice = get_object_or_404(PaymentRequestModel, pk=pk)
+        invoice = get_object_or_404(PaymentModel, pk=pk)
 
         context = {
             'invoice': invoice

@@ -1,12 +1,10 @@
-from django.db import models
-from datetime import date
 
+from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser, PermissionsMixin
 from django.db.models import Q
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from simple_history.models import HistoricalRecords
 
 
 # CUSTOM USER MANAGER
@@ -28,6 +26,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('user_type', 'Developer')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError("Superuser must be have is_staff True")
@@ -63,7 +62,6 @@ class User(AbstractUser, PermissionsMixin):
     is_hr = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_finance = models.BooleanField(default=False)
-    history = HistoricalRecords()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
@@ -107,7 +105,7 @@ class Profile(models.Model):
     avatar = models.ImageField(upload_to='avatar', blank=True, null=True)
     created_date = models.DateField(auto_now_add=True, editable=True)
     updated_date = models.DateField(blank=True, null=True)
-    history = HistoricalRecords()
+
 
     def __str__(self):
         return f"{self.user.email}'s Profile"
@@ -133,6 +131,10 @@ class Profile(models.Model):
         return True
 
 
+
+
+
+
 class Nominee(models.Model):
     profile = models.OneToOneField(
         Profile, 
@@ -145,7 +147,7 @@ class Nominee(models.Model):
     phone_number = models.CharField(max_length=16, blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    history = HistoricalRecords()
+
 
     def __str__(self):
         return f"{self.profile.user.email}'s Nominee"
@@ -174,7 +176,7 @@ class ContactUs(models.Model):
     message = models.TextField()
     is_seen = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
-    history = HistoricalRecords()
+
 
     def __str__(self):
         return f"{self.user.email} Send A Message!"

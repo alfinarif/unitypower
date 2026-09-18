@@ -8,7 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from administration.helpers.paid_unpaid_billings import calculate_all_users_billing
 from membership.models import User, Profile, Nominee
-from finance.models import PaymentRequestModel
+from finance.models import PaymentModel
 
 
 
@@ -468,7 +468,7 @@ def download_invoice_report(id):
     story.append(Spacer(1, 15))
 
     # Dynamic Profile Data
-    invoice = PaymentRequestModel.objects.get(id=id)
+    invoice = PaymentModel.objects.get(id=id)
 
     # Table Header
     table_data = [[
@@ -480,7 +480,7 @@ def download_invoice_report(id):
     ]]
 
     # Populate Table Rows dynamically
-    calculation_type = invoice.calculation_type if invoice.calculation_type else "X"
+    calculation_type = invoice.payment_type if invoice.payment_type else "X"
     payment_method = invoice.payment_method if invoice.payment_method else "X"
     amount_of_money = invoice.amount_of_money if invoice.amount_of_money else "X"
     status = invoice.status if invoice.status else "X"
@@ -597,7 +597,7 @@ def download_transaction_list_report(request):
     story.append(Spacer(1, 15))
 
     # Dynamic Profile Data
-    transaction_list = PaymentRequestModel.objects.all().order_by('-id')
+    transaction_list = PaymentModel.objects.all().order_by('-id')
 
     # Table Header
     table_data = [[
@@ -614,7 +614,7 @@ def download_transaction_list_report(request):
     for transaction in transaction_list:
         # FIX 2: Handle None values cleanly inside Paragraphs to prevent rendering breaks
         member = transaction.user.email if transaction.user.email else "X"
-        calculation_type = transaction.calculation_type if transaction.calculation_type else "X"
+        calculation_type = transaction.payment_type if transaction.payment_type else "X"
         payment_method = transaction.payment_method if transaction.payment_method else "X"
         amount_of_money = transaction.amount_of_money if transaction.amount_of_money else "X"
         cashier = transaction.cashier if transaction.cashier else "X"
@@ -736,7 +736,7 @@ def download_unpaid_list_report(request):
     # Dynamic Unpaid Data
     users = User.objects.all().order_by('-id')
     reports_data = calculate_all_users_billing(users)
-    transaction_list = PaymentRequestModel.objects.all().order_by('-id')
+    transaction_list = PaymentModel.objects.all().order_by('-id')
 
     # Table Header
     table_data = [[

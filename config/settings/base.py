@@ -35,9 +35,19 @@ INSTALLED_APPS = [
     'administration',
     'membership',
     'finance',
-    'simple_history',
     'import_export',
+
+    'easyaudit', # To tracking all users actions
+    "django_tasks", # To run background tasks
+    "django_tasks_db",     # The actual backend engine providing the DB tables
+    "django_scheduled_tasks",
 ]
+
+TASKS = {
+    "default": {
+        "BACKEND": "django_tasks_db.DatabaseBackend",
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,9 +59,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # simple_history to track users log
-    'simple_history.middleware.HistoryRequestMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -133,7 +144,19 @@ MEDIA_URL = 'media/'
 
 
 
+# 1. Ignore background, static, or admin paths from Request Logs
+DJANGO_EASY_AUDIT_LOG_REQUESTS_RE_EXCLUDE = [
+    r'^/admin/',       # Exclude internal admin clicks if you only want visitor traffic
+    r'^/static/',      # Exclude static file requests
+    r'^/media/',       # Exclude media file requests
+    r'^/favicon\.ico', # Exclude browser icon requests
+]
 
+
+# 2. Exclude specific models from being tracked (e.g., the log models themselves)
+DJANGO_EASY_AUDIT_UNREGISTERED_CLASSES_EXTRA = [
+    'sessions.Session', # Avoid logging session updates on every click
+]
 
 
 

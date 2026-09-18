@@ -6,7 +6,7 @@ from itertools import groupby
 
 
 from membership.models import User
-from finance.models import FeeSchedule, PaymentRequestModel
+from finance.models import FeeSchedule, PaymentModel
 
 
 def get_unpaid_report(request):
@@ -40,7 +40,7 @@ def get_unpaid_report(request):
 
         # 2. Get months the user actually paid for
         paid_months = set(
-            PaymentRequestModel.objects.filter(Q(user=member) & Q(is_accept=True) & Q(status='Approved'))
+            PaymentModel.objects.filter(Q(user=member) & Q(is_accept=True) & Q(status='Approved'))
             .values_list('pay_month', flat=True)
         )
         
@@ -93,7 +93,7 @@ def get_unpaid_report_per_user(user_id):
 
     # 2. Get months the user actually paid for
     paid_months = set(
-        PaymentRequestModel.objects.filter(Q(user=member) & Q(is_accept=True) & Q(status='Approved'))
+        PaymentModel.objects.filter(Q(user=member) & Q(is_accept=True) & Q(status='Approved'))
         .values_list('pay_month', flat=True)
     )
     # 3. Filter out paid months to find unpaid ones

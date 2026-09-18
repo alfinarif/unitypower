@@ -86,7 +86,7 @@
                                                                 
                                                                 <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-12 order-sm-0 order-1">
                                                                     <div class="inv--payment-info">
-                                                                        <p><span class=" inv-subtitle">Payment For:</span> <span>{{invoice.calculation_type}}</span></p>
+                                                                        <p><span class=" inv-subtitle">Payment Type:</span> <span>{{invoice.payment_type}}</span></p>
                                                                         <p><span class=" inv-subtitle">Payment Method:</span> <span>{{invoice.payment_method}}</span></p>
                                                                         {% comment %} <p><span class=" inv-subtitle">Amount Of Money: </span> <span>{{invoice.amount_of_money}}</span></p> {% endcomment %}
                                                                         <p><span class=" inv-subtitle">Cashier:</span> <span>{{invoice.cashier}}</span></p>
@@ -118,12 +118,13 @@
                                                                     <tbody>
 
                                                                         <tr>
-                                                                            <td>{{invoice.calculation_type}}</td>
+                                                                            <td>{{invoice.payment_type}}</td>
                                                                             <td>{{invoice.payment_method}}</td>
                                                                             <td>{{invoice.amount_of_money}}৳</td>
                                                                             <td>{{invoice.from_number}}</td>
+
                                                                             {% if invoice.status == 'Pending' %}
-                                                                                <td><span class="badge badge-info inv-status">Pending</span></td>
+                                                                                <td><span class="badge badge-info inv-status">{{invoice.status}}</span></td>
                                                                             {% elif invoice.status == 'Approved' %}
                                                                                 <td><span class="badge badge-success inv-status">Approved</span></td>
                                                                             {% elif invoice.status == 'Rejected' %}

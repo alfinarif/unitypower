@@ -41,7 +41,7 @@
                                         <div class="form-row">
                                             <div class="col-md-6 mb-6">
                                                 <label for="validationCustom01">Payment Type</label>
-                                                {{admin_form.calculation_type}}
+                                                {{admin_form.payment_type}}
                                             </div>
                                             <div class="col-md-6 mb-6">
                                                 <label for="validationCustom02">Payment Method</label>
@@ -125,8 +125,8 @@
                                         {% csrf_token %}
                                         <div class="form-row">
                                             <div class="col-md-6 mb-6">
-                                                <label for="validationCustom01">Calculation Type</label>
-                                                {{form.calculation_type}}
+                                                <label for="validationCustom01">Payment Type</label>
+                                                {{form.payment_type}}
                                             </div>
                                             <div class="col-md-6 mb-6">
                                                 <label for="validationCustom02">Payment Method</label>

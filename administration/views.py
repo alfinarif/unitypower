@@ -8,7 +8,7 @@ from django.db.models import Sum, Q
 from django.utils import timezone
 
 from administration.models import WhatsappNotificationModel
-from finance.models import PaymentRequestModel, PropertiesBuySale
+from finance.models import PaymentModel, Properties
 from membership.models import User, Profile, Nominee, ContactUs
 
 from administration.forms import WhatsappNotificationForm, WhatsappNotificationToPerUserForm
@@ -38,26 +38,34 @@ from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_use
 from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
 from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report, download_transaction_list_report, download_unpaid_list_report
 
+from itertools import chain
+from easyaudit.models import CRUDEvent, RequestEvent, LoginEvent
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
 def admin_index_view(request):
     if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-        # SHOWING DJANGO ACTIVITY LOGS
-        logs = LogEntry.objects.all().order_by('-action_time')
 
         # SHOWING PAYMENT TRANSACTIONS
-        transactions = PaymentRequestModel.objects.all().order_by('-created')[:6]
+        transactions = PaymentModel.objects.all().order_by('-created')[:6]
 
         # SHOWING HISTORY FROM ALL MODELS
-        all_objects_list = list(itertools.chain(
-            User.history.model.objects.all().order_by('-history_date'),
-            Profile.history.model.objects.all().order_by('-history_date'),
-            Nominee.history.model.objects.all().order_by('-history_date'),
-            ContactUs.history.model.objects.all().order_by('-history_date'),
-            PaymentRequestModel.history.model.objects.all().order_by('-history_date')
-        ))
+        # 1. Fetch data from all three models (limiting to 100 each for performance)
+        cruds = CRUDEvent.objects.select_related('user', 'content_type').order_by('-datetime')[:100]
+        requests = RequestEvent.objects.select_related('user').order_by('-datetime')[:100]
+        logins = LoginEvent.objects.select_related('user').order_by('-datetime')[:100]
 
-        history_list = list(all_objects_list)
+        # 2. Combine them into a single iterable list
+        combined_timeline = list(chain(cruds, requests, logins))
+
+        # 3. Sort the combined list universally by 'datetime' in descending order
+        # (Newest actions appear at the top, regardless of log type)
+        combined_timeline.sort(key=lambda log: log.datetime, reverse=True)
+
+        # 4. Slice the final combined timeline if you only want the top 50 overall entries
+        final_timeline = combined_timeline[:50]
+
+
+        history_list = final_timeline
         count = min(len(history_list), len(history_list))
         random_history_list = random.sample(history_list, count) if count > 0 else []
         # END HISTORY BLOCK HERE ========================
@@ -65,21 +73,21 @@ def admin_index_view(request):
         # CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
 
         # Calculate both totals in a single database query
-        payment_totals = PaymentRequestModel.objects.aggregate(
-            total_cash=Sum('amount_of_money', filter=Q(payment_method='Cash') & Q(status='Approved') & Q(is_accept=True)),
-            total_bank=Sum('amount_of_money', filter=Q(payment_method='Bank') & Q(status='Approved') & Q(is_accept=True)),
-
-            
-            total_savings_cash=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(payment_method='Cash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bank=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(payment_method='Bank') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bkash=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(payment_method='Bkash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_rocket=Sum('amount_of_money', filter=Q(calculation_type='Savings') & Q(payment_method='Rocket') & Q(status='Approved') & Q(is_accept=True)),
+        payment_totals = PaymentModel.objects.aggregate(
+            total_cash=Sum('amount_of_money', filter=Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
+            total_bank=Sum('amount_of_money', filter=Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
 
 
-            total_developments=Sum('amount_of_money', filter=Q(payment_method='Developments') & Q(status='Approved') & Q(is_accept=True)),
-            total_expense=Sum('amount_of_money', filter=Q(calculation_type='Expense') & Q(status='Approved') & Q(is_accept=True)),
-            total_loan=Sum('amount_of_money', filter=Q(calculation_type='Loan') & Q(status='Approved') & Q(is_accept=True)),
-            total_welfare=Sum('amount_of_money', filter=Q(calculation_type='Welfare') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_cash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_bank=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Bkash') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Rocket') & Q(status='Approved') & Q(is_accept=True)),
+
+
+            total_developments=Sum('amount_of_money', filter=Q(payment_method__name='Developments') & Q(status='Approved') & Q(is_accept=True)),
+            total_expense=Sum('amount_of_money', filter=Q(payment_type__name='Expense') & Q(status='Approved') & Q(is_accept=True)),
+            total_loan=Sum('amount_of_money', filter=Q(payment_type__name='Loan') & Q(status='Approved') & Q(is_accept=True)),
+            total_welfare=Sum('amount_of_money', filter=Q(payment_type__name='Welfare') & Q(status='Approved') & Q(is_accept=True)),
 
         )
 
@@ -111,8 +119,8 @@ def admin_index_view(request):
 
         # END CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
 
-        recent_savings_list = PaymentRequestModel.objects.filter(calculation_type='Savings').order_by('-id')
-        recent_members_list = Profile.objects.all().order_by('-id')
+        recent_savings_list = PaymentModel.objects.filter(payment_type__name='Savings').order_by('-id')[:7]
+        recent_members_list = Profile.objects.all().order_by('-id')[:7]
 
 
 
@@ -123,7 +131,6 @@ def admin_index_view(request):
 
         
         context = {
-            'logs': logs,
             'transactions': transactions,
             'all_objects_list': random_history_list,
             'total_received_balance': total_received_balance,
@@ -237,7 +244,7 @@ def admin_nominee_update_view(request, id):
 def admin_transaction_list(request):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-            all_transactions = PaymentRequestModel.objects.all().order_by('-id')
+            all_transactions = PaymentModel.objects.all().order_by('-id')
             
 
             context = {
@@ -270,7 +277,7 @@ def admin_properties_list_view(request):
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-            properties_list = PropertiesBuySale.objects.all().order_by('-id')
+            properties_list = Properties.objects.all().order_by('-id')
             
 
             context = {

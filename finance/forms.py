@@ -4,7 +4,7 @@ from django import forms
 import calendar
 from django.utils import timezone
 
-from finance.models import PaymentRequestModel, PropertiesBuySale
+from finance.models import PaymentModel, Properties
 
 
 class PaymentRequestForm(ModelForm):
@@ -15,12 +15,12 @@ class PaymentRequestForm(ModelForm):
         # Generates: [(1, 'January'), (2, 'February'), ..., (12, 'December')]
         MONTH_CHOICES = [(i, calendar.month_name[i]) for i in range(1, 13)]
 
-        model = PaymentRequestModel
-        fields = ['calculation_type', 'payment_method', 'amount_of_money', 'from_number', 'pay_year', 'pay_month', 'pin_ref', 'cashier', 'payment_note']
+        model = PaymentModel
+        fields = ['payment_type', 'payment_method', 'amount_of_money', 'from_number', 'pay_year', 'pay_month', 'pin_ref', 'cashier', 'payment_note']
         exclude = ('user', 'invoice_number')
         
         widgets = {
-            'calculation_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentType'}),
+            'payment_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentType'}),
             'payment_method': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentMethod'}),
             'amount_of_money': forms.NumberInput(attrs={'class': 'form-control mb-4', 'id': 'amountInput'}),
             'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'fromNumber'}),
@@ -49,14 +49,14 @@ class PaymentViaAdminForm(ModelForm):
         # Generates: [(1, 'January'), (2, 'February'), ..., (12, 'December')]
         MONTH_CHOICES = [(i, calendar.month_name[i]) for i in range(1, 13)]
 
-        model = PaymentRequestModel
-        fields = ['user', 'properties', 'cashier', 'calculation_type', 'payment_method', 'amount_of_money', 'from_number', 'pay_year', 'pay_month', 'pin_ref', 'pay_month', 'payment_note']
+        model = PaymentModel
+        fields = ['user', 'properties', 'cashier', 'payment_type', 'payment_method', 'amount_of_money', 'from_number', 'pay_year', 'pay_month', 'pin_ref', 'pay_month', 'payment_note']
         exclude = ('invoice_number',)
         widgets = {
             'user': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'validationCustom01'}),
             'properties': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'propertiesId'}),
             'cashier': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'cashier'}),
-            'calculation_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentType'}),
+            'payment_type': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'paymentType'}),
             'payment_method': forms.Select(attrs={'class': 'form-control mb-4', 'id': 'profession paymentMethod'}),
             'amount_of_money': forms.NumberInput(attrs={'class': 'form-control mb-4', 'id': 'amountInput'}),
             'from_number': forms.TextInput(attrs={'placeholder': '01800000000', 'class': 'form-control mb-4', 'id': 'fromNumber'}),
@@ -82,7 +82,7 @@ class PaymentViaAdminForm(ModelForm):
 
 class PropertiesForm(ModelForm):
     class Meta:
-        model = PropertiesBuySale
+        model = Properties
         fields = ['name', 'details', 'document', 'status', 'approved_by']
         exclude = ('user', 'history', 'approved_at')
 
