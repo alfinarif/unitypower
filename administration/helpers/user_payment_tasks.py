@@ -1,19 +1,14 @@
-import calendar
-from datetime import date
+from datetime import date, datetime
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
-import time  # 1. IMPORT THIS
-
-from django.tasks import task
 from django.utils import timezone
-from datetime import timedelta
-from django.db import IntegrityError, transaction
-from django.db.models import Q
-from django.db.models import Sum
 from decimal import Decimal
+from dateutil.relativedelta import relativedelta
+from django.db import transaction
+from django.db.models import Sum, Q
+from django.db.utils import IntegrityError
 
-from membership.models import User
 from finance.models import FeeSchedule, PaymentModel, DuePayment, PaymentSummery
+from membership.models import User
 
 
 def get_fee_for_month(month_number):
@@ -40,8 +35,7 @@ def get_fee_for_month(month_number):
 
 
 
-@task
-def due_billing_bg_tasks():
+def generate_due_billings():
     print("[Due Billing] Started generating due billings processing...")
     try:
         with transaction.atomic():
@@ -95,20 +89,16 @@ def due_billing_bg_tasks():
 
                     current_date += relativedelta(months=1)
                     
+        print("[Due Billing] Successfully completed generating due billings.")
+                    
     except Exception as e:
         print(f"[Due Billing ERROR] Due Billing logic failed: {e}")
-
-    # Since this runs inside the separate 'db_worker' process, sleeping here safely 
-    # waits 10 seconds without locking up your main web server or website users.
-    time.sleep(10)
-    
-    print("[Due Billing] Successfully executed the task...")
-    due_billing_bg_tasks.enqueue()  # No arguments = completely safe from JSON serialization errors!
+        raise e  # Re-raise so your calling framework knows it crashed
 
 
 
-@task
-def calculate_billing_bg_tasks():
+
+def calculate_billing_summaries():
     print("[Calculate Billing] Started chronological billing deduction waterfall...")
     try:
         with transaction.atomic():
@@ -175,17 +165,12 @@ def calculate_billing_bg_tasks():
 
     except Exception as e:
         print(f"[Calculate billing ERROR] Calculate billing logic failed: {e}")
-
-    # 3. Continuous Safe Background Loop
-    time.sleep(10)
-    
-    print("[Calculate Billing] Successfully executed the task...")
-    calculate_billing_bg_tasks.enqueue()
+        raise e
 
 
 
-@task
-def payment_summery_bg_tasks():
+
+def calculate_and_sync_payment_summaries():
     print("[Payment Summary] Started payment summary processing...")
     try:
         with transaction.atomic():
@@ -244,16 +229,11 @@ def payment_summery_bg_tasks():
                         )
                         
             print("[Payment Summary] Sync complete with exact, non-doubled values.")
-
+            
     except Exception as e:
         print(f"[Payment Summary ERROR] Payment summary logic failed: {e}")
+        raise e # Re-raise so your view or background runner knows it failed
 
-    # 5. Continuous Loop Rescheduling
-    print("[Payment Summary] Waiting 10 seconds before scheduling next block...")
-    time.sleep(10)
-    
-    print("[Payment Summary] Spawning next task...")
-    payment_summery_bg_tasks.enqueue()
 
 
 

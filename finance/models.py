@@ -117,6 +117,7 @@ class PaymentModel(models.Model):
 class DuePayment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='due_payment', limit_choices_to=~Q(user_type='Developer'))
     due_amount = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
+    total_due_amount = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
     pay_year = models.IntegerField()
     pay_month = models.IntegerField()
     penalty_fee = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
@@ -124,6 +125,11 @@ class DuePayment(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        # Calculate total_due_amount as the sum of due_amount and penalty_fee
+        self.total_due_amount = Decimal(self.due_amount) + Decimal(self.penalty_fee)
+            
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Created due payment record for {self.user.email}"
@@ -138,6 +144,7 @@ class PaymentSummery(models.Model):
     total_paid_amount = models.DecimalField(max_digits=20, decimal_places=2, default='0.00')
     is_active = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"Created payment summery record for {self.user.email}"

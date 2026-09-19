@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load static %}
 {% load custom_filters %}
+{% load mathfilters %}
 
 
 <!--  Showing toast messages  -->
@@ -64,7 +65,7 @@
                                     <p>
                                         <span class="text-danger">
                                             {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
-                                                ৳{{unpaid_reports.total_unpaid_due|floatformat:"2"|intcomma}}
+                                                ৳{{payment_summery.total_due_amount|floatformat:"2"|intcomma}}
                                             {% else %}
                                                 <span class="text-success"><strong>Developer Mode</strong></span>
                                             {% endif %}
@@ -88,8 +89,13 @@
                                             {% for user_report in unpaid_reports %}
                                             {% if unpaid_reports %}
                                                 <div class="info-detail-1">
-                                                    <p>Due month > <span class="text-danger">{{user_report.pay_month|to_month_name}}-{{user_report.pay_year}}</span></p>
-                                                    <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.due_amount|floatformat:"2"|intcomma}}</span></p>
+                                                    {% if user_report.is_penalty == True %}
+                                                        <p>Due with <span class="text-info">Penalty</span> > <span class="badge badge-danger">{{user_report.pay_month|to_month_name}}-{{user_report.pay_year}}</span></p>
+                                                        <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.due_amount|floatformat:"2"|intcomma}}</span></p>
+                                                    {% elif user_report.is_penalty == False %}
+                                                        <p>Due month > <span class="text-success">{{user_report.pay_month|to_month_name}}-{{user_report.pay_year}}</span></p>
+                                                        <p><span class="w-currency">৳</span> <span class="bill-amount">{{user_report.due_amount|floatformat:"2"|intcomma}}</span></p>
+                                                    {% endif %}
                                                 </div>
                                             {% else %}
                                                 <div class="info-detail-1">

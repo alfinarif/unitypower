@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_tasks", # To run background tasks
     "django_tasks_db",     # The actual backend engine providing the DB tables
     "django_scheduled_tasks",
+    'mathfilters', # To use math filters in templates
 ]
 
 TASKS = {

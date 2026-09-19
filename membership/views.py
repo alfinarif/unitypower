@@ -1,15 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from datetime import datetime
 
-from datetime import date
-from dateutil.relativedelta import relativedelta
-
 from membership.models import User, Profile
-from .forms import CreateUserForm, ProfileInfoForm, NomineeInfoForm, ContactUsForm
+from .forms import CreateUserForm, ProfileInfoForm, ContactUsForm
 
-from finance.models import PaymentModel, DuePayment
+from finance.models import PaymentModel, DuePayment, PaymentSummery
 from django.db.models import Q
 from django.db.models import Sum
 
@@ -139,17 +135,14 @@ def summary_view(request):
 
     # ==================== get unpaid users, amounts reports ==================================
         unpaid_reports = DuePayment.objects.filter(Q(user=request.user) & Q(status='Pending')).order_by('created')
-        print('==================================================')
-        print(unpaid_reports)
-        print('====== Len ======')
-        print(len(unpaid_reports))
-        print('==================================================')
+        payment_summery = PaymentSummery.objects.get(user=request.user)
 
         context = {
             'total_payment': total_payment,
             'last_payment': last_payment,
             'last_five_transaction': last_five_transaction,
-            'unpaid_reports': unpaid_reports
+            'unpaid_reports': unpaid_reports,
+            'payment_summery': payment_summery,
             
         }
         messages.info(request, 'Your Finance A/C Summary.')

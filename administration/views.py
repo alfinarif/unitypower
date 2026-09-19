@@ -38,11 +38,20 @@ from .helpers.unpaid_reports import get_unpaid_report, get_unpaid_report_per_use
 from .helpers.paid_unpaid_billings import calculate_per_user_billing, calculate_all_users_billing
 from .helpers.export_all_as_pdf import download_member_report, download_profile_report, download_nominee_report, download_invoice_report, download_transaction_list_report, download_unpaid_list_report
 
+from .helpers.user_payment_tasks import (
+    generate_due_billings, 
+    calculate_billing_summaries, 
+    calculate_and_sync_payment_summaries
+)
+
 from itertools import chain
 from easyaudit.models import CRUDEvent, RequestEvent, LoginEvent
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
 def admin_index_view(request):
+    generate_due_billings()
+    calculate_billing_summaries()
+    calculate_and_sync_payment_summaries()
     if request.user.is_hr or request.user.is_admin or request.user.is_finance:
 
         # SHOWING PAYMENT TRANSACTIONS
