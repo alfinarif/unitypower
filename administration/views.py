@@ -49,9 +49,6 @@ from easyaudit.models import CRUDEvent, RequestEvent, LoginEvent
 
 # ADMIN INDEX VIEWS TO SHOW ALL SUMMARY
 def admin_index_view(request):
-    generate_due_billings()
-    calculate_billing_summaries()
-    calculate_and_sync_payment_summaries()
     if request.user.is_hr or request.user.is_admin or request.user.is_finance:
 
         # SHOWING PAYMENT TRANSACTIONS

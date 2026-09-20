@@ -60,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'finance.middleware.AutoBillingSyncMiddleware', # Custom middleware to sync billing and payment summaries on every request
+
     'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
 
