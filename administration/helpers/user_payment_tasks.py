@@ -16,30 +16,27 @@ def get_fee_for_month(month_number):
     fee_schedule_obj = FeeSchedule.objects.last()
     
     if not fee_schedule_obj:
-        base_fee = 5000
-        special_fee = 20000
+        base_fee = Decimal('5000.00')
+        special_fee = Decimal('20000.00')
     else:
-        base_fee = fee_schedule_obj.base_fee
-        special_fee = fee_schedule_obj.special_fee
+        base_fee = Decimal(fee_schedule_obj.base_fee)
+        special_fee = Decimal(fee_schedule_obj.special_fee)
 
-    penalty_fine = 500
-    today = date.today()
-    if today.day > 10:
-        if month_number in [4, 11]:
-            return base_fee + special_fee + penalty_fine
-        return base_fee + penalty_fine
-    else:
-        if month_number in [4, 11]:
-            return base_fee + special_fee
-        return base_fee
+    if month_number in [4, 11]:
+        return base_fee + special_fee
+    return base_fee
+
 
 
 
 def generate_due_billings():
-    print("[Due Billing] Started generating due billings processing...")
     try:
         with transaction.atomic():
-            users = User.objects.all()
+            # 1. Safely fetch the Pending Status object instance
+            pending_status_obj = 'Pending'
+            
+            # Exclude developers at the database layer
+            users = User.objects.filter(~Q(user_type='Developer'))
             today = date.today()
             
             # Prefetch payments to build a quick lookup map in memory
@@ -49,7 +46,6 @@ def generate_due_billings():
                 paid_maps[payment.user.id].add((payment.pay_year, payment.pay_month))
 
             for user in users:
-                # Safe attribute extraction
                 if not hasattr(user, 'profile') or not user.profile.created_date:
                     continue
                     
@@ -65,35 +61,56 @@ def generate_due_billings():
                     month = current_date.month
                     
                     if (year, month) not in user_paid_months:
-                        # Fetch original monthly fee requirements
-                        fee = get_fee_for_month(month)
+                        # Fetch the original clean monthly base fee requirements
+                        base_fee = Decimal(get_fee_for_month(month))
+
+                        # --- FIX 1: CALCULATE THE CHRONOLOGICAL PENALTY DEADLINE ---
+                        # Create a date object representing the 10th day of THIS SPECIFIC billing month
+                        penalty_deadline = date(year, month, 10)
+                        
+                        is_late = False
+                        penalty_amt = Decimal('0.00')
+                        
+                        # If today's calendar date has passed that month's specific 10th-day deadline,
+                        # it is officially late, and a permanent penalty fine is applied.
+                        if today > penalty_deadline:
+                            is_late = True
+                            penalty_amt = Decimal('500.00')
+
+                        # ---  INCLUDE PENALTY IN INITIAL DUE_AMOUNT ---
+                        final_calculated_due = base_fee + penalty_amt
 
                         due_payment, created = DuePayment.objects.get_or_create(
                             user=user,
                             pay_year=year,
                             pay_month=month,
                             defaults={
-                                'due_amount': Decimal(fee),
-                                'status': 'Pending'
+                                'due_amount': final_calculated_due,
+                                'status': pending_status_obj, # FIX 3: Assign object, not string
+                                'is_penalty': is_late,
+                                'penalty_fee': penalty_amt
                             }
                         )
                         
                         if created:
-                            print(f"Generated dues for User {user.id} - {month}/{year}")
-
-                        # Check if past grace period (10th day of the month)
-                        if today.day > 10:
-                            due_payment.is_penalty = True
-                            due_payment.penalty_fee = Decimal('500.00')  # Keep Decimals consistent
-                            due_payment.save()
+                            print(f"Generated dues for User {user.id} - {month}/{year} (Penalty Applied: {is_late})")
+                        else:
+                            # If the record already existed but was unpaid, and it just passed the 10th deadline today,
+                            # lock in the penalty updates permanently:
+                            if is_late and not due_payment.is_penalty:
+                                due_payment.is_penalty = True
+                                due_payment.penalty_fee = penalty_amt
+                                due_payment.due_amount += penalty_amt # Add fine to their active debt
+                                due_payment.save()
+                                print(f"Locked in lifetime penalty for User {user.id} on overdue month {month}/{year}")
 
                     current_date += relativedelta(months=1)
                     
-        print("[Due Billing] Successfully completed generating due billings.")
+        print("[Due Billing] Successfully completed generating due billings with accurate penalties.")
                     
     except Exception as e:
         print(f"[Due Billing ERROR] Due Billing logic failed: {e}")
-        raise e  # Re-raise so your calling framework knows it crashed
+        raise e
 
 
 
@@ -102,7 +119,8 @@ def calculate_billing_summaries():
     print("[Calculate Billing] Started chronological billing deduction waterfall...")
     try:
         with transaction.atomic():
-            # 1. Fetch required status objects safely to prevent foreign key errors
+            # Fetch actual status objects if they are ForeignKeys in your real database schema
+            # If they are CharFields, you can replace these with raw strings like 'Approved' / 'Pending'
             approved_status_obj = 'Approved'
             pending_status_obj = 'Pending'
             
@@ -112,12 +130,12 @@ def calculate_billing_summaries():
             )
             
             # Map user_id -> their absolute "wallet pool" of available cash
-            # Example: { 1: Decimal('50000.00'), 2: Decimal('15000.00') }
             user_cash_pools = {item['user_id']: Decimal(item['grand_total_paid'] or 0) for item in user_payments}
 
-            # Step 2: Fetch ALL DuePayments ordered CHRONOLOGICALLY
-            # This is critical so old months get paid off before newer months
-            all_due_records = DuePayment.objects.all().order_by('user_id', 'pay_year', 'pay_month')
+            # Step 2: Fetch ALL DuePayments ordered CHRONOLOGICALLY (Strictly exclude Developer users)
+            all_due_records = DuePayment.objects.filter(
+                ~Q(user__user_type='Developer')
+            ).select_related('user').order_by('user_id', 'pay_year', 'pay_month')
 
             # Step 3: Process the chronological ledger waterfall
             for due in all_due_records:
@@ -129,39 +147,65 @@ def calculate_billing_summaries():
                 # Look up what this month was originally supposed to cost
                 original_base_fee = Decimal(get_fee_for_month(due.pay_month))
 
-                if available_cash >= original_base_fee:
+                # --- FIX: READ PRE-CALCULATED LIFETIME PENALTY DIRECTLY FROM THE ROW ---
+                row_penalty_fee = Decimal(due.penalty_fee or 0)
+                
+                # Total cost for this month is always the base month cost + its permanent fine
+                total_month_cost = original_base_fee + row_penalty_fee
+
+                if available_cash >= total_month_cost:
                     # CASE A: User has enough cash in their pool to clear this month completely
                     new_due_balance = Decimal('0.00')
                     
-                    # Deduct this month's cost from their lifetime pool. 
-                    # The remainder stays in user_cash_pools and naturally rolls over to the next loop iteration!
-                    user_cash_pools[user_id] -= original_base_fee
+                    # Deduct total month cost from their lifetime pool remainder
+                    user_cash_pools[user_id] -= total_month_cost
                     
                     # Mark the record as completely settled
                     due.status = approved_status_obj
-                    due.is_penalty = False
-                    due.penalty_fee = Decimal(0)
+                    # Note: We do NOT set due.is_penalty = False or penalty_fee = 0 here. 
+                    # Keeping them unchanged locks the penalty history into the row permanently.
                 
                 elif available_cash > 0:
-                    # CASE B: User has some money left, but not enough to cover the whole month
-                    new_due_balance = original_base_fee - available_cash
+                    # CASE B: User has some money left, but not enough to cover the whole month cost
+                    new_due_balance = total_month_cost - available_cash
                     
                     # Exhaust their cash pool completely. No money left to roll over.
                     user_cash_pools[user_id] = Decimal('0.00')
                     due.status = pending_status_obj
                 
                 else:
-                    # CASE C: User has no cash left in their pool. The month remains fully due.
-                    new_due_balance = original_base_fee
+                    # CASE C: User has no cash left in their pool. The month remains fully due with fine.
+                    new_due_balance = total_month_cost
                     due.status = pending_status_obj
 
-                # Step 4: Save only if the balance or status actually changed to protect DB performance
+                # Save only if the balance or status actually changed to protect DB performance
                 if due.due_amount != new_due_balance or due.status != due.status:
                     due.due_amount = new_due_balance
                     due.save()
-                    print(f"Updated User {user_id} ({due.pay_month}/{due.pay_year}): Due Balance = {due.due_amount}, Status = {due.status}")
+                    print(f"Updated Due row for User {user_id} ({due.pay_month}/{due.pay_year}): Due = {due.due_amount}")
 
-        print("[Calculate Billing] Successfully completed billing sync with rollover cascading.")
+            # --- STEP 4: STORE THE LEFT OVER SURPLUS IN PAYMENTSUMMERY ---
+            print("[Calculate Billing] Updating PaymentSummery tables with remaining balances...")
+            for user_id, remaining_surplus in user_cash_pools.items():
+                
+                # Additional fallback check to ensure no developer profiles receive a summary record
+                from membership.models import User
+                target_user = User.objects.filter(id=user_id).first()
+                if target_user and target_user.user_type == 'Developer':
+                    continue
+                
+                # update_or_create works perfectly here because of your OneToOneField mapping
+                PaymentSummery.objects.update_or_create(
+                    user_id=user_id,
+                    defaults={
+                        'credit_amount': remaining_surplus, 
+                        'is_active': True
+                    }
+                )
+                if remaining_surplus > 0:
+                    print(f"[SURPLUS PERSISTED] User {user_id} leftover balance of {remaining_surplus} stored in PaymentSummery credit_amount.")
+
+        print("[Calculate Billing] Successfully completed billing sync with synchronized lifetime penalties.")
 
     except Exception as e:
         print(f"[Calculate billing ERROR] Calculate billing logic failed: {e}")
@@ -196,7 +240,7 @@ def calculate_and_sync_payment_summaries():
             
             # 3. Process every user cleanly using safe memory maps
             # Note: For production with large databases, consider .iterator()
-            users = User.objects.all()
+            users = User.objects.filter(~Q(user_type='Developer'))
             
             for user in users:
                 total_paid = paid_map.get(user.id, Decimal('0.00'))

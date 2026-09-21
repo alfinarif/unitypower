@@ -45,7 +45,7 @@ def payment_request(request):
                 if admin_form.is_valid():
                     admin_form.save()
                     messages.success(request, 'Your payment request submited successfully.')
-                    return redirect('finance:transaction_list')
+                    return redirect('administration:admin_transaction_list')
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
@@ -57,15 +57,15 @@ def payment_request(request):
                     current_submited_form = form.save(commit=False)
                     current_submited_form.user = request.user
                     current_submited_form.save()
-                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                    messages.success(request, 'Your payment request submited successfully.')
+                    return redirect('finance:transaction_list')
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 form = PaymentRequestForm()
 
         # showing all payment request for current user
-        user = request.user
-        all_payments = user.payments.all()
+        all_payments = request.user.payments.all()
         context = {
             'form': form,
             'admin_form': admin_form,

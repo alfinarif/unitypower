@@ -50,10 +50,10 @@
                             <div class="widget-amount">
 
                                 <div class="w-a-info funds-received">
-                                    <span>Last Payments <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
+                                    <span>Credit Balance <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
                                     <p>
-                                        {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
-                                            ৳{{last_payment.amount_of_money|floatformat:"2"|intcomma}}
+                                        {% if not request.user.user_type == 'Developer' %}
+                                            ৳{{payment_summery.credit_amount|floatformat:"2"|intcomma}}
                                         {% else %}
                                             <span class="text-success"><strong>Developer Mode</strong></span>
                                         {% endif %}
@@ -64,7 +64,7 @@
                                     <span>Due Amounts <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg></span>
                                     <p>
                                         <span class="text-danger">
-                                            {% if request.user.user_type == 'Member' or request.user.user_type == 'Chief-Adviser' or request.user.user_type == 'President' or request.user.user_type == 'Vice-President' or request.user.user_type == 'Chief-Cashier' or request.user.user_type == 'Assistant-Cashier' or request.user.user_type == 'Organizing-Committee' or request.user.user_type == 'Editor' or request.user.user_type == 'Hr' or request.user.user_type == 'Admin' %}
+                                            {% if not request.user.user_type == 'Developer' %}
                                                 ৳{{payment_summery.total_due_amount|floatformat:"2"|intcomma}}
                                             {% else %}
                                                 <span class="text-success"><strong>Developer Mode</strong></span>

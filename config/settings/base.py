@@ -2,11 +2,26 @@ import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
+import firebase_admin
+from firebase_admin import credentials
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
+# Initialize Firebase Admin SDK
+# Set the path to your downloaded Firebase private key JSON
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, 'firebase_api.json')
+
+# Initialize the default Firebase App
+firebase_admin.initialize_app()
+
+FCM_DJANGO_SETTINGS = {
+     # Allows updating existing tokens instead of throwing integrity errors
+     "UPDATE_ON_DUPLICATE_REG_ID": True,
+}
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-vuy$-kjz!i1zumy6z9b9p1(v(k#3^l*&6vrlt=ap=yvtk-nnrt'
@@ -42,6 +57,9 @@ INSTALLED_APPS = [
     "django_tasks_db",     # The actual backend engine providing the DB tables
     "django_scheduled_tasks",
     'mathfilters', # To use math filters in templates
+
+    'rest_framework',
+    'fcm_django',
 ]
 
 TASKS = {
@@ -64,6 +82,19 @@ MIDDLEWARE = [
 
     'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication', # Allows logged-in admin sessions to register
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
 
 
 

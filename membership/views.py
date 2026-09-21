@@ -61,8 +61,12 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, f"Welcome {email} to your profile.")
-            return redirect('membership:summary_view')
+            if user.user_type == "Developer":
+                messages.success(request, f"Welcome {email} to your profile.")
+                return redirect('administration:admin_index')
+            else:
+                messages.success(request, f"Welcome {email} to your profile.")
+                return redirect('membership:summary_view')
         else:
             messages.warning(request, 'Username or Password invalid..!')
 
@@ -95,58 +99,62 @@ def profile_view(request):
 # INDEX VIEW FOR ALL TYPE OF USERS
 def summary_view(request):
     if request.user.is_authenticated:
-        # CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
-        
-        # Calculate both totals in a single database query
-        payment_totals = PaymentModel.objects.aggregate(
-            total_savings_cash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bank=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bkash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Rocket') & Q(status='Approved') & Q(is_accept=True)),
-
-
-            total_expense=Sum('amount_of_money', filter=Q(payment_type__name='Expense') & Q(status='Approved') & Q(is_accept=True)),
-            total_loan=Sum('amount_of_money', filter=Q(payment_type__name='Loan') & Q(status='Approved') & Q(is_accept=True)),
-            total_welfare=Sum('amount_of_money', filter=Q(payment_type__name='Welfare') & Q(status='Approved') & Q(is_accept=True)),
-            total_developments=Sum('amount_of_money', filter=Q(payment_type__name='Developments') & Q(status='Approved') & Q(is_accept=True)),
-
-        )
-
-        
-        savings_total_cash = payment_totals['total_savings_cash'] or 0
-        savings_total_bank = payment_totals['total_savings_bank'] or 0
-        savings_total_bkash = payment_totals['total_savings_bkash'] or 0
-        savings_total_rocket = payment_totals['total_savings_rocket'] or 0
-
-        
-
-        development_total = payment_totals['total_developments'] or 0
-        expense_total = payment_totals['total_expense'] or 0
-        loan_total = payment_totals['total_loan'] or 0
-        welfare_total = payment_totals['total_welfare'] or 0
-
-        # Sum savings_total_cash and savings_total_bank and savings_total_bkash and savings_total_rocket
-        total_payment = (savings_total_cash + savings_total_bank + savings_total_bkash + savings_total_rocket)
-        
-        # END CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
-        last_five_transaction = PaymentModel.objects.filter(user=request.user).order_by('-id')[:3]
-        last_payment = PaymentModel.objects.filter(Q(user=request.user) & Q(is_accept=True) & Q(status='Approved')).last()
-
-
-    # ==================== get unpaid users, amounts reports ==================================
-        unpaid_reports = DuePayment.objects.filter(Q(user=request.user) & Q(status='Pending')).order_by('created')
-        payment_summery = PaymentSummery.objects.get(user=request.user)
-
-        context = {
-            'total_payment': total_payment,
-            'last_payment': last_payment,
-            'last_five_transaction': last_five_transaction,
-            'unpaid_reports': unpaid_reports,
-            'payment_summery': payment_summery,
+        if request.user.user_type == "Developer":
+            messages.success(request, 'You have full access at Admin Panel.')
+            return redirect('administration:admin_index')
+        else:
+            # CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
             
-        }
-        messages.info(request, 'Your Finance A/C Summary.')
-        return render(request, 'summary_page.html', context)
+            # Calculate both totals in a single database query
+            payment_totals = PaymentModel.objects.aggregate(
+                total_savings_cash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_bank=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bkash') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Rocket') & Q(status='Approved') & Q(is_accept=True)),
+
+
+                total_expense=Sum('amount_of_money', filter=Q(payment_type__name='Expense') & Q(status='Approved') & Q(is_accept=True)),
+                total_loan=Sum('amount_of_money', filter=Q(payment_type__name='Loan') & Q(status='Approved') & Q(is_accept=True)),
+                total_welfare=Sum('amount_of_money', filter=Q(payment_type__name='Welfare') & Q(status='Approved') & Q(is_accept=True)),
+                total_developments=Sum('amount_of_money', filter=Q(payment_type__name='Developments') & Q(status='Approved') & Q(is_accept=True)),
+
+            )
+
+            
+            savings_total_cash = payment_totals['total_savings_cash'] or 0
+            savings_total_bank = payment_totals['total_savings_bank'] or 0
+            savings_total_bkash = payment_totals['total_savings_bkash'] or 0
+            savings_total_rocket = payment_totals['total_savings_rocket'] or 0
+
+            
+
+            development_total = payment_totals['total_developments'] or 0
+            expense_total = payment_totals['total_expense'] or 0
+            loan_total = payment_totals['total_loan'] or 0
+            welfare_total = payment_totals['total_welfare'] or 0
+
+            # Sum savings_total_cash and savings_total_bank and savings_total_bkash and savings_total_rocket
+            total_payment = (savings_total_cash + savings_total_bank + savings_total_bkash + savings_total_rocket)
+            
+            # END CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
+            last_five_transaction = PaymentModel.objects.filter(user=request.user).order_by('-id')[:3]
+            last_payment = PaymentModel.objects.filter(Q(user=request.user) & Q(is_accept=True) & Q(status='Approved')).last()
+
+
+        # ==================== get unpaid users, amounts reports ==================================
+            unpaid_reports = DuePayment.objects.filter(Q(user=request.user) & Q(status='Pending')).order_by('created')
+            payment_summery = PaymentSummery.objects.get(user=request.user)
+
+            context = {
+                'total_payment': total_payment,
+                'last_payment': last_payment,
+                'last_five_transaction': last_five_transaction,
+                'unpaid_reports': unpaid_reports,
+                'payment_summery': payment_summery,
+                
+            }
+            messages.info(request, 'Your Finance A/C Summary.')
+            return render(request, 'summary_page.html', context)
     else:
         return redirect('membership:user_login')
 

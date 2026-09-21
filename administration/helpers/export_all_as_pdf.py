@@ -407,7 +407,7 @@ def download_nominee_report(request):
 def download_invoice_report(id):
     # Create the HTTP response with PDF headers
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="members_nominee_report.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="invoice_report_id_{id}.pdf"'
 
     # Setup document
     doc = SimpleDocTemplate(response, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
@@ -462,6 +462,7 @@ def download_invoice_report(id):
     # Title
     story.append(Paragraph("Unity Power Finance Department", title_style))
     story.append(Paragraph("Invoice Reports", title_style))
+    story.append(Spacer(1, 15))
     story.append(Paragraph("E-mail: info@unitypower.online", info_style))
     story.append(Paragraph("Phone: +966506897109", info_style))
     story.append(Paragraph("Address: Riyadh, Saudi Arabia", info_style))
@@ -480,7 +481,7 @@ def download_invoice_report(id):
     ]]
 
     # Populate Table Rows dynamically
-    calculation_type = invoice.payment_type if invoice.payment_type else "X"
+    payment_type = invoice.payment_type if invoice.payment_type else "X"
     payment_method = invoice.payment_method if invoice.payment_method else "X"
     amount_of_money = invoice.amount_of_money if invoice.amount_of_money else "X"
     status = invoice.status if invoice.status else "X"
@@ -489,11 +490,11 @@ def download_invoice_report(id):
 
 
     table_data.append([
-        Paragraph(calculation_type, cell_style),
-        Paragraph(payment_method, cell_style),
+        Paragraph(str(payment_type), cell_style),
+        Paragraph(str(payment_method), cell_style),
         Paragraph(str(amount_of_money), cell_style),
-        Paragraph(pay_date, cell_style),
-        Paragraph(status, cell_style),
+        Paragraph(str(pay_date), cell_style),
+        Paragraph(str(status), cell_style),
     ])
 
     # Create Table with specific column widths (Total width: 532)
@@ -614,7 +615,7 @@ def download_transaction_list_report(request):
     for transaction in transaction_list:
         # FIX 2: Handle None values cleanly inside Paragraphs to prevent rendering breaks
         member = transaction.user.email if transaction.user.email else "X"
-        calculation_type = transaction.payment_type if transaction.payment_type else "X"
+        payment_type = transaction.payment_type if transaction.payment_type else "X"
         payment_method = transaction.payment_method if transaction.payment_method else "X"
         amount_of_money = transaction.amount_of_money if transaction.amount_of_money else "X"
         cashier = transaction.cashier if transaction.cashier else "X"
@@ -623,13 +624,13 @@ def download_transaction_list_report(request):
         
 
         table_data.append([
-            Paragraph(member, cell_style),
-            Paragraph(calculation_type, cell_style),
-            Paragraph(payment_method, cell_style),
+            Paragraph(str(member), cell_style),
+            Paragraph(str(payment_type), cell_style),
+            Paragraph(str(payment_method), cell_style),
             Paragraph(str(amount_of_money), cell_style),
-            Paragraph(cashier, cell_style),
-            Paragraph(status, cell_style),
-            Paragraph(pay_date, cell_style),
+            Paragraph(str(cashier), cell_style),
+            Paragraph(str(status), cell_style),
+            Paragraph(str(pay_date), cell_style),
         ])
 
     # Create Table with specific column widths (Total width: 532)
@@ -748,10 +749,10 @@ def download_unpaid_list_report(request):
 
     # Populate Table Rows dynamically
     for user in reports_data:
-        member = user['email'] if user['email'] else "X"
-        account_number = user['account_number'] if user['account_number'] else "X"
-        due_months = user['total_unpaid_months'] if user['total_unpaid_months'] else "X"
-        total_due_amount = user['total_unpaid'] if user['total_unpaid'] else "X"
+        member = str(user['email']) if user['email'] else "X"
+        account_number = str(user['account_number']) if user['account_number'] else "X"
+        due_months = str(user['total_unpaid_months']) if user['total_unpaid_months'] else "X"
+        total_due_amount = str(user['total_unpaid']) if user['total_unpaid'] else "X"
         
         table_data.append([
             Paragraph(member, cell_style),

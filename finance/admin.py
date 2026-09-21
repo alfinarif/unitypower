@@ -57,7 +57,7 @@ class DuePaymentAdmin(admin.ModelAdmin):
 
 
 class PaymentSummeryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'total_due_amount', 'total_penalty_amount', 'total_paid_amount', 'is_active', 'created')
+    list_display = ('id', 'user', 'total_due_amount', 'total_penalty_amount', 'total_paid_amount', 'credit_amount', 'is_active', 'created')
 
 
 

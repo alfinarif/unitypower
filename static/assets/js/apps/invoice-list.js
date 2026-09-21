@@ -52,3 +52,7 @@ $('.dt-delete').on('click', function() {
 $('.action-delete').on('click', function() {
     $(this).parents('tr').remove();
 })
+
+
+
+
