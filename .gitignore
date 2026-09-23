@@ -1,4 +1,6 @@
 venv/
 .venv/
 env/
-firebase_api.json/
+
+firebase/
+.firebase/

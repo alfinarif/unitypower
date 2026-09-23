@@ -15,6 +15,8 @@ from finance.models import PaymentModel
 from finance.forms import PaymentRequestForm, PaymentViaAdminForm
 
 from administration.helpers.send_messages_whatsapp import send_whatsapp_messages
+from administration.helpers.push_notification import send_notification_to_finance
+from membership.models import User
 
 
 # TRANSACTION LIST VIEW
@@ -54,9 +56,32 @@ def payment_request(request):
             if request.method == 'post' or request.method == 'POST':
                 form = PaymentRequestForm(request.POST)
                 if form.is_valid():
+                    
                     current_submited_form = form.save(commit=False)
                     current_submited_form.user = request.user
+                    
+                    # 2. Save the instance to the DB correctly (modifies the object in place)
                     current_submited_form.save()
+                    
+
+                    # 3. Cache the values to prevent N+1 database queries inside the loop
+                    payment_amount = current_submited_form.amount_of_money
+                    user_email = request.user.email  # We already have request.user loaded!
+                    document_url = current_submited_form.document.url if current_submited_form.document else "/"
+
+                    # 4. Fetch the finance users
+                    type_list = ['Member', 'Chief-Adviser', 'Organizing-Committee']
+                    users_type_finance = User.objects.exclude(user_type__in=type_list)
+                    domain = request.build_absolute_uri() 
+                    # 5. Send notifications safely
+                    for user in users_type_finance:
+                        send_notification_to_finance(
+                            user_id = user.id,
+                            title = f"{payment_amount}BDT Payment Submited.❤️",
+                            body = f"{user_email} Has Submited Monthly Payment, Kindly Request To Check And Return Any Feedback Thank You.",
+                            click_action = f"{document_url}"
+                        )
+                        
                     messages.success(request, 'Your payment request submited successfully.')
                     return redirect('finance:transaction_list')
                 else:
@@ -87,12 +112,37 @@ def approve_or_reject_payment_request(request, id, status):
             return redirect('administration:admin_transaction_list')
         else:
             if status == 'Approved':
-                PaymentModel.objects.filter(id=id).update(
-                    status=status,
-                    is_accept = True,
-                    approved_by = request.user,
-                    approved_at = timezone.now()
-                    )
+                # 1. Fetch the actual object instance along with user information up front
+                pay_obj = PaymentModel.objects.select_related('user').filter(id=id).first()
+
+                if not pay_obj:
+                    # Handle the error if the record does not exist
+                    messages.error(request, "Payment record not found.")
+                    return redirect('administration:admin_transaction_list')
+
+                # 2. Update the fields on the instance directly
+                pay_obj.status = status
+                pay_obj.is_accept = True
+                pay_obj.approved_by = request.user
+                pay_obj.approved_at = timezone.now()
+                pay_obj.save()  # Commits the changes to the database
+
+                # 3. Cache the values safely from the actual object instance
+                payment_amount = pay_obj.amount_of_money
+                user_email = pay_obj.user.email  
+                obj_id = pay_obj.id
+
+                # 4. Safely check if a document exists before grabbing its URL string
+                document_url = pay_obj.document.url if pay_obj.document else "/"
+
+                # 5. Send notifications safely using the updated model values
+                send_notification_to_finance(
+                    user_id = pay_obj.user.id,
+                    title = "Payment Request Approved. ❤️",
+                    body = f"{user_email} Your Submitted Monthly Fee {payment_amount}BDT Payment Has Been Approved, Thank You.",
+                    click_action = document_url
+                )
+
 
                 payment_date = f"{calendar.month_name[current_user_payment_request.pay_month]} {current_user_payment_request.pay_year}"
                 sms_body = f"*Payment Notification* \n\n*Hello {current_user_payment_request.user.profile.full_name}* \nYour payment request month of *{payment_date}* and amount is *TK-{current_user_payment_request.amount_of_money}* has been approved successfully.\n\n*Thank You*\n\n*Best Regards*\n*UnityPower Finance Department*"
