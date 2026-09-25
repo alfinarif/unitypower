@@ -38,41 +38,25 @@
                                 <thead>
                                     <tr>
                                         <th>Member Email</th>
-                                        <th>ID Number</th>
-                                        <th>Month Details</th>
-                                        <th>Amount</th>
+                                        <th>Member ID</th>
+                                        <th>Due Amount</th>
                                         <th>Send Messages</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for user in reports_data %}
+                                    {% for user in users_data %}
                                             
                                         <tr>
                                             <td><span class="inv-email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> 
                                                 {{user.email}} </span>
                                             </td>
                                             <td>{{user.account_number}}</td>
-                                            
-                                            <td>
-                                                {% for unpaid_month in user.unpaid_months %}
-                                                    <span class="badge badge-danger mr-2"> {{unpaid_month.month_name}} </span> 
-                                                    {% if forloop.counter|divisibleby:5 and not forloop.last %}    
-                                                        <div class="d-flex">
-                                                            {% comment %} <p class="align-self-center mb-0 user-name"> {{transaction.unpaid_months|truncatechars:10}} </p> {% endcomment %}
-                                                                
-                                                        </div>
-                                                    
-                                                        </br>
-                                                    {% endif %}
-                                                    
-                                                {% endfor %}
-                                            </td>
-
-                                            <td><span class="inv-amount">৳{{user.total_unpaid}}</span></td>
-
+                                            {% if user.total_due  %}
+                                                <td><span class="inv-amount">৳{{user.total_due}}</span></td>
+                                            {% endif %}
                                             <td>
                                                 <span class="d-flex">
-                                                    <a href="{% url 'administration:send_whatsapp_notification_to_unpaid_user' user.id %}" class="btn btn-info btn-sm w-100">Send Notice</a>
+                                                    <a href="{% url 'administration:send_whatsapp_notification_to_unpaid_user' user.id %}" class="btn btn-primary btn-sm w-100">Send Notice</a>
                                                 </span>
                                             </td>
                                             

@@ -8,7 +8,7 @@ from django.db.models import Sum, Q
 from django.utils import timezone
 
 from administration.models import WhatsappNotificationModel
-from finance.models import PaymentModel, Properties
+from finance.models import PaymentModel, Properties, PaymentSummery, DuePayment
 from membership.models import User, Profile, Nominee, ContactUs
 
 from administration.forms import WhatsappNotificationForm, WhatsappNotificationToPerUserForm
@@ -19,7 +19,6 @@ from membership.forms import UserUpdateForm, NomineeInfoForm
 from finance.admin import PaymentRequestModelResource
 from membership.admin import UserModelResource
 
-import itertools
 import random
 
 import io
@@ -76,20 +75,20 @@ def admin_index_view(request):
 
         # Calculate both totals in a single database query
         payment_totals = PaymentModel.objects.aggregate(
-            total_cash=Sum('amount_of_money', filter=Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
-            total_bank=Sum('amount_of_money', filter=Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
+            total_cash=Sum('amount_of_money', filter=Q(payment_method='Cash') & Q(status='Approved') & Q(is_accept=True)),
+            total_bank=Sum('amount_of_money', filter=Q(payment_method='Bank') & Q(status='Approved') & Q(is_accept=True)),
 
 
-            total_savings_cash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bank=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Bkash') & Q(status='Approved') & Q(is_accept=True)),
-            total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(payment_method__name='Rocket') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_cash=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(payment_method='Cash') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_bank=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(payment_method='Bank') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(payment_method='Bkash') & Q(status='Approved') & Q(is_accept=True)),
+            total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(payment_method='Rocket') & Q(status='Approved') & Q(is_accept=True)),
 
 
-            total_developments=Sum('amount_of_money', filter=Q(payment_method__name='Developments') & Q(status='Approved') & Q(is_accept=True)),
-            total_expense=Sum('amount_of_money', filter=Q(payment_type__name='Expense') & Q(status='Approved') & Q(is_accept=True)),
-            total_loan=Sum('amount_of_money', filter=Q(payment_type__name='Loan') & Q(status='Approved') & Q(is_accept=True)),
-            total_welfare=Sum('amount_of_money', filter=Q(payment_type__name='Welfare') & Q(status='Approved') & Q(is_accept=True)),
+            total_developments=Sum('amount_of_money', filter=Q(payment_method='Developments') & Q(status='Approved') & Q(is_accept=True)),
+            total_expense=Sum('amount_of_money', filter=Q(payment_type='Expense') & Q(status='Approved') & Q(is_accept=True)),
+            total_loan=Sum('amount_of_money', filter=Q(payment_type='Loan') & Q(status='Approved') & Q(is_accept=True)),
+            total_welfare=Sum('amount_of_money', filter=Q(payment_type='Welfare') & Q(status='Approved') & Q(is_accept=True)),
 
         )
 
@@ -121,7 +120,7 @@ def admin_index_view(request):
 
         # END CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
 
-        recent_savings_list = PaymentModel.objects.filter(payment_type__name='Savings').order_by('-id')[:7]
+        recent_savings_list = PaymentModel.objects.filter(payment_type='Savings').order_by('-id')[:7]
         recent_members_list = Profile.objects.all().order_by('-id')[:7]
 
 
@@ -261,6 +260,25 @@ def admin_transaction_list(request):
 
 
 
+# Accounts Summery LIST VIEW
+def admin_accounts_summery_list(request):
+    if request.user.is_authenticated:
+        if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            total_accounts = PaymentSummery.objects.filter(is_active=True).order_by('-id')
+            
+
+            context = {
+                'total_accounts': total_accounts
+            }
+
+            return render(request, 'accounts_summery_list.html', context)
+        else:
+                return redirect('membership:profile_view')
+    else:
+        return redirect('membership:user_login')
+
+
+
 
 # PROPERTIES LIST VIEW
 def admin_properties_list_view(request):
@@ -297,20 +315,23 @@ def admin_properties_list_view(request):
 
 # TRANSACTION LIST VIEW
 def admin_unpaid_report_list(request):
-    if request.user.is_authenticated:
-        if request.user.is_hr or request.user.is_admin or request.user.is_finance:
-            users = User.objects.exclude(user_type='Developer')
-            reports_data = calculate_all_users_billing(users)
-
-            context = {
-                'reports_data': reports_data
-            }
-
-            return render(request, 'unpaid_reports.html', context)
-        else:
-            return redirect('membership:profile_view')
-    else:
+    if not request.user.is_authenticated:
         return redirect('membership:user_login')
+        
+    if not (request.user.is_hr or request.user.is_admin or request.user.is_finance):
+        return redirect('membership:profile_view')
+
+    users_with_due = User.objects.exclude(user_type='Developer').annotate(
+        total_due=Sum(
+            'due_payment__due_amount', # Adjust 'amount' to your DuePayment field name
+            filter=Q(due_payment__status='Pending')
+        )
+    ).order_by('-id') # Optional: order by id or total_due
+
+    context = {
+        'users_data': users_with_due
+    }
+    return render(request, 'unpaid_reports.html', context)
 
 
 

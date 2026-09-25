@@ -51,13 +51,11 @@ INSTALLED_APPS = [
     'membership',
     'finance',
     'import_export',
-
     'easyaudit', # To tracking all users actions
     "django_tasks", # To run background tasks
     "django_tasks_db",     # The actual backend engine providing the DB tables
     "django_scheduled_tasks",
     'mathfilters', # To use math filters in templates
-
     'rest_framework',
     'fcm_django',
 ]
@@ -70,6 +68,7 @@ TASKS = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,9 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'finance.middleware.AutoBillingSyncMiddleware', # Custom middleware to sync billing and payment summaries on every request
-
     'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
 
@@ -187,10 +184,7 @@ DJANGO_EASY_AUDIT_LOG_REQUESTS_RE_EXCLUDE = [
 ]
 
 
-# 2. Exclude specific models from being tracked (e.g., the log models themselves)
-DJANGO_EASY_AUDIT_UNREGISTERED_CLASSES_EXTRA = [
-    'sessions.Session', # Avoid logging session updates on every click
-]
+
 
 
 

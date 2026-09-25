@@ -107,16 +107,16 @@ def summary_view(request):
             
             # Calculate both totals in a single database query
             payment_totals = PaymentModel.objects.aggregate(
-                total_savings_cash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Cash') & Q(status='Approved') & Q(is_accept=True)),
-                total_savings_bank=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bank') & Q(status='Approved') & Q(is_accept=True)),
-                total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Bkash') & Q(status='Approved') & Q(is_accept=True)),
-                total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type__name='Savings') & Q(user=request.user) & Q(payment_method__name='Rocket') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_cash=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(user=request.user) & Q(payment_method='Cash') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_bank=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(user=request.user) & Q(payment_method='Bank') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_bkash=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(user=request.user) & Q(payment_method='Bkash') & Q(status='Approved') & Q(is_accept=True)),
+                total_savings_rocket=Sum('amount_of_money', filter=Q(payment_type='Savings') & Q(user=request.user) & Q(payment_method='Rocket') & Q(status='Approved') & Q(is_accept=True)),
 
 
-                total_expense=Sum('amount_of_money', filter=Q(payment_type__name='Expense') & Q(status='Approved') & Q(is_accept=True)),
-                total_loan=Sum('amount_of_money', filter=Q(payment_type__name='Loan') & Q(status='Approved') & Q(is_accept=True)),
-                total_welfare=Sum('amount_of_money', filter=Q(payment_type__name='Welfare') & Q(status='Approved') & Q(is_accept=True)),
-                total_developments=Sum('amount_of_money', filter=Q(payment_type__name='Developments') & Q(status='Approved') & Q(is_accept=True)),
+                total_expense=Sum('amount_of_money', filter=Q(payment_type='Expense') & Q(status='Approved') & Q(is_accept=True)),
+                total_loan=Sum('amount_of_money', filter=Q(payment_type='Loan') & Q(status='Approved') & Q(is_accept=True)),
+                total_welfare=Sum('amount_of_money', filter=Q(payment_type='Welfare') & Q(status='Approved') & Q(is_accept=True)),
+                total_developments=Sum('amount_of_money', filter=Q(payment_type='Developments') & Q(status='Approved') & Q(is_accept=True)),
 
             )
 

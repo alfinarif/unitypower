@@ -482,7 +482,7 @@ def download_invoice_report(id):
 
     # Populate Table Rows dynamically
     payment_type = invoice.payment_type if invoice.payment_type else "X"
-    payment_method = invoice.payment_method if invoice.payment_method else "X"
+    payment_method = invoice.payment_via if invoice.payment_via else "X"
     amount_of_money = invoice.amount_of_money if invoice.amount_of_money else "X"
     status = invoice.status if invoice.status else "X"
 
@@ -616,7 +616,7 @@ def download_transaction_list_report(request):
         # FIX 2: Handle None values cleanly inside Paragraphs to prevent rendering breaks
         member = transaction.user.email if transaction.user.email else "X"
         payment_type = transaction.payment_type if transaction.payment_type else "X"
-        payment_method = transaction.payment_method if transaction.payment_method else "X"
+        payment_method = transaction.payment_via if transaction.payment_via else "X"
         amount_of_money = transaction.amount_of_money if transaction.amount_of_money else "X"
         cashier = transaction.cashier if transaction.cashier else "X"
         status = transaction.status if transaction.status else "X"

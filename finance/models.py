@@ -32,23 +32,6 @@ class FeeSchedule(models.Model):
     def __str__(self):
         return f"Regular Fee:{self.base_fee} | Special Fee: {self.special_fee}"
     
-
-class PaymentType(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    is_active = models.BooleanField(default=False)
-    created_at = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-class PaymentMethod(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    is_active = models.BooleanField(default=False)
-    created_at = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
     
 
 class Cashier(models.Model):
@@ -85,17 +68,33 @@ class Properties(models.Model):
 
 # Payment request models
 class PaymentModel(models.Model):
+    CALCULATION_TYPE = (
+        ('Select Purpose', 'Select Purpose'),
+        ('Savings', 'Savings'),
+        ('Expense', 'Expense'),
+        ('Loan', 'Loan'),
+        ('Welfare', 'Welfare')
+
+    )
+    PAYMENT_METHOD = (
+        ('Select Method', 'Select Method'),
+        ('Developments', 'Developments'),
+        ('Bkash', 'Bkash'),
+        ('Rocket', 'Rocket'),
+        ('Cash', 'Cash'),
+        ('Bank', 'Bank'),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments', limit_choices_to=~Q(user_type='Developer'))
     properties = models.ForeignKey(Properties, on_delete=models.CASCADE, blank=True, null=True, related_name='properties')
     invoice_number = models.CharField(max_length=20, unique=True, default=generate_invoice_number, editable=False)
-    payment_type = models.ForeignKey(PaymentType, on_delete=models.CASCADE, default='Select Purpose')
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE, default='Select Method')
+    payment_type = models.CharField(max_length=100, choices=CALCULATION_TYPE, default='Select Purpose')
+    payment_method = models.CharField(max_length=100, choices=PAYMENT_METHOD, default='Select Method')
     amount_of_money = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
     from_number = models.CharField(max_length=20, blank=True, null=True)
     pin_ref = models.CharField(max_length=20, blank=True, null=True)
     pay_year = models.IntegerField()
     pay_month = models.IntegerField()
-    cashier = models.ForeignKey(Cashier, on_delete=models.CASCADE, default='Select Cashier')
+    cashier = models.ForeignKey(Cashier, on_delete=models.CASCADE, blank=True, null=True)
     payment_note = models.CharField(max_length=500, blank=True, null=True)
     is_accept = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
@@ -123,12 +122,6 @@ class DuePayment(models.Model):
     is_penalty = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        # Calculate total_due_amount as the sum of due_amount and penalty_fee
-        self.total_due_amount = Decimal(self.due_amount) + Decimal(self.penalty_fee)
-            
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Created due payment record for {self.user.email}"

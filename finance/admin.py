@@ -3,9 +3,7 @@ from django.contrib import admin
 from finance.models import (
     PaymentModel, 
     Properties,
-    FeeSchedule, 
-    PaymentType,
-    PaymentMethod,
+    FeeSchedule,
     Cashier,
     DuePayment,
     PaymentSummery
@@ -65,8 +63,7 @@ class PaymentSummeryAdmin(admin.ModelAdmin):
 class PropertiesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'status', 'approved_by', 'created_at')
 
-admin.site.register(PaymentType)
-admin.site.register(PaymentMethod)
+
 admin.site.register(Cashier)
 admin.site.register(FeeSchedule)
 admin.site.register(Properties, PropertiesAdmin)

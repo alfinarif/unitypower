@@ -10,6 +10,7 @@ urlpatterns = [
     path('user-list/update/<int:id>/', views.admin_user_update_view, name='admin_user_update'),
     path('profile-list/', views.admin_profile_list_view, name='admin_profile_list'),
     path('transactions-list/', views.admin_transaction_list, name='admin_transaction_list'),
+    path('accounts-summery-list/', views.admin_accounts_summery_list, name='admin_accounts_summery_list'),
     path('properties-list/', views.admin_properties_list_view, name='admin_properties_list_view'),
     path('unpaid-reports-list/', views.admin_unpaid_report_list, name='admin_unpaid_report_list'),
     path('nominee-list/', views.admin_nominee_list_view, name='admin_nominee_list'),

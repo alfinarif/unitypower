@@ -83,6 +83,7 @@
                     <a href="#finance" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 2h8v8H7v12H5V10H2V2zm2 2v4h4V4H4zm8 1h7.09v9H22v8h-8v-8h3.09V7H12V5zm4 11v4h4v-4h-4z" fill="#f5f5f5"></path> </g></svg>
+                            
                             <span>Finance Department</span>
                         </div>
                         <div>
@@ -91,84 +92,20 @@
                     </a>
                     <ul class="collapse submenu recent-submenu mini-recent-submenu list-unstyled show" id="finance" data-parent="#accordionExample">
                         <li class="active">
-                            <a href="{% url 'administration:admin_properties_list_view' %}"> <span class="text-success">Accounts Summery</span> </a>
+                            <a href="{% url 'administration:admin_accounts_summery_list' %}"> <span class="text-success">Accounts Summery</span> </a>
                         </li>
-                        
-                        <!-- NEW: Nested Submenu Parent -->
-                        <li class="nested-menu">
-                            <a href="#financeViews" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nested-toggle">
-                                <span class="text-success">Finance Views</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right sub-chevron"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </a>
-                            <!-- Nested Submenu Items -->
-                            <ul class="collapse list-unstyled sub-submenu" id="financeViews">
-                                <li class="">
-                                    <a href="{% url 'administration:admin_transaction_list' %}"> <span class="text-success">Invoice List</span> </a>
-                                </li>
-                                <li class="">
-                                    <a href="{% url 'administration:admin_unpaid_report_list' %}"> <span class="text-success">Due Member List</span> </a>
-                                </li>
-                            </ul>
+                        <li class="">
+                            <a href="{% url 'administration:admin_transaction_list' %}"> <span class="text-success">Transactions</span> </a>
+                        </li>
+                        <li class="">
+                            <a href="{% url 'administration:admin_unpaid_report_list' %}"> <span class="text-success">Due Members List</span> </a>
                         </li>
 
-
-
-
-                        <li class="nested-menu">
-                            <a href="#propertiesTag" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nested-toggle">
-                                <span class="text-success">Properties</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right sub-chevron"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </a>
-                            <!-- Nested Submenu Items -->
-                            <ul class="collapse list-unstyled sub-submenu" id="propertiesTag">
-                                <li class="">
-                                    <a href="{% url 'administration:admin_properties_list_view' %}"> <span class="text-success">Properties List</span> </a>
-                                </li>
-                                <li class="">
-                                    <a href="{% url 'administration:admin_unpaid_report_list' %}"> <span class="text-success">Add New Properties</span> </a>
-                                </li>
-                            </ul>
+                        <li class="">
+                            <a href="{% url 'administration:admin_properties_list_view' %}"> <span class="text-success">Properties List</span> </a>
                         </li>
-
-                        <li class="nested-menu">
-                            <a href="#financeReports" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nested-toggle">
-                                <span class="text-success">Reports & Transactions</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right sub-chevron"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </a>
-                            <!-- Nested Submenu Items -->
-                            <ul class="collapse list-unstyled sub-submenu" id="financeReports">
-                                <li class="">
-                                    <a href="{% url 'administration:admin_transaction_list' %}"> <span class="text-success">Invoice List</span> </a>
-                                </li>
-                                <li class="">
-                                    <a href="{% url 'administration:admin_unpaid_report_list' %}"> <span class="text-success">Due Member List</span> </a>
-                                </li>
-                            </ul>
-                        </li>
-
                         <li class="">
                             <a href="{% url 'finance:payment_request' %}"> <span class="text-success">Add New Payment</span> </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="menu">
-                    <a href="#notification" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
-                            <svg width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 2h8v8H7v12H5V10H2V2zm2 2v4h4V4H4zm8 1h7.09v9H22v8h-8v-8h3.09V7H12V5zm4 11v4h4v-4h-4z" fill="#f5f5f5"></path> </g></svg>
-                            
-                            <span>Notifications</span>
-                        </div>
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </div>
-                    </a>
-                    <ul class="collapse submenu recent-submenu mini-recent-submenu list-unstyled show" id="notification" data-parent="#accordionExample">
-                        <li class="active">
-                            <a href="{% url 'administration:admin_properties_list_view' %}"> <span class="text-success">Send To Whatsapp</span> </a>
-                        </li>
-                        <li class="">
-                            <a href="{% url 'administration:admin_transaction_list' %}"> <span class="text-success">Push Notification</span> </a>
                         </li>
                     </ul>
                 </li>
