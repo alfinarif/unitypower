@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Initialize Firebase Admin SDK
 # Set the path to your downloaded Firebase private key JSON
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, 'firebase/firebase_api.json')
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, 'firebase_api.json')
 
 # Initialize the default Firebase App
 firebase_admin.initialize_app()
