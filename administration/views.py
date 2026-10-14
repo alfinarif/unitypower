@@ -8,7 +8,7 @@ from django.db.models import Sum, Q
 from django.utils import timezone
 
 from administration.models import WhatsappNotificationModel
-from finance.models import PaymentModel, Properties, PaymentSummery, DuePayment
+from finance.models import PaymentModel, Properties, PropertiesFile, PaymentSummery, DuePayment
 from membership.models import User, Profile, Nominee, ContactUs
 
 from administration.forms import WhatsappNotificationForm, WhatsappNotificationToPerUserForm
@@ -287,12 +287,20 @@ def admin_properties_list_view(request):
             form = PropertiesForm()
             if request.method == 'POST' or request.method == 'post':
                 form = PropertiesForm(request.POST)
+                files = request.FILES.getlist('documents')
                 all_users = User.objects.exclude(user_type='Developer')
                 if form.is_valid():
                     form_obj = form.save(commit=False)
                     form_obj.save()
                     form_obj.user.set(all_users)
                     form_obj.save()
+                    print('====================================================')
+                    print(form_obj)
+                    print(files)
+                    print('====================================================')
+                    for file in files:
+                        PropertiesFile.objects.create(properties=form_obj, file=file)
+                        
                     messages.success(request, "Properties document have been created successfully.")
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

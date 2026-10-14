@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block content %}
 
@@ -20,12 +21,66 @@
 
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
-            <div class="row layout-spacing">
+            <div class="row layout-spacing m-3">
 
                 <!-- Content -->
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 layout-top-spacing"></div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 layout-top-spacing">
+                    <div class="bio layout-spacing ">
+                        <div class="widget-content widget-content-area">
+                            <h3 class="">{{properties.name}}</h3>
+                            <p>
+                                {{properties.details}}
+                            </p>
 
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-top-spacing">
+                            <div class="bio-skill-box">
+
+                                <div class="row">
+                                    {% if properties.files %}
+                                        {% for file in properties.files.all %}
+                                            <div class="col-12 col-xl-6 col-lg-12 mb-xl-5 mb-5 ">
+                                                <div class="d-flex b-skills">
+                                                    <div>
+                                                    </div>
+                                                    <div class="">
+                                                        <!-- Top Aligned Media -->
+                                                        <div class="media">
+                                                            <img class="rounded" src="{{file.file.url}}" alt="document" style="width: 40px; height: 40px;">
+                                                            <div class="media-body">
+                                                                <a href="{{ file.file.url }}" target="_blank" class="ml-2 mt-5">
+                                                                    {{ file.file|cut:"properties_doc/" }}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col-12 col-xl-6 col-lg-12 mb-xl-5 mb-5 ">
+                                            <div class="d-flex b-skills">
+                                                <div>
+                                                </div>
+                                                <div class="">
+                                                    <!-- Top Aligned Media -->
+                                                    <div class="media">
+                                                        <img class="rounded" src="{% static 'assets/images/not_found.jpg' %}" alt="document" style="width: 40px; height: 40px;">
+                                                        <div class="media-body">
+                                                            <p class="ml-2 mt-5">No document uploaded</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
+                        </div>                                
+                    </div>
+                </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 layout-top-spacing">
 
                         <div class="work-experience layout-spacing mt-2">
                             
@@ -68,7 +123,7 @@
                         </div>
 
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 layout-top-spacing"></div>
+                    {% comment %} <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 layout-top-spacing"></div> {% endcomment %}
 
             </div>
         </div>

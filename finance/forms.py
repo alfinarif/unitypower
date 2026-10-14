@@ -83,13 +83,12 @@ class PaymentViaAdminForm(ModelForm):
 class PropertiesForm(ModelForm):
     class Meta:
         model = Properties
-        fields = ['name', 'details', 'document']
+        fields = ['name', 'details']
         exclude = ('user', 'status', 'assistant_cashier_by', 'chief_cashier_by', 'vice_president_by', 'president_by', 'approved_at')
 
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Properties Name', 'class': 'form-control mb-4', 'id': 'profession'}),
             'details': forms.Textarea(attrs={'placeholder': 'Details', 'rows': '6', 'class': 'form-control mb-4', 'id': 'profession'}),
-            'document': forms.FileInput(attrs={'placeholder': 'Documents', 'class': 'form-control mb-4', 'id': 'profession'}),
             
         }
 

@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 import random
 import string
@@ -59,7 +61,6 @@ class Properties(models.Model):
     user = models.ManyToManyField(User, related_name="properties", limit_choices_to=~Q(user_type='Developer'))
     name = models.CharField(max_length=255, blank=False, null=False, default='Properties Name')
     details = models.TextField(blank=False, null=False, default='Properties Descriptions')
-    document = models.ImageField(upload_to='payment_doc', blank=True, null=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='PENDING_ASSISTANT_CASHIER')
 
     assistant_cashier_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assistant_cashier_approvals')
@@ -77,6 +78,11 @@ class Properties(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def filename(self):
+        # Extracts just the last part of the path (the actual file name)
+        return os.path.basename(self.document.name)
 
     def approve(self, user):
         """Advances the state machine sequentially based on user role."""
@@ -109,6 +115,7 @@ class Properties(models.Model):
             {'code': 'PENDING_CHIEF_CASHIER', 'label': f'Chief Cashier {self.chief_cashier_by} Review', 'date': self.chief_cashier_at},
             {'code': 'PENDING_VICE_PRESIDENT', 'label': f'Vice President {self.vice_president_by} Review', 'date': self.vice_president_at },
             {'code': 'PENDING_PRESIDENT', 'label': f'President {self.president_by} Review', 'date': self.president_at},
+            {'code': 'Approved', 'label': f'This Property is Approved', 'date': self.president_at},
         ]
         
         # Determine the active numerical index
@@ -159,7 +166,12 @@ class Properties(models.Model):
     #     else:
     #         raise PermissionError("You do not have permission to reject this request.")
 
+class PropertiesFile(models.Model):
+    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='properties_doc/', blank=True, null=True)
 
+    def __str__(self):
+        return f"File for {self.properties.name}"
 
 
 # Payment request models
