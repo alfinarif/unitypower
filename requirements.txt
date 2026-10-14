@@ -85,6 +85,7 @@ prompt_toolkit==3.0.53
 propcache==0.5.2
 proto-plus==1.28.4
 protobuf==7.36.2
+psycopg2-binary==2.9.13
 pyasn1==0.6.4
 pyasn1_modules==0.4.2
 PyAutoGUI==0.9.54

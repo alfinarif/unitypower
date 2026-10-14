@@ -61,7 +61,7 @@
                                                     </br>
                                                     <p class="meta-time">{{properties.created_at}}</p>
                                                     <div class="note-description-content">
-                                                        <p class="note-description" data-noteDescription="Curabitur facilisis vel elit sed dapibus sodales purus rhoncus.">{{properties.details|truncatewords:5}}</p>
+                                                        <p class="note-description">{{properties.details|truncatewords:5}}</p>
                                                     </div>
                                                 </div>
                                                 <div class="note-action">
@@ -70,7 +70,7 @@
                                                 </div>
                                                 <div class="note-footer">
                                                     <div class="tags-selector btn-group">
-                                                        <a class="text-success nav-link dropdown-toggle d-icon label-group" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">
+                                                        <a class="text-success nav-link dropdown-toggle d-icon label-group" href="{% url 'administration:admin_properties_details_view' properties.pk %}">
                                                             <strong>View</strong>
                                                         </a>
                                                     </div>
@@ -84,31 +84,95 @@
                             
                         </div>
 
-                        <!-- Modal -->
-                                            <div class="modal fade" id="notesMailModal" tabindex="-1" role="dialog" aria-labelledby="notesMailModalTitle" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                            <div class="notes-box">
-                                                                <div class="notes-content">                                                                        
-                                                                    <form method="POST">
-                                                                        {% csrf_token %}
+                        <!-- Form Modal -->
+                        <div class="modal fade" id="notesMailModal" tabindex="-1" role="dialog" aria-labelledby="notesMailModalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        <div class="notes-box">
+                                            <div class="notes-content">                                                                        
+                                                <form method="POST">
+                                                    {% csrf_token %}
 
-                                                                        {{form.as_p}}
+                                                    {{form.as_p}}
 
-                                                                        <div class="modal-footer">
-                                                                            <button class="btn" data-dismiss="modal"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Discard</button>
-                                                                            <button type="submit"  class="btn btn-success">Add Properties</button>
-                                                                        </div>
-                                                                    </form>
+                                                    <div class="modal-footer">
+                                                        <button class="btn" data-dismiss="modal"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Discard</button>
+                                                        <button type="submit"  class="btn btn-success">Add Properties</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View Modal -->
+                        <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="notesMailModalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="modal"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        <div class="notes-box">
+                                            <div class="notes-content">                                                                        
+                                                <div class="work-experience layout-spacing mt-4">
+                            
+                                                    <div class="widget-content widget-content-area">
+
+                                                        <h3 class="">Status Progress</h3>
+                                                        
+                                                        <div class="timeline-alter">
+                                                        
+                                                            <div class="item-timeline">
+                                                                <div class="t-meta-date">
+                                                                    <p class="">04 Mar 2009</p>
+                                                                </div>
+                                                                <div class="t-dot">
+                                                                </div>
+                                                                <div class="t-text text-success">
+                                                                    <p class="text-success">Foysal Ahammed</p>
+                                                                    <p class="text-success">Approved</p>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="item-timeline">
+                                                                <div class="t-meta-date">
+                                                                    <p class="">25 Apr 2014</p>
+                                                                </div>
+                                                                <div class="t-dot">
+                                                                </div>
+                                                                <div class="t-text">
+                                                                    <p>Borhan Uddin</p>
+                                                                    <p>Pending</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="item-timeline">
+                                                                <div class="t-meta-date">
+                                                                    <p class="">04 Apr 2018</p>
+                                                                </div>
+                                                                <div class="t-dot">
+                                                                </div>
+                                                                <div class="t-text">
+                                                                    <p>Forid Ahhamed</p>
+                                                                    <p>Pending</p>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
-                                                        
                                                     </div>
+
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>

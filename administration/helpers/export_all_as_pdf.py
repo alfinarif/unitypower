@@ -31,7 +31,7 @@ def download_member_report(request):
         textColor=colors.HexColor('#1a365d'),
         alignment=0,
         leading=3,
-        spaceAfter=20
+        spaceAfter=10
     )
     info_style = ParagraphStyle(
         'InfoStyle',
@@ -40,7 +40,7 @@ def download_member_report(request):
         textColor=colors.HexColor('#1a365d'),
         alignment=0,
         leading=5,
-        spaceAfter=5
+        spaceAfter=0
     )
     cell_style = ParagraphStyle(
         'CellStyle',
@@ -66,11 +66,12 @@ def download_member_report(request):
         logo = Image(logo_path, width=70, height=70)
         logo.hAlign = 'LEFT'
         story.append(logo)
-        story.append(Spacer(1, 15))
+        story.append(Spacer(1, 5))
 
     # Title
     story.append(Paragraph("Unity Power Association", title_style))
-    story.append(Paragraph("Members List Reports", title_style))
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("Members List Reports", info_style))
     story.append(Paragraph("E-mail: info@unitypower.online", info_style))
     story.append(Paragraph("Phone: +966506897109", info_style))
     story.append(Paragraph("Address: Riyadh, Saudi Arabia", info_style))

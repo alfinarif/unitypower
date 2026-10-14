@@ -15,15 +15,7 @@ WHATSAPP_API_VERSION = "v26.0"  # Use the latest stable Graph API version
 
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 

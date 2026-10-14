@@ -47,6 +47,10 @@ STATUS_CHOICES = (
         ('Pending', 'Pending'),
         ('Approved', 'Approved'),
         ('Rejected', 'Rejected'),
+        ('PENDING_ASSISTANT_CASHIER', 'Pending Assistant Cashier Approval'),
+        ('PENDING_CHIEF_CASHIER', 'Pending Chief Cashier Approval'),
+        ('PENDING_VICE_PRESIDENT', 'Pending Vice President Approval'),
+        ('PENDING_PRESIDENT', 'Pending President Approval'),
     )
 
 
@@ -56,13 +60,105 @@ class Properties(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False, default='Properties Name')
     details = models.TextField(blank=False, null=False, default='Properties Descriptions')
     document = models.ImageField(upload_to='payment_doc', blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='properties_approved', limit_choices_to=~Q(user_type='Developer'))
-    approved_at = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='PENDING_ASSISTANT_CASHIER')
+
+    assistant_cashier_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assistant_cashier_approvals')
+    chief_cashier_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='chief_cashier_approvals')
+    vice_president_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='vice_president_approvals')
+    president_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='president_approvals')
+
+    assistant_cashier_at = models.DateTimeField(null=True, blank=True)
+    chief_cashier_at = models.DateTimeField(null=True, blank=True)
+    vice_president_at = models.DateTimeField(null=True, blank=True)
+    president_at = models.DateTimeField(null=True, blank=True)
+
+    approved_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
+
+    def approve(self, user):
+        """Advances the state machine sequentially based on user role."""
+        if self.status == 'PENDING_ASSISTANT_CASHIER' and user.user_type == 'Assistant-Cashier':
+            self.status = 'PENDING_CHIEF_CASHIER'
+            self.assistant_cashier_by = user
+            self.assistant_cashier_at = timezone.now()
+        elif self.status == 'PENDING_CHIEF_CASHIER' and user.user_type == 'Chief-Cashier':
+            self.status = 'PENDING_VICE_PRESIDENT'
+            self.chief_cashier_by = user
+            self.chief_cashier_at = timezone.now()
+        elif self.status == 'PENDING_VICE_PRESIDENT' and user.user_type == 'Vice-President':
+            self.status = 'PENDING_PRESIDENT'
+            self.vice_president_by = user
+            self.vice_president_at = timezone.now()
+        elif self.status == 'PENDING_PRESIDENT' and user.user_type == 'President':
+            self.status = 'Approved'
+            self.president_by = user
+            self.president_at = timezone.now()
+        else:
+            raise PermissionError("You do not have permission to approve this request at its current stage.")
+        
+        self.save()
+
+    
+    def get_step_progress(self):
+        """Returns structural info about the stages to be rendered in templates."""
+        stages = [
+            {'code': 'PENDING_ASSISTANT_CASHIER', 'label': f'Assistant Cashier {self.assistant_cashier_by} Review', 'date': self.assistant_cashier_at},
+            {'code': 'PENDING_CHIEF_CASHIER', 'label': f'Chief Cashier {self.chief_cashier_by} Review', 'date': self.chief_cashier_at},
+            {'code': 'PENDING_VICE_PRESIDENT', 'label': f'Vice President {self.vice_president_by} Review', 'date': self.vice_president_at },
+            {'code': 'PENDING_PRESIDENT', 'label': f'President {self.president_by} Review', 'date': self.president_at},
+        ]
+        
+        # Determine the active numerical index
+        status_indices = {
+            'PENDING_ASSISTANT_CASHIER': 0,
+            'PENDING_CHIEF_CASHIER': 1,
+            'PENDING_VICE_PRESIDENT': 2,
+            'PENDING_PRESIDENT': 3,
+            'Rejected': -1, # Special case for rejected
+
+        }
+        
+        current_index = status_indices.get(self.status, 0)
+        
+        steps = []
+        for i, stage in enumerate(stages):
+            if self.status == 'REJECTED':
+                status_class = 'step-rejected' if i == current_index else 'step-disabled'
+            elif i < current_index:
+                status_class = 'text-success'
+            elif i == current_index:
+                status_class = 'text-primary'
+            else:
+                status_class = 'text-secondary'
+                
+            steps.append({
+                'label': stage['label'],
+                'date': stage['date'],
+                'class': status_class,
+                'is_current': i == current_index
+            })
+            
+        return steps
+
+    # def reject(self, user):
+    #     """Any authorized stage role can reject the workflow."""
+    #     valid_roles = {
+    #         'PENDING_ASSISTANT_CASHIER': 'Assistant-Cashier',
+    #         'PENDING_CHIEF_CASHIER': 'Chief-Cashier',
+    #         'PENDING_VICE_PRESIDENT': 'Vice-President',
+    #         'PENDING_PRESIDENT': 'President'
+    #     }
+        
+    #     required_group = valid_roles.get(self.status)
+    #     if required_group and user.user_type == required_group:
+    #         self.status = 'REJECTED'
+    #         self.save()
+    #     else:
+    #         raise PermissionError("You do not have permission to reject this request.")
+
 
 
 
@@ -97,7 +193,7 @@ class PaymentModel(models.Model):
     cashier = models.ForeignKey(Cashier, on_delete=models.CASCADE, blank=True, null=True)
     payment_note = models.CharField(max_length=500, blank=True, null=True)
     is_accept = models.BooleanField(default=False)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Pending')
     approved_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='approved_by', limit_choices_to=~Q(user_type='Developer'))
     approved_at = models.DateField(blank=True, null=True)
     document = models.ImageField(upload_to='payment_doc', blank=True, null=True)
@@ -120,7 +216,7 @@ class DuePayment(models.Model):
     pay_month = models.IntegerField()
     penalty_fee = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
     is_penalty = models.BooleanField(default=False)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Pending')
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

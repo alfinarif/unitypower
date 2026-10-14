@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container sidebar-closed sbar-open" id="container">
+
+        <div class="overlay"></div>
+        <div class="cs-overlay"></div>
+        <div class="search-overlay"></div>
+
+        <!--  BEGIN SIDEBAR  -->
+        {% include 'components/sidebar.html' %}
+        <!--  END SIDEBAR  -->
+
+        <!--  Showing toast messages  -->
+        {% include "components/toast_message.html" %}
+        <!--  Showing toast messages end -->
+
+        <!--  BEGIN CONTENT AREA  -->
+        <div id="content" class="main-content">
+            <div class="row layout-spacing">
+
+                <!-- Content -->
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 layout-top-spacing"></div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 layout-top-spacing">
+
+                        <div class="work-experience layout-spacing mt-2">
+                            
+                            <div class="widget-content widget-content-area m-10">
+
+                                <h3 class="">Status Progress</h3>
+                                
+                                <div class="timeline-alter">
+                                    {% for step in properties.get_step_progress %}
+                                        <div class="step-item">
+                                            <div class="step-label">
+                                                <div class="item-timeline">
+                                                    <div class="t-meta-date">
+                                                        <p class="">{{step.date}}</p>
+                                                    </div>
+                                                    <div class="t-dot {{ step.class }}">
+                                                    </div>
+                                                    <div class="t-text mt-n3">
+                                                        <p class="{{ step.class }}">{{ step.label }}</p>
+                                                        {% if step.is_current and properties.status != 'REJECTED' %}
+                                                            <span class="badge-pending">(Awaiting Action)</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                        
+                                        {% if not forloop.last %}
+                                            <div class="step-line {{ step.class }}"></div>
+                                        {% endif %}
+                                    {% endfor %}
+                                
+                                    
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 layout-top-spacing"></div>
+
+            </div>
+        </div>
+
+        <!--  END CONTENT AREA  -->
+
+    </div>
+    <!-- END MAIN CONTAINER -->
+    
+
+{% endblock content %}
+
+   

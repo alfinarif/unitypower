@@ -313,6 +313,26 @@ def admin_properties_list_view(request):
 
 
 
+# PROPERTIES DETAILS VIEW
+def admin_properties_details_view(request, pk):
+    if request.user.is_authenticated:
+        if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            
+            properties = Properties.objects.get(pk=pk)
+
+            context = {
+                'properties': properties,
+            }
+
+            return render(request, 'properties_status_progress.html', context)
+        else:
+                return redirect('membership:profile_view')
+    else:
+        return redirect('membership:user_login')
+
+
+
+
 # TRANSACTION LIST VIEW
 def admin_unpaid_report_list(request):
     if not request.user.is_authenticated:

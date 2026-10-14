@@ -37,6 +37,28 @@ IMPORT_EXPORT_SKIP_ADMIN_CONFIRM = False
 IMPORT_EXPORT_CSV_ENCODING = 'utf-8-sig'
 
 
+# Database
+# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'unitypower',          # Your database name
+#         'USER': 'unitypower',        # Your database user
+#         'PASSWORD': 'unitypower@123',    # Your database password
+#         'HOST': 'localhost',             # Set to your server IP or container name if remote
+#         'PORT': '5432',                  # Default PostgreSQL port
+#     }
+# }
+
 
 # Application definition
 INSTALLED_APPS = [

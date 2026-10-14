@@ -61,7 +61,7 @@ class PaymentSummeryAdmin(admin.ModelAdmin):
 
 
 class PropertiesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'status', 'approved_by', 'created_at')
+    list_display = ('id', 'name', 'status', 'created_at')
 
 
 admin.site.register(Cashier)
