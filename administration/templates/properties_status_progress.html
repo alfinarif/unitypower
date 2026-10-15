@@ -87,25 +87,37 @@
                             <div class="widget-content widget-content-area m-10">
 
                                 <h3 class="">Status Progress</h3>
-                                
                                 <div class="timeline-alter">
                                     {% for step in properties.get_step_progress %}
                                         <div class="step-item">
                                             <div class="step-label">
-                                                <div class="item-timeline">
-                                                    <div class="t-meta-date">
-                                                        <p class="">{{step.date}}</p>
+
+                                                {% if step.approved_by %}
+                                                    <div class="item-timeline">
+                                                        <div class="t-meta-date">
+                                                            <p class="">{{step.date}}</p>
+                                                        </div>
+                                                        <div class="t-dot">
+                                                        </div>
+                                                        <div class="t-text mt-n3">
+                                                            <p class="text-success">{{ step.label }}</p>
+                                                        </div>
                                                     </div>
-                                                    <div class="t-dot {{ step.class }}">
+                                                {% else %}
+                                                    <div class="item-timeline">
+                                                        <div class="t-meta-date">
+                                                            <p class="">{{step.date}}</p>
+                                                        </div>
+                                                        <div class="t-dot {{ step.class }}">
+                                                        </div>
+                                                        <div class="t-text">
+                                                            <p class="{{ step.class }}">{{ step.label }}</p>
+                                                            {% if step.is_current and properties.status != 'REJECTED' %}
+                                                                <span class="badge-pending">(Awaiting Action)</span>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
-                                                    <div class="t-text mt-n3">
-                                                        <p class="{{ step.class }}">{{ step.label }}</p>
-                                                        {% if step.is_current and properties.status != 'REJECTED' %}
-                                                            <span class="badge-pending">(Awaiting Action)</span>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                
+                                                {% endif %}
                                                 
                                             </div>
                                         </div>
@@ -114,14 +126,32 @@
                                             <div class="step-line {{ step.class }}"></div>
                                         {% endif %}
                                     {% endfor %}
+                                    </br>
+                                    {% if properties_status == 'Approved' %}
+                                        <p class="badge-success text-center fw-bold p-3">This Properties Get Approval Successfully</p>
+                                    {% else %}
+                                        {% if properties_status != "Approved" and request.user.user_type == "Assistant-Cashier" or request.user.user_type == "Chief-Cashier" or request.user.user_type == "Vice-President" or request.user.user_type == "President" %}
+                                            {% if properties.assistant_cashier_by == request.user or properties.chief_cashier_by == request.user or properties.vice_president_by == request.user or properties.president_by == request.user %}
+                                                <div class="action-panel">
+                                                    <p class="text-success">You have already approved this property.</p>
+                                                </div>
+                                            {% else %}
+                                                <div class="action-panel">
+                                                    <p>You have a pending approval assignment:</p>
+                                                    <a href="{% url 'administration:admin_properties_details_view' properties.pk 'approve' %}" class="btn btn-success w-40">Approve</a>
+                                                    <a href="{% url 'administration:admin_properties_details_view' properties.pk 'reject' %}" class="btn btn-danger w-40">Reject</a>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                        </br>
+                                        <p class="badge-warning text-center fw-bold p-3">This Properties Awating For Approval!</p>
+                                    {% endif %}
                                 
                                     
 
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                     {% comment %} <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 layout-top-spacing"></div> {% endcomment %}
 

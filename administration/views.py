@@ -322,14 +322,25 @@ def admin_properties_list_view(request):
 
 
 # PROPERTIES DETAILS VIEW
-def admin_properties_details_view(request, pk):
+def admin_properties_details_view(request, pk, action):
     if request.user.is_authenticated:
         if request.user.is_hr or request.user.is_admin or request.user.is_finance:
             
             properties = Properties.objects.get(pk=pk)
 
+            if action == 'approve':
+                properties.approve(request.user)
+                messages.success(request, f"Request successfully forwarded/approved!")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            elif action == 'reject':
+                properties.reject(request.user)
+                messages.error(request, "Request has been rejected.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             context = {
                 'properties': properties,
+                'properties_status': properties.status,
             }
 
             return render(request, 'properties_status_progress.html', context)

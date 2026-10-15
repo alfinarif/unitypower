@@ -103,19 +103,33 @@ class Properties(models.Model):
             self.president_by = user
             self.president_at = timezone.now()
         else:
-            raise PermissionError("You do not have permission to approve this request at its current stage.")
+            pass  # Invalid role for the current status; do nothing
         
         self.save()
 
+    def reject(self, user):
+        """Any authorized stage role can reject the workflow."""
+        valid_roles = {
+            'PENDING_ASSISTANT_CASHIER': 'Assistant-Cashier',
+            'PENDING_CHIEF_CASHIER': 'Chief-Cashier',
+            'PENDING_VICE_PRESIDENT': 'Vice-President',
+            'PENDING_PRESIDENT': 'President'
+        }
+        
+        required_group = valid_roles.get(self.status)
+        if required_group and user.user_type == required_group:
+            self.status = 'Rejected'
+            self.save()
+        else:
+            pass
     
     def get_step_progress(self):
         """Returns structural info about the stages to be rendered in templates."""
         stages = [
-            {'code': 'PENDING_ASSISTANT_CASHIER', 'label': f'Assistant Cashier {self.assistant_cashier_by} Review', 'date': self.assistant_cashier_at},
-            {'code': 'PENDING_CHIEF_CASHIER', 'label': f'Chief Cashier {self.chief_cashier_by} Review', 'date': self.chief_cashier_at},
-            {'code': 'PENDING_VICE_PRESIDENT', 'label': f'Vice President {self.vice_president_by} Review', 'date': self.vice_president_at },
-            {'code': 'PENDING_PRESIDENT', 'label': f'President {self.president_by} Review', 'date': self.president_at},
-            {'code': 'Approved', 'label': f'This Property is Approved', 'date': self.president_at},
+            {'code': 'PENDING_ASSISTANT_CASHIER', 'label': f'Assistant Cashier {self.assistant_cashier_by} Review', 'date': self.assistant_cashier_at, 'approved_by': self.assistant_cashier_by},
+            {'code': 'PENDING_CHIEF_CASHIER', 'label': f'Chief Cashier {self.chief_cashier_by} Review', 'date': self.chief_cashier_at, 'approved_by': self.chief_cashier_by},
+            {'code': 'PENDING_VICE_PRESIDENT', 'label': f'Vice President {self.vice_president_by} Review', 'date': self.vice_president_at, 'approved_by': self.vice_president_by },
+            {'code': 'PENDING_PRESIDENT', 'label': f'President {self.president_by} Review', 'date': self.president_at, 'approved_by': self.president_by},
         ]
         
         # Determine the active numerical index
@@ -132,39 +146,26 @@ class Properties(models.Model):
         
         steps = []
         for i, stage in enumerate(stages):
-            if self.status == 'REJECTED':
-                status_class = 'step-rejected' if i == current_index else 'step-disabled'
+            if self.status == 'Rejected':
+                status_class = 'text-danger' if i == current_index else 'text-warning'
             elif i < current_index:
                 status_class = 'text-success'
             elif i == current_index:
                 status_class = 'text-primary'
             else:
-                status_class = 'text-secondary'
+                status_class = 'text-ligh'
                 
             steps.append({
                 'label': stage['label'],
                 'date': stage['date'],
+                'approved_by': stage['approved_by'],
                 'class': status_class,
                 'is_current': i == current_index
             })
             
         return steps
 
-    # def reject(self, user):
-    #     """Any authorized stage role can reject the workflow."""
-    #     valid_roles = {
-    #         'PENDING_ASSISTANT_CASHIER': 'Assistant-Cashier',
-    #         'PENDING_CHIEF_CASHIER': 'Chief-Cashier',
-    #         'PENDING_VICE_PRESIDENT': 'Vice-President',
-    #         'PENDING_PRESIDENT': 'President'
-    #     }
-        
-    #     required_group = valid_roles.get(self.status)
-    #     if required_group and user.user_type == required_group:
-    #         self.status = 'REJECTED'
-    #         self.save()
-    #     else:
-    #         raise PermissionError("You do not have permission to reject this request.")
+    
 
 class PropertiesFile(models.Model):
     properties = models.ForeignKey(Properties, on_delete=models.CASCADE, related_name='files')
