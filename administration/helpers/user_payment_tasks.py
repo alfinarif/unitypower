@@ -79,18 +79,18 @@ def generate_due_billings():
 
                         # ---  INCLUDE PENALTY IN INITIAL DUE_AMOUNT ---
                         final_calculated_due = base_fee + penalty_amt
-
-                        due_payment, created = DuePayment.objects.get_or_create(
-                            user=user,
-                            pay_year=year,
-                            pay_month=month,
-                            defaults={
-                                'due_amount': final_calculated_due,
-                                'status': pending_status_obj, # FIX 3: Assign object, not string
-                                'is_penalty': is_late,
-                                'penalty_fee': penalty_amt
-                            }
-                        )
+                        if user.user_type != 'Developer':
+                            due_payment, created = DuePayment.objects.get_or_create(
+                                user=user,
+                                pay_year=year,
+                                pay_month=month,
+                                defaults={
+                                    'due_amount': final_calculated_due,
+                                    'status': pending_status_obj, # FIX 3: Assign object, not string
+                                    'is_penalty': is_late,
+                                    'penalty_fee': penalty_amt
+                                }
+                            )
                         
                         if created:
                             print(f"Generated dues for User {user.id} - {month}/{year} (Penalty Applied: {is_late})")
@@ -116,7 +116,7 @@ def generate_due_billings():
 
 
 def calculate_billing_summaries():
-    print("[Calculate Billing] Started chronological billing deduction waterfall...")
+    print("[Calculate Billing] Started billing deduction waterfall...")
     try:
         with transaction.atomic():
             # Fetch actual status objects if they are ForeignKeys in your real database schema
@@ -245,6 +245,10 @@ def calculate_and_sync_payment_summaries():
             for user in users:
                 total_paid = paid_map.get(user.id, Decimal('0.00'))
                 total_due, total_penalty = due_map.get(user.id, (Decimal('0.00'), Decimal('0.00')))   
+                penalty_fee = total_penalty if total_due > 0 else Decimal('0.00')  # Only count penalty if there's an actual due
+                
+                if total_due <= 0:
+                    DuePayment.objects.filter(user=user).update(is_penalty=False)
 
                 # 4. Use select_for_update to avoid concurrency race-conditions
                 summary_queryset = PaymentSummery.objects.select_for_update().filter(user=user)
@@ -252,23 +256,24 @@ def calculate_and_sync_payment_summaries():
                 if summary_queryset.exists():
                     summary_queryset.update(
                         total_due_amount=total_due,
-                        total_penalty_amount=total_penalty,
+                        total_penalty_amount=penalty_fee,
                         total_paid_amount=total_paid
                     )
                 else:
                     try:
-                        PaymentSummery.objects.create(
-                            user=user,
-                            total_due_amount=total_due,
-                            total_penalty_amount=total_penalty,
-                            total_paid_amount=total_paid,
-                            is_active=True
-                        )
+                        if user.user_type != 'Developer':
+                            PaymentSummery.objects.create(
+                                user=user,
+                                total_due_amount=total_due,
+                                total_penalty_amount=penalty_fee,
+                                total_paid_amount=total_paid,
+                                is_active=True
+                            )
                     except IntegrityError:
                         # Fallback if another thread created it at the exact same millisecond
                         PaymentSummery.objects.filter(user=user).update(
                             total_due_amount=total_due,
-                            total_penalty_amount=total_penalty,
+                            total_penalty_amount=penalty_fee,
                             total_paid_amount=total_paid
                         )
                         

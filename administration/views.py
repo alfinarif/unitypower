@@ -1,4 +1,7 @@
-
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -22,7 +25,7 @@ from membership.admin import UserModelResource
 import random
 
 import io
-from django.http import FileResponse
+from django.http import FileResponse, Http404
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -294,10 +297,6 @@ def admin_properties_list_view(request):
                     form_obj.save()
                     form_obj.user.set(all_users)
                     form_obj.save()
-                    print('====================================================')
-                    print(form_obj)
-                    print(files)
-                    print('====================================================')
                     for file in files:
                         PropertiesFile.objects.create(properties=form_obj, file=file)
                         
@@ -349,6 +348,26 @@ def admin_properties_details_view(request, pk, action):
     else:
         return redirect('membership:user_login')
 
+
+
+# DOWNLOAD FILE VIEW
+def download_file_view(request, pk):
+  obj = get_object_or_404(PropertiesFile, pk=pk)
+
+  if not obj.file:
+    raise Http404("No file attached to this record.")
+
+  # Use Django's storage backend (works for local disk and S3/Cloud)
+  if not default_storage.exists(obj.file.name):
+    raise Http404(
+        "The physical file is missing from storage."
+    )  # Graceful 404
+
+  return FileResponse(
+      obj.file.open("rb"),
+      as_attachment=True,
+      filename=os.path.basename(obj.file.name),
+  )
 
 
 

@@ -11,7 +11,7 @@ from django.http import FileResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
 
-from finance.models import PaymentModel
+from finance.models import PaymentModel, DuePayment
 from finance.forms import PaymentRequestForm, PaymentViaAdminForm
 
 from administration.helpers.send_messages_whatsapp import send_whatsapp_messages
@@ -102,7 +102,6 @@ def payment_request(request):
         return redirect('membership:user_login')
     
 
-
 # APPROVE OR REJECT PAYMENT REQUEST
 def approve_or_reject_payment_request(request, id, status):
     if request.user.is_authenticated:
@@ -126,6 +125,7 @@ def approve_or_reject_payment_request(request, id, status):
                 pay_obj.approved_by = request.user
                 pay_obj.approved_at = timezone.now()
                 pay_obj.save()  # Commits the changes to the database
+                
 
                 # 3. Cache the values safely from the actual object instance
                 payment_amount = pay_obj.amount_of_money

@@ -60,6 +60,7 @@ STATUS_CHOICES = (
 class Properties(models.Model):
     user = models.ManyToManyField(User, related_name="properties", limit_choices_to=~Q(user_type='Developer'))
     name = models.CharField(max_length=255, blank=False, null=False, default='Properties Name')
+    amount = models.DecimalField(max_digits=50, decimal_places=2, default='0.00')
     details = models.TextField(blank=False, null=False, default='Properties Descriptions')
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='PENDING_ASSISTANT_CASHIER')
 
@@ -194,11 +195,11 @@ class PaymentModel(models.Model):
         ('Bank', 'Bank'),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments', limit_choices_to=~Q(user_type='Developer'))
-    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, blank=True, null=True, related_name='properties')
+    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, blank=True, null=True, related_name='properties', limit_choices_to=Q(status='Approved'))
     invoice_number = models.CharField(max_length=20, unique=True, default=generate_invoice_number, editable=False)
     payment_type = models.CharField(max_length=100, choices=CALCULATION_TYPE, default='Select Purpose')
     payment_method = models.CharField(max_length=100, choices=PAYMENT_METHOD, default='Select Method')
-    amount_of_money = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
+    amount_of_money = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
     from_number = models.CharField(max_length=20, blank=True, null=True)
     pin_ref = models.CharField(max_length=20, blank=True, null=True)
     pay_year = models.IntegerField()
@@ -224,10 +225,10 @@ class PaymentModel(models.Model):
 
 class DuePayment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='due_payment', limit_choices_to=~Q(user_type='Developer'))
-    due_amount = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
+    due_amount = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
     pay_year = models.IntegerField()
     pay_month = models.IntegerField()
-    penalty_fee = models.DecimalField(max_digits=11, decimal_places=2, default='0.00')
+    penalty_fee = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
     is_penalty = models.BooleanField(default=False)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Pending')
     created = models.DateTimeField(auto_now_add=True)
@@ -240,10 +241,10 @@ class DuePayment(models.Model):
  
 class PaymentSummery(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='payment_summery', limit_choices_to=~Q(user_type='Developer'))
-    total_due_amount = models.DecimalField(max_digits=20, decimal_places=2, default='0.00')
-    total_penalty_amount = models.DecimalField(max_digits=20, decimal_places=2, default='0.00')
-    total_paid_amount = models.DecimalField(max_digits=20, decimal_places=2, default='0.00')
-    credit_amount = models.DecimalField(max_digits=20, decimal_places=2, default='0.00')
+    total_due_amount = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
+    total_penalty_amount = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
+    total_paid_amount = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
+    credit_amount = models.DecimalField(max_digits=200, decimal_places=2, default='0.00')
     is_active = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 

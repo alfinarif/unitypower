@@ -1,11 +1,14 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from datetime import datetime
 
+from odf import form
+
 from membership.models import User, Profile
 from .forms import CreateUserForm, ProfileInfoForm, ContactUsForm
 
-from finance.models import PaymentModel, DuePayment, PaymentSummery
+from finance.models import PaymentModel, DuePayment, PaymentSummery, Properties
 from django.db.models import Q
 from django.db.models import Sum
 
@@ -88,10 +91,31 @@ def profile_view(request):
             messages.success(request, 'You have full access at Admin Panel.')
             return redirect('administration:admin_index')
         else:
+            properties_list = Properties.objects.all().order_by('-id')
             context = {
-                'profile': request.user.profile
+                'profile': request.user.profile,
+                'properties_list': properties_list
             }
             return render(request, 'auth/user_profile.html', context)
+    else:
+        return redirect('membership:user_login')
+
+
+# PROPERTIES DETAILS VIEW
+def member_properties_details_view(request, pk):
+    if request.user.is_authenticated:
+        if request.user.is_hr or request.user.is_admin or request.user.is_finance:
+            messages.error(request, "You don't have access to view this page! Please contact with admin.")
+            return redirect('administration:admin_properties_list_view')
+        else:
+            properties = Properties.objects.get(pk=pk)
+
+            context = {
+                'properties': properties,
+                'properties_status': properties.status,
+            }
+            messages.info(request, 'Properties status and progress details.')
+            return render(request, 'properties_status_progress.html', context)
     else:
         return redirect('membership:user_login')
 

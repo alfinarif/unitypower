@@ -13,6 +13,7 @@ urlpatterns = [
     path('accounts-summery-list/', views.admin_accounts_summery_list, name='admin_accounts_summery_list'),
     path('properties-list/', views.admin_properties_list_view, name='admin_properties_list_view'),
     path('properties-details/<int:pk>/<str:action>/', views.admin_properties_details_view, name='admin_properties_details_view'),
+    path('download-file/<int:pk>/', views.download_file_view, name='download_file_view'),
     path('unpaid-reports-list/', views.admin_unpaid_report_list, name='admin_unpaid_report_list'),
     path('nominee-list/', views.admin_nominee_list_view, name='admin_nominee_list'),
     path('nominee-list/update/<int:id>/', views.admin_nominee_update_view, name='admin_nominee_update'),

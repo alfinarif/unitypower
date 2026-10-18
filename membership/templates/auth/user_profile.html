@@ -259,59 +259,30 @@
                                     
                                     <div class="bio-skill-box">
                                         <div class="row">
-                                            
-                                            <div class="col-12 col-xl-6 col-lg-12 mb-xl-5 mb-5 ">
-                                                
-                                                <div class="d-flex b-skills">
-                                                    <div>
+                                            {% for properties in properties_list %}
+                                                <div class="col-12 col-xl-6 col-lg-12 mb-xl-5 mb-5 ">
+                                                    
+                                                    <div class="d-flex b-skills">
+                                                        <div>
+                                                        </div>
+                                                        <div class="">
+                                                            
+                                                            <h5 class="text-success">{{properties.name}}</h5>
+                                                            <p>{{properties.details|truncatewords:15}}</p>
+                                                            <div class="note-footer">
+                                                                <div class="tags-selector btn-group">
+                                                                    <a class="badge badge-success nav-link dropdown-toggle d-icon label-group" href="{% url 'membership:member_properties_details_view' properties.pk %}">
+                                                                        <strong>View Details</strong>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="">
-                                                        <h5>Sass Applications</h5>
-                                                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse eu fugiat nulla pariatur.</p>
-                                                    </div>
+
+                                                    
+
                                                 </div>
-
-                                            </div>
-
-                                            <div class="col-12 col-xl-6 col-lg-12 mb-xl-5 mb-5 ">
-                                                
-                                                <div class="d-flex b-skills">
-                                                    <div>
-                                                    </div>
-                                                    <div class="">
-                                                        <h5>Github Countributer</h5>
-                                                        <p>Ut enim ad minim veniam, quis nostrud exercitation aliquip ex ea commodo consequat.</p>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-12 col-xl-6 col-lg-12 mb-xl-0 mb-5 ">
-                                                
-                                                <div class="d-flex b-skills">
-                                                    <div>
-                                                    </div>
-                                                    <div class="">
-                                                        <h5>Photograhpy</h5>
-                                                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia anim id est laborum.</p>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-12 col-xl-6 col-lg-12 mb-xl-0 mb-0 ">
-                                                
-                                                <div class="d-flex b-skills">
-                                                    <div>
-                                                    </div>
-                                                    <div class="">
-                                                        <h5>Mobile Apps</h5>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do et dolore magna aliqua.</p>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
+                                            {% endfor %}
                                         </div>
                                     </div>
 
