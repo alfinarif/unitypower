@@ -112,28 +112,20 @@
                                 <div class="mt-container mx-auto">
                                     <div class="timeline-line">
 
-                                    {% for log in all_objects_list %}
-                                        <div class="item-timeline timeline-primary">
-                                            <div class="t-dot" data-original-title="" title="">
-                                            </div>
-                                            <div class="t-text">
-                                                {% if log.url %}
-                                                    <p><span class="text-primary">TRAFFIC</span> <span class="text-info">{{ log.ip_address }}</span> accessed page <code>{{ log.url }}</code> ({% if log.user %}{{ log.user.username }}{% else %}Guest{% endif %})</p>
-                                                {% elif log.event_type and not log.object_repr %}
-                                                    <p><span class="text-success">AUTH</span> User <strong>{{ log.email }}</strong> triggered auth event: <strong>{{ log.get_event_type_display }}</strong> from IP {{ log.ip_address }}</p>
-                                                {% elif log.object_repr %}
-                                                    <p><span class="text-warning">DB CHANGE</span> User <strong>{% if log.user %}{{ log.user.username }}{% else %}System{% endif %}</strong> performed <strong>{{ log.get_event_type_display }}</strong> on <em>{{ log.object_repr }}</em></p>
-                                                {% endif %}
-                                                <p><span class="text-danger">{{ log.event_type }}</span> <span class="text-success">{{ log.history_object }}</span></p>
-                                                
-                                                <p class="t-time">{{ log.datetime|date:"Y-m-d H:i:s" }}</p>
-                                            </div>
-                                        </div> 
-
-                                    {% endfor %}
-
-                        
-
+                                        {% if activities %}
+                                            {% for log in activities %}
+                                                <div class="item-timeline {% if log.action == "approve" %}timeline-success{% elif log.action == "reject" %}timeline-danger{% endif %}">
+                                                    <div class="t-dot" data-original-title="" title="">
+                                                    </div>
+                                                    <div class="t-text">
+                                                        <p>{{log.action|upper}} - <span>{{log.user.email}} <span {% if log.action == 'approve' %}class="text-success"{% elif log.action == 'reject' %}class="text-danger"{% endif %}>{{log.description}}</span> </span></p>
+                                                        <span class="badge">{{log.ip_address}}</span>
+                                                        <p class="t-time">{{log.created_at}} ago</p>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        
 
                                     </div>
                                 </div>
@@ -143,6 +135,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">

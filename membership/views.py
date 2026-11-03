@@ -19,6 +19,7 @@ from administration.helpers.paid_unpaid_billings import calculate_per_user_billi
 
 # Email backend package for sending email
 from administration.helpers.emailSenders import send_email_notification
+from activity.helpers.activity_logger import log_activity
 
 
 
@@ -33,6 +34,12 @@ def user_registration(request):
                 if form.is_valid():
                     form.save()
                     current_user = form.cleaned_data.get('email')
+                    log_activity(
+                        request=request,
+                        action='create',
+                        description='Created a new user account',
+                        instance=form
+                    )
                     messages.success(request, 'Account created for ' + current_user)
                     return redirect('administration:admin_user_list')
                 else:
@@ -65,9 +72,21 @@ def user_login(request):
         if user is not None:
             login(request, user)
             if user.user_type == "Developer":
+                log_activity(
+                    request=request,
+                    action='login',
+                    description = f'User logged in to admin portal',
+                    instance=user
+                )
                 messages.success(request, f"Welcome {email} to your profile.")
                 return redirect('administration:admin_index')
             else:
+                log_activity(
+                    request=request,
+                    action='login',
+                    description = 'has been logged in to profile',
+                    instance=user
+                )
                 messages.success(request, f"Welcome {email} to your profile.")
                 return redirect('membership:summary_view')
         else:
@@ -79,6 +98,12 @@ def user_login(request):
 
 # USER LOGOUT -> WHENE USER IS LOGGED IN THEY CAN LOGOUT
 def user_logout(request):
+    log_activity(
+        request=request,
+        action='logout',
+        description = 'has been logged out',
+        instance=request.user
+    )
     logout(request)
     messages.info(request, 'Login to access your profile.')
     return redirect('membership:user_login')
@@ -211,6 +236,12 @@ def update_profile(request, id):
                 current_form.avatar = request.FILES.get('avatar')
                 current_form.updated_date = datetime.now()
                 current_form.save()
+                log_activity(
+                    request=request,
+                    action='update',
+                    description = f'Updated profile: {get_profile.user.email}',
+                    instance=current_form
+                )
                 messages.success(request, 'Your profile info updated successfully')
                 return redirect('membership:profile_view')
             else:
@@ -243,7 +274,12 @@ def contact_us(request):
                 current_object = form.save(commit=False)
                 current_object.user = request.user
                 current_object.save()
-
+                log_activity(
+                    request=request,
+                    action='send',
+                    description = 'Sended a contact message to admin',
+                    instance=current_object
+                )
                 messages.success(request, 'Your message sended to admin successfully!')
                 return redirect('membership:contact_us')
             else:

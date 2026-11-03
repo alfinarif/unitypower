@@ -87,7 +87,7 @@ class Profile(models.Model):
         User, 
         on_delete=models.CASCADE, 
         related_name='profile',
-        limit_choices_to=~Q(user_type='Developer')
+        #limit_choices_to=~Q(user_type='Developer')
         )
     full_name = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)

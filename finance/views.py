@@ -17,6 +17,7 @@ from finance.forms import PaymentRequestForm, PaymentViaAdminForm
 from administration.helpers.send_messages_whatsapp import send_whatsapp_messages
 from administration.helpers.push_notification import send_notification_to_finance
 from membership.models import User
+from activity.helpers.activity_logger import log_activity
 
 
 # TRANSACTION LIST VIEW
@@ -45,7 +46,13 @@ def payment_request(request):
                 admin_form = PaymentViaAdminForm(request.POST)
                 
                 if admin_form.is_valid():
-                    admin_form.save()
+                    admin_pay_obj = admin_form.save()
+                    log_activity(
+                        request=request,
+                        action='submit',
+                        description='Submited a payment request',
+                        instance=admin_pay_obj
+                    )
                     messages.success(request, 'Your payment request submited successfully.')
                     return redirect('administration:admin_transaction_list')
                 else:
@@ -62,6 +69,13 @@ def payment_request(request):
                     
                     # 2. Save the instance to the DB correctly (modifies the object in place)
                     current_submited_form.save()
+
+                    log_activity(
+                        request=request,
+                        action='submit',
+                        description='Submited a payment request',
+                        instance=current_submited_form
+                    )
                     
 
                     # 3. Cache the values to prevent N+1 database queries inside the loop
@@ -125,7 +139,13 @@ def approve_or_reject_payment_request(request, id, status):
                 pay_obj.approved_by = request.user
                 pay_obj.approved_at = timezone.now()
                 pay_obj.save()  # Commits the changes to the database
-                
+
+                log_activity(
+                    request=request,
+                    action='approve',
+                    description='Approved a payment request',
+                    instance=pay_obj
+                )
 
                 # 3. Cache the values safely from the actual object instance
                 payment_amount = pay_obj.amount_of_money
@@ -151,12 +171,21 @@ def approve_or_reject_payment_request(request, id, status):
                 messages.success(request, "Payment request has been approved.")
                 return redirect('administration:admin_transaction_list')
             elif status == 'Rejected':
-                PaymentModel.objects.filter(id=id).update(
+                pay_obj_id = PaymentModel.objects.filter(id=id).update(
                     status=status,
                     is_accept = False,
                     approved_by = request.user,
                     approved_at = timezone.now()
-                    )
+                )
+                payment_obj = PaymentModel.objects.get(id=pay_obj_id)
+                
+                log_activity(
+                    request=request,
+                    action='reject',
+                    description='Rejected a payment request',
+                    instance=payment_obj
+                )
+            
                 messages.warning(request, "Your payment request has been rejected.")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
@@ -201,6 +230,12 @@ def invoice_download(request, pk):
             io.BytesIO(pdf_file), 
             as_attachment=True, 
             filename=f'invoice_{invoice.invoice_number}.pdf'
+        )
+        log_activity(
+            request=request,
+            action='download',
+            description='Downloaded a payment invoice',
+            instance=invoice
         )
         return response
 

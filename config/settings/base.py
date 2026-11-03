@@ -69,14 +69,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'api',
     'administration',
     'membership',
     'finance',
+    'activity',
     'import_export',
-    'easyaudit', # To tracking all users actions
     "django_tasks", # To run background tasks
     "django_tasks_db",     # The actual backend engine providing the DB tables
-    "django_scheduled_tasks",
     'mathfilters', # To use math filters in templates
     'rest_framework',
     'fcm_django',
@@ -104,6 +104,10 @@ MIDDLEWARE = [
 
 
 REST_FRAMEWORK = {
+    # Default permission classes
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
@@ -113,6 +117,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication', # Allows logged-in admin sessions to register
         'rest_framework.authentication.BasicAuthentication',
     ],
+    # Default pagination
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 
