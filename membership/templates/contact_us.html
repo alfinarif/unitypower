@@ -31,7 +31,7 @@
                                 <div class="widget-header">
                                     <div class="row  mt-3">
                                         <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
-                                            <h3><strong>CONTACT WITH MANAGEMENT</strong></h3>
+                                            <h3><strong>{% translate "Contact Management" %}</strong></h3>
                                         </div>                 
                                     </div>
                                 </div>
@@ -42,7 +42,7 @@
                                         <div class="form-row">
                                             <div class="col-md-12 mb-12">
 
-                                                <label for="validationCustom01">Subject</label>
+                                                <label for="validationCustom01">{% translate "Subject" %}</label>
                                                 {{form.subject}}
                                                 
                                             </div>
@@ -51,13 +51,13 @@
                                         <div class="form-row">
                                             <div class="col-md-12 mb-12">
 
-                                                <label for="validationCustom01">Message</label>
+                                                <label for="validationCustom01">{% translate "Message" %}</label>
                                                 {{form.message}}
                                             </div>
                                         </div>
                                         
                                         
-                                        <button class="btn btn-primary mt-3" type="submit">Send Message</button>
+                                        <button class="btn btn-primary mt-3" type="submit">{% translate "Send Message" %}</button>
                                     </form>
                                     
                                 </div>
@@ -78,7 +78,6 @@
     </div>
     <!-- END MAIN CONTAINER -->
 {% endblock content %}
-
 
 
 

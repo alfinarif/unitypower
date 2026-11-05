@@ -1,30 +1,218 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 20:49+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: UnityPower\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: bn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: .\config\settings.py:124
-msgid "English"
-msgstr ""
 
-#: .\config\settings.py:125
-msgid "Bengali"
-msgstr ""
+msgid "Search..."
+msgstr "অনুসন্ধান করুন..."
 
-#: .\config\settings.py:126
-msgid "Arabic"
-msgstr ""
+msgid "Dashboard"
+msgstr "ড্যাশবোর্ড"
+
+msgid "Home Page"
+msgstr "হোম পেজ"
+
+msgid "Features"
+msgstr "বৈশিষ্ট্যসমূহ"
+
+msgid "Your Account Summary"
+msgstr "আপনার অ্যাকাউন্টের সারসংক্ষেপ"
+
+msgid "Members Management"
+msgstr "সদস্য ব্যবস্থাপনা"
+
+msgid "Members List"
+msgstr "সদস্য তালিকা"
+
+msgid "Profile List"
+msgstr "প্রোফাইল তালিকা"
+
+msgid "Nominee List"
+msgstr "মনোনীত ব্যক্তির তালিকা"
+
+msgid "Add New Member"
+msgstr "নতুন সদস্য যোগ করুন"
+
+msgid "Finance Department"
+msgstr "অর্থ বিভাগ"
+
+msgid "Accounts Summary"
+msgstr "হিসাবের সারসংক্ষেপ"
+
+msgid "Transactions"
+msgstr "লেনদেন"
+
+msgid "Due Members List"
+msgstr "বকেয়া সদস্যদের তালিকা"
+
+msgid "Properties List"
+msgstr "সম্পত্তির তালিকা"
+
+msgid "Add New Payment"
+msgstr "নতুন পেমেন্ট যোগ করুন"
+
+msgid "Contact and Messages"
+msgstr "যোগাযোগ ও বার্তা"
+
+msgid "Send Notifications"
+msgstr "বিজ্ঞপ্তি পাঠান"
+
+msgid "Contact Us List"
+msgstr "যোগাযোগের তালিকা"
+
+msgid "Add New Contact"
+msgstr "নতুন যোগাযোগ যোগ করুন"
+
+msgid "Payment Request"
+msgstr "পেমেন্টের অনুরোধ"
+
+msgid "Contact Us"
+msgstr "যোগাযোগ করুন"
+
+msgid "Logout"
+msgstr "লগ আউট"
+
+msgid "Login To Your Account"
+msgstr "আপনার অ্যাকাউন্টে লগ ইন করুন"
+
+msgid "Forgot Password?"
+msgstr "পাসওয়ার্ড ভুলে গেছেন?"
+
+msgid "Password"
+msgstr "পাসওয়ার্ড"
+
+msgid "Create An Account"
+msgstr "অ্যাকাউন্ট তৈরি করুন"
+
+msgid "I agree to the"
+msgstr "আমি সম্মত"
+
+msgid "terms and conditions"
+msgstr "শর্তাবলিতে"
+
+msgid "Notice"
+msgstr "নোটিশ"
+
+msgid "Hello"
+msgstr "হ্যালো"
+
+msgid "Mr."
+msgstr "জনাব"
+
+msgid "Contact Management"
+msgstr "ব্যবস্থাপনার সাথে যোগাযোগ"
+
+msgid "Subject"
+msgstr "বিষয়"
+
+msgid "Message"
+msgstr "বার্তা"
+
+msgid "Send Message"
+msgstr "বার্তা পাঠান"
+
+msgid "লগ ইন করুন"
+msgstr "লগ ইন করুন"
+
+msgid "অ্যাকাউন্টে প্রবেশ করতে ই-মেইল এবং পাসওয়ার্ড দিন."
+msgstr "অ্যাকাউন্টে প্রবেশ করতে ই-মেইল এবং পাসওয়ার্ড দিন."
+
+msgid "ই-মেইল"
+msgstr "ই-মেইল"
+
+msgid "পাসওয়ার্ড"
+msgstr "পাসওয়ার্ড"
+
+msgid "প্রবেশ করুন"
+msgstr "প্রবেশ করুন"
+
+msgid "নিবন্ধন করুন"
+msgstr "নিবন্ধন করুন"
+
+msgid "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?"
+msgstr "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?"
+
+msgid "সদস্য নাম্বার"
+msgstr "সদস্য নাম্বার"
+
+msgid "পাসওয়ার্ড নিশ্চিত করুন"
+msgstr "পাসওয়ার্ড নিশ্চিত করুন"
+
+msgid "অ্যাকাউন্ট তৈরি করুন!"
+msgstr "অ্যাকাউন্ট তৈরি করুন!"
+
+msgid "আপনার প্রোফাইল তথ্য আপডেট করুন"
+msgstr "আপনার প্রোফাইল তথ্য আপডেট করুন"
+
+msgid "আমাদের আপনার তথ্য প্রয়োজন,"
+msgstr "আমাদের আপনার তথ্য প্রয়োজন,"
+
+msgid "আপনাকে আরও ভালো ব্যবহারকারীর অভিজ্ঞতা দিতে,"
+msgstr "আপনাকে আরও ভালো ব্যবহারকারীর অভিজ্ঞতা দিতে,"
+
+msgid "আপনার সমর্থন ও সহযোগিতার জন্য আমরা কৃতজ্ঞ।"
+msgstr "আপনার সমর্থন ও সহযোগিতার জন্য আমরা কৃতজ্ঞ।"
+
+msgid "আপডেট করুন"
+msgstr "আপডেট করুন"
+
+msgid "Request For New Payments"
+msgstr "নতুন পেমেন্টের অনুরোধ"
+
+msgid "Member For Payment"
+msgstr "পেমেন্টের জন্য সদস্য"
+
+msgid "Received Cashier"
+msgstr "গ্রহণকারী ক্যাশিয়ার"
+
+msgid "Payment Type"
+msgstr "পেমেন্টের ধরন"
+
+msgid "Payment Method"
+msgstr "পেমেন্ট পদ্ধতি"
+
+msgid "Amount"
+msgstr "পরিমাণ"
+
+msgid "Bkash/Rocket/Bank Account"
+msgstr "বিকাশ/রকেট/ব্যাংক অ্যাকাউন্ট"
+
+msgid "Select Properties"
+msgstr "সম্পত্তি নির্বাচন করুন"
+
+msgid "Payment Year"
+msgstr "পেমেন্টের বছর"
+
+msgid "Payment Month"
+msgstr "পেমেন্টের মাস"
+
+msgid "PIN or Reference Number"
+msgstr "পিন বা রেফারেন্স নম্বর"
+
+msgid "Leave a Message"
+msgstr "একটি বার্তা লিখুন"
+
+msgid "Agree to terms and conditions"
+msgstr "শর্তাবলিতে সম্মত"
+
+msgid "You must agree before submitting."
+msgstr "জমা দেওয়ার আগে আপনাকে সম্মত হতে হবে।"
+
+msgid "Submit Request"
+msgstr "অনুরোধ জমা দিন"
+
+msgid "Error 404"
+msgstr "ত্রুটি ৪০৪"
+
+msgid "Ooops!"
+msgstr "দুঃখিত!"
+
+msgid "The page you requested was not found!"
+msgstr "আপনার অনুরোধ করা পৃষ্ঠাটি খুঁজে পাওয়া যায়নি!"
+
+msgid "Go Back"
+msgstr "ফিরে যান"

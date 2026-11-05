@@ -19,7 +19,7 @@
                                 <div class="widget-header">
                                     <div class="row">
                                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                                            <h4>Request For New Payments</h4>
+                                            <h4>{% translate "Request For New Payments" %}</h4>
                                         </div>                 
                                     </div>
                                 </div>
@@ -29,63 +29,63 @@
 
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6" id='myColUser'>
-                                                <label for="validationCustom01">Member For Payment</label>
+                                                <label for="validationCustom01">{% translate "Member For Payment" %}</label>
                                                 {{admin_form.user}}
                                             </div>
 
                                             <div class="col-md-6 mb-6" id="cashier">
-                                                <label for="validationCustom02">Received Cashier</label>
+                                                <label for="validationCustom02">{% translate "Received Cashier" %}</label>
                                                 {{admin_form.cashier}}
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-md-6 mb-6">
-                                                <label for="validationCustom01">Payment Type</label>
+                                                <label for="validationCustom01">{% translate "Payment Type" %}</label>
                                                 {{admin_form.payment_type}}
                                             </div>
                                             <div class="col-md-6 mb-6">
-                                                <label for="validationCustom02">Payment Method</label>
+                                                <label for="validationCustom02">{% translate "Payment Method" %}</label>
                                                 {{admin_form.payment_method}}
                                             </div>
                                         </div>
                                         </br>
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6" id='myColAmount'>
-                                                <label for="validationCustom01">Amounts</label>
+                                                <label for="validationCustom01">{% translate "Amount" %}</label>
                                                 {{admin_form.amount_of_money}}
                                             </div>
 
                                             <div class="col-md-6 mb-6" id="fromNumber">
-                                                <label for="validationCustom02">Bkash/Rocket/Bank-AC</label>
+                                                <label for="validationCustom02">{% translate "Bkash/Rocket/Bank Account" %}</label>
                                                 {{admin_form.from_number}}
                                             </div>
                                         </div>
                                         <div class="form-row mb-3" id="properties" style="display: none;">
                                             <div class="col-md-12 mb-12">
-                                                <label for="validationCustom01">Select Properties</label>
+                                                <label for="validationCustom01">{% translate "Select Properties" %}</label>
                                                 {{admin_form.properties}}
                                             </div>
                                         </div>
                                         <div class="form-row mb-3">
                                             <div class="col-md-6 mb-6" id="payYear">
-                                                <label for="validationCustom01">Payment Year</label>
+                                                <label for="validationCustom01">{% translate "Payment Year" %}</label>
                                                 {{admin_form.pay_year}}
                                             </div>
 
                                             <div class="col-md-6 mb-6" id="payMonth">
-                                                <label for="validationCustom02">Payment Month</label>
+                                                <label for="validationCustom02">{% translate "Payment Month" %}</label>
                                                 {{admin_form.pay_month}}
                                             </div>
                                         </div>
                                         <div class="form-row mb-3" id="pinRef">
                                             <div class="col-md-12 mb-12">
-                                                <label for="validationCustom01">Pin Number Or Referance</label>
+                                                <label for="validationCustom01">{% translate "PIN or Reference Number" %}</label>
                                                 {{admin_form.pin_ref}}
                                             </div>
                                         </div>
                                         <div class="form-row mb-3">
                                             <div class="col-md-12 mb-12">
-                                                <label for="validationCustom02">Leave a Message</label>
+                                                <label for="validationCustom02">{% translate "Leave a Message" %}</label>
                                                 {{admin_form.payment_note}}
                                             </div>
                                         </div>
@@ -94,14 +94,14 @@
                                             <div class="form-check pl-0">
                                                 <div class="custom-control custom-checkbox checkbox-success">
                                                     <input type="checkbox" class="custom-control-input" name="is_agree" id="invalidCheck" required>
-                                                    <label class="custom-control-label" for="invalidCheck">Agree to terms and conditions</label>
+                                                    <label class="custom-control-label" for="invalidCheck">{% translate "Agree to terms and conditions" %}</label>
                                                     <div class="invalid-feedback">
-                                                        You must agree before submitting.
+                                                        {% translate "You must agree before submitting." %}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary mt-3 w-100 text-center" type="submit">Submit Request</button>
+                                        <button class="btn btn-primary mt-3 w-100 text-center" type="submit">{% translate "Submit Request" %}</button>
                                     </form>
                                     
                                 </div>
@@ -116,7 +116,7 @@
                                 <div class="widget-header">
                                     <div class="row">
                                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                                            <h4>Request For New Payments</h4>
+                                            <h4>{% translate "Request For New Payments" %}</h4>
                                         </div>                 
                                     </div>
                                 </div>
@@ -235,4 +235,3 @@
         </div>
     </div>
 </div>
-

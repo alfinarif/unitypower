@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 
 from activity.models import ActivityLog
+from django.forms import ModelForm
 
 
 def get_client_ip(request):
@@ -25,6 +26,8 @@ def log_activity(request, action, description, instance=None, changes=None):
     object_repr = ''
 
     if instance is not None:
+        if isinstance(instance, ModelForm):
+            instance = instance.instance
         content_type = ContentType.objects.get_for_model(
             instance,
             for_concrete_model=False

@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from django.utils.translation import gettext_lazy as _
 
 import firebase_admin
 from firebase_admin import credentials
@@ -170,9 +169,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 LANGUAGES = [
-    ('en', _('English')),
-    ('bn-bd', _('Bengali')),
-    ('ar', _('Arabic'))
+    ('en', 'English'),
+    ('bn', 'বাংলা'),
+    ('ar', 'العربية')
 ]
 TIME_ZONE = 'Asia/Riyadh'
 
@@ -211,8 +210,6 @@ DJANGO_EASY_AUDIT_LOG_REQUESTS_RE_EXCLUDE = [
     r'^/media/',       # Exclude media file requests
     r'^/favicon\.ico', # Exclude browser icon requests
 ]
-
-
 
 
 
