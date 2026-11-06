@@ -38,10 +38,9 @@ def admin_index_view(request):
             transactions = PaymentModel.objects.all().order_by('-created')[:6]
 
             # SHOWING HISTORY FROM ALL MODELS
-            activities = ActivityLog.objects.select_related(
-                            'user',
-                            'content_type'
-                        ).all()
+            activities = ActivityLog.objects.select_related('user').order_by(
+                '-created_at'
+            )[:20]
             # END HISTORY BLOCK HERE ========================
 
             # CALCULATING TOTAL MONEY TRANSACTIONS HERE ===============================
@@ -564,7 +563,6 @@ def download_unpaid_report_view(request):
         return download_unpaid_list_report(request)
     else:
         return redirect('membership:user_login')
-
 
 
 

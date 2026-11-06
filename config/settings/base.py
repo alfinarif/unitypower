@@ -97,7 +97,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'finance.middleware.AutoBillingSyncMiddleware', # Custom middleware to sync billing and payment summaries on every request
+    'finance.middleware.AutoBillingSyncMiddleware', # Queue billing reconciliation without blocking page requests
     'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
 
@@ -210,7 +210,6 @@ DJANGO_EASY_AUDIT_LOG_REQUESTS_RE_EXCLUDE = [
     r'^/media/',       # Exclude media file requests
     r'^/favicon\.ico', # Exclude browser icon requests
 ]
-
 
 
 

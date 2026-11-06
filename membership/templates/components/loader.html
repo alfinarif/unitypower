@@ -1,11 +1,16 @@
-{% load i18n %}
+{% load i18n static %}
 
-
-<div id="load_screen"> 
-    <div class="loader"> 
-        <div class="loader-content">
-            <div class="spinner-grow align-self-center"></div>
+<div id="load_screen" class="page-loader is-visible" role="status" aria-live="polite"
+     aria-label="{% translate 'Loading' %}"
+     data-loader-loading="{% translate 'Loading your page' %}"
+     data-loader-submitting="{% translate 'Submitting your request' %}">
+    <div class="page-loader__card">
+        <div class="page-loader__brand">
+            <span class="page-loader__orbit" aria-hidden="true"></span>
+            <img class="page-loader__logo" src="{% static 'images/unity_power_logo.png' %}" alt="">
         </div>
+        <p class="page-loader__title">{% translate "UnityPower" %}</p>
+        <p class="page-loader__message" data-loader-message>{% translate "Preparing your page" %}</p>
+        <span class="page-loader__progress" aria-hidden="true"></span>
     </div>
 </div>
-

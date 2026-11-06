@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <title>{% translate "Notice" %} | Unity-Power </title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/unity_power_logo.png' %}"/>
+    <link href="{% static 'assets/css/loader.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'assets/js/loader.js' %}"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
     <link href="{%  static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
@@ -19,6 +21,8 @@
 
 </head>
 <body class="maintanence text-center">
+    {% include "components/loader.html" %}
+
     <!--  Showing toast messages  -->
     {% include "components/toast_message.html" %}
     <!--  Showing toast messages end -->
@@ -33,7 +37,7 @@
             <p class="error-text">{% translate "আপনার প্রোফাইল তথ্য আপডেট করুন" %}</p>
             <p class="text">{% translate "আমাদের আপনার তথ্য প্রয়োজন," %} <br/> {% translate "আপনাকে আরও ভালো ব্যবহারকারীর অভিজ্ঞতা দিতে," %}</p>
             <p class="text">{% translate "আপনার সমর্থন ও সহযোগিতার জন্য আমরা কৃতজ্ঞ।" %}</p>
-            <a href="{% url 'update_profile' %}" class="btn btn-success w-50 mt-4">{% translate "আপডেট করুন" %}</a>
+            <a href="{% url 'membership:update_profile' request.user.profile.id %}" class="btn btn-success w-50 mt-4">{% translate "আপডেট করুন" %}</a>
         </div>
     </div>
     
