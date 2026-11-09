@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %} {{ profile.full_name }} | Unity-Power {% endblock title %}
 
@@ -36,7 +37,7 @@
                                         {% if profile.avatar %}
                                             <img class="profile-avatar-custom" src="{{  profile.avatar.url }}" alt="avatar">
                                         {% else %}
-                                            <img class="profile-avatar-custom" src="https://www.vecteezy.com/vector-art/21548095-default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait" alt="avatar">
+                                            <img class="profile-avatar-custom" src="{% static 'images/unity_power_logo.png' %}" alt="avatar">
                                         {% endif %}
                                         <p class="">{{ profile.full_name }}</p>
                                     </div>
